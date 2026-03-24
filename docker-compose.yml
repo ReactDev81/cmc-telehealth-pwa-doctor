@@ -1,0 +1,11 @@
+version: "3.9"
+
+services:
+  cmc-telehealth-pwa-doctor:
+    build: .
+    container_name: cmc-telehealth-pwa-doctor
+    restart: always
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env

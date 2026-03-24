@@ -4,6 +4,7 @@ import withPWAInit from 'next-pwa';
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  output: "standalone",
   compiler: {
     removeConsole: process.env.NODE_ENV !== "development"
   },
@@ -17,4 +18,4 @@ const withPWA = withPWAInit({
   disable: process.env.NODE_ENV === 'development',
 });
 
-export default withPWA(nextConfig);
+export default process.env.NODE_ENV === 'development' ? nextConfig : withPWA(nextConfig);

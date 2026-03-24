@@ -55,16 +55,26 @@ const LoginPage = () => {
     const handleLogin = (formData: LoginFormData): Promise<void> => {
         return new Promise((resolve) => {
             signIn(formData, {
-                onSuccess: async (data) => {
+                onSuccess: async (responseData) => {
 
-                    const user = data.data;
+                    // The actual payload might be deeply nested depending on API variations.
+                    // We extract it defensively.
+                    const payload = (responseData as any)?.data || responseData;
+                    const user = (payload as any)?.user || payload;
+                    const token = (responseData as any)?.token || (payload as any)?.token;
+                    
+                    if (!user) {
+                        console.error('User object is undefined in response:', responseData);
+                        return;
+                    }
+
                     const role: UserRole = user.role as UserRole;
 
                     const userData: User = {
-                        id: user.id,
-                        first_name: user.first_name,
-                        last_name: user.last_name,
-                        email: user.email,
+                        id: user.id || "",
+                        first_name: user.first_name || "",
+                        last_name: user.last_name || "",
+                        email: user.email || "",
                         role,
                         gender: user.gender,
                         date_of_birth: user.date_of_birth,
@@ -74,18 +84,18 @@ const LoginPage = () => {
                         status: user.status ?? "",
                         avatar: user.avatar,
                         address: {
-                            address: user.address.address,
-                            area: user.address.area,
-                            city: user.address.city,
-                            landmark: user.address.landmark,
-                            pincode: user.address.pincode,
-                            state: user.address.state,
+                            address: user.address?.address,
+                            area: user.address?.area,
+                            city: user.address?.city,
+                            landmark: user.address?.landmark,
+                            pincode: user.address?.pincode,
+                            state: user.address?.state,
                         },
                     };
 
-                    // console.log("Render Login Screen", data);
+                    // console.log("Render Login Screen", responseData);
 
-                    await login(userData, data.token);
+                    await login(userData, token || "");
 
                     router.push("/");
 
