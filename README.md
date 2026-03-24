@@ -1,36 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# CMC Telehealth PWA (Doctor Dashboard)
 
-## Getting Started
+A Progressive Web App for doctors working with CMC Telehealth, built using [Next.js](https://nextjs.org).
 
-First, run the development server:
+## Prerequisites
+- [Docker](https://www.docker.com/products/docker-desktop) installed on your system.
+- [Docker Compose](https://docs.docker.com/compose/install/) (usually included with Docker Desktop).
 
+## Getting Started with Docker
+
+You can easily run the production build of this project locally without installing Node.js by using Docker.
+
+### 1. Project Setup
+Ensure you have the project files on your local machine and navigate to the project directory:
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cd cmc-telehealth-pwa-doctor
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Environment Variables
+Ensure you have a `.env` file in the root directory. This is required by `docker-compose.yml` to pass configuration variables into the container. Follow the .env.sample file to create your .env file. 
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Build and Start the Container
+Use Docker Compose to build the image and run the container in detached mode:
+```bash
+docker-compose up --build -d
+```
+*This command uses the `Dockerfile` to install dependencies, build the optimized Next.js app, and start the application server.*
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 4. Access the Application
+Once the container is up and running, open your web browser and navigate to:
+**[http://localhost:8000](http://localhost:8000)**
 
-## Learn More
+*(Note: The Docker configuration maps the exposed Next.js server to port `8000` on your host machine).*
 
-To learn more about Next.js, take a look at the following resources:
+### 5. Managing the Container
+To view logs:
+```bash
+docker-compose logs -f
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To stop and remove the running container:
+```bash
+docker-compose down
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Local Development (Without Docker)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+If you prefer to run the application for active development without Docker:
+```bash
+# Install dependencies
+npm install
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+# Start the development server
+npm run dev
+```
+Then, open [http://localhost:3000](http://localhost:3000) with your browser.
