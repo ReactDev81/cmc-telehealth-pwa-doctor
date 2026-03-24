@@ -5,7 +5,9 @@ import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import AuthForm from "@/components/auth/AuthForm"
 import AuthLayout from "@/components/auth/AuthLayout"
-import axios from "axios"
+import { useLogin } from "@/mutations/useLogin"
+import { useAuth } from "@/context/userContext"
+import { User, UserRole } from "@/types/user-context"
 
 interface LoginFormData {
     email: string
@@ -13,11 +15,13 @@ interface LoginFormData {
 }
 
 const LoginPage = () => {
+
     const router = useRouter()
+    const { login, user } = useAuth();
+    const { mutate: signIn, isPending, isError, error } = useLogin();
     const [mounted, setMounted] = useState(false)
     const [imageError, setImageError] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const [errorMessage, setErrorMessage] = useState("")
+    const [emailverified, setEmailverified] = useState(false);
 
     useEffect(() => {
         setMounted(true)
@@ -48,66 +52,56 @@ const LoginPage = () => {
         },
     ]
 
-    const handleLogin = async (data: LoginFormData) => {
-        // Basic validation
-        if (!data.email || !data.password) {
-            setErrorMessage("Please fill in all fields")
-            return
-        }
+    const handleLogin = (formData: LoginFormData): Promise<void> => {
+        return new Promise((resolve) => {
+            signIn(formData, {
+                onSuccess: async (data) => {
 
-        setLoading(true)
-        setErrorMessage("")
+                    const user = data.data;
+                    const role: UserRole = user.role as UserRole;
 
-        try {
-            const response = await axios.post(
-                `${process.env.NEXT_PUBLIC_API_URL}/auth/login`,
-                {
-                    email: data.email,
-                    password: data.password,
+                    const userData: User = {
+                        id: user.id,
+                        first_name: user.first_name,
+                        last_name: user.last_name,
+                        email: user.email,
+                        role,
+                        gender: user.gender,
+                        date_of_birth: user.date_of_birth,
+                        phone: user.phone,
+                        patient_id: user.patient_id,
+                        doctor_id: user.doctor_id,
+                        status: user.status ?? "",
+                        avatar: user.avatar,
+                        address: {
+                            address: user.address.address,
+                            area: user.address.area,
+                            city: user.address.city,
+                            landmark: user.address.landmark,
+                            pincode: user.address.pincode,
+                            state: user.address.state,
+                        },
+                    };
+
+                    // console.log("Render Login Screen", data);
+
+                    await login(userData, data.token);
+
+                    router.push("/");
+
+                    resolve();
                 },
-                {
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                }
-            )
-
-            if (response.data.success && response.data.token) {
-                // Store token (consider using httpOnly cookies for better security)
-                localStorage.setItem("token", response.data.token)
-                localStorage.setItem("user", JSON.stringify(response.data.data))
-
-                // Store token in cookie for middleware access
-                document.cookie = `token=${response.data.token}; path=/; max-age=604800; samesite=lax`
-
-                // Redirect to dashboard based on role
-                if (response.data.data.role === "doctor") {
-                    router.push("/doctor/dashboard")
-                } else {
-                    router.push("/patient/dashboard")
-                }
-            } else {
-                setErrorMessage(response.data.message || "Login failed")
-            }
-        } catch (error: any) {
-            console.error("Login Error:", error)
-
-            if (error.response) {
-                // The request was made and the server responded with a status code outside of 2xx
-                setErrorMessage(error.response.data?.message || "Server error occurred")
-            } else if (error.request) {
-                // The request was made but no response was received
-                setErrorMessage(
-                    "No response from server. Please check your internet connection."
-                )
-            } else {
-                // Something happened in setting up the request
-                setErrorMessage("An error occurred. Please try again.")
-            }
-        } finally {
-            setLoading(false)
-        }
-    }
+                onError: (error: any) => {
+                    const err = (error as any)?.response?.data?.errors?.message;
+                    console.log('err', err);
+                    if (error.response?.data?.errors?.status === "verified") {
+                        setEmailverified(true);
+                    }
+                    resolve();
+                },
+            });
+        });
+    };
 
     return (
         <AuthLayout title="" subtitle="">
@@ -115,7 +109,7 @@ const LoginPage = () => {
                 <div className="mb-4 flex justify-center">
                     {mounted && (
                         <Image
-                            src="/assets/icon/logo-light.png"
+                            src="/icons/logo-light.png"
                             alt="Company Logo"
                             width={120}
                             height={40}
@@ -141,16 +135,20 @@ const LoginPage = () => {
                     Sign in to your account to continue
                 </p>
 
-                {errorMessage && (
+                {isError && (
                     <div className="mt-3 rounded-md bg-red-50 p-3">
-                        <p className="text-sm text-red-600">{errorMessage}</p>
+                        <p className="text-sm text-red-600">
+                            {((error as any)?.response?.data?.errors?.message ??
+                                (error as any)?.message ??
+                                "Login failed. Please check your credentials.")}
+                        </p>
                     </div>
                 )}
             </div>
 
             <AuthForm
                 fields={fields}
-                buttonText={loading ? "Signing In..." : "Sign In"}
+                buttonText={isPending ? "Signing In..." : "Sign In"}
                 onSubmit={handleLogin}
                 showForgotPassword={true}
                 alternateLink={{

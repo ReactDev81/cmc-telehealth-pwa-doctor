@@ -31,7 +31,6 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
                 const storedUser = localStorage.getItem(USER_KEY)
                 const storedToken = localStorage.getItem(TOKEN_KEY)
 
-
                 if (storedUser) setUser(JSON.parse(storedUser));
 
                 if (storedToken) {
@@ -53,6 +52,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         try {
             localStorage.setItem(USER_KEY, JSON.stringify(userData));
             localStorage.setItem(TOKEN_KEY, authToken);
+            document.cookie = `token=${authToken}; path=/; max-age=604800; samesite=lax`;
+            document.cookie = `role=${userData.role}; path=/; max-age=604800; samesite=lax`;
         } catch (e) {
             console.log("Error saving auth data", e);
         }
@@ -65,6 +66,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         try {
             localStorage.removeItem(USER_KEY);
             localStorage.removeItem(TOKEN_KEY);
+            document.cookie = "token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+            document.cookie = "role=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         } catch (e) {
             console.log("Error clearing auth data", e);
         }
