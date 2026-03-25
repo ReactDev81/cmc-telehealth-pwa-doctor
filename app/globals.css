@@ -46,6 +46,8 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
 }
 
 :root {
@@ -81,25 +83,8 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-
-
-  /* status color  */
-  /* ✅ Appointment Status Colors */
-  --status-confirmed-bg: #dbeafe;
-  --status-confirmed-text: #1e40af;
-
-  --status-failed-bg: #fee2e2;
-  --status-failed-text: #991b1b;
-
-  --status-completed-bg: #dcfce7;
-  --status-completed-text: #166534;
-
-  --status-pending-bg: #fef9c3;
-  --status-pending-text: #854d0e;
-
-  --status-default-bg: #fef08a;
-  --status-default-text: #1f2937;
-
+  --success: oklch(0.627 0.194 149.214);
+  --success-foreground: oklch(0.985 0 0);
 }
 
 .dark {
@@ -134,24 +119,8 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
-
-  /* status color  */
-
-  --status-confirmed-bg: #1e3a8a;
-  --status-confirmed-text: #bfdbfe;
-
-  --status-failed-bg: #7f1d1d;
-  --status-failed-text: #fecaca;
-
-  --status-completed-bg: #14532d;
-  --status-completed-text: #bbf7d0;
-
-  --status-pending-bg: #713f12;
-  --status-pending-text: #fde68a;
-
-  --status-default-bg: #3f3f46;
-  --status-default-text: #e4e4e7;
-
+  --success: oklch(0.448 0.145 149.214);
+  --success-foreground: oklch(0.985 0 0);
 }
 
 @layer base {

@@ -8,6 +8,15 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV !== "development"
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: 'telehealthwebapplive.cmcludhiana.in',
+        pathname: '/**',
+      },
+    ],
+  },
   turbopack: {}
 };
 

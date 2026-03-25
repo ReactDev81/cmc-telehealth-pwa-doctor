@@ -46,6 +46,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     }, []);
 
     const login = async (userData: User, authToken: string) => {
+        console.log("UserContext: login called with", { userData, authToken });
         setUser(userData);
         setToken(authToken);
         setAuthToken(authToken);
@@ -54,6 +55,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
             localStorage.setItem(TOKEN_KEY, authToken);
             document.cookie = `token=${authToken}; path=/; max-age=604800; samesite=lax`;
             document.cookie = `role=${userData.role}; path=/; max-age=604800; samesite=lax`;
+            console.log("UserContext: values saved to localStorage and cookies");
         } catch (e) {
             console.log("Error saving auth data", e);
         }
