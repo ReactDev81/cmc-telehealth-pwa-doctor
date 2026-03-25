@@ -1,9 +1,187 @@
-const AppointmentsPage = () => {
-    return (
-        <div>
-            <h1>Appointments</h1>
-        </div>
-    );
-}
+"use client";
 
-export default AppointmentsPage;
+import { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+
+import CustomTabs, { TabItem } from "@/components/pages/appoitment/CustomTabs";
+
+import { useMyAppointments } from "@/querys/useAppointments";
+import AppointmentCard from "@/components/pages/appoitment/AppointmentCard";
+import AppointmentFilters from "@/components/pages/appoitment/AppointmentFilters";
+
+const Appointments = () => {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const tabParam = searchParams.get("tab");
+
+  const defaultTab =
+    tabParam && ["today", "upcoming", "past", "all"].includes(tabParam)
+      ? tabParam
+      : "today";
+
+  const [activeTab, setActiveTab] = useState(defaultTab);
+
+  const [searchQuery, setSearchQuery] = useState("");
+  const [selectedFilter, setSelectedFilter] = useState("all");
+
+  const { data, isLoading, error } = useMyAppointments(activeTab);
+  const appointments = Array.isArray(data?.data) ? data.data : [];
+
+  // ✅ Unique status list
+  const statusOptions = [
+    { value: "all", label: "All Status" },
+    ...Array.from(
+      new Map(
+        appointments.map((apt: any) => [
+          apt.status,
+          { value: apt.status, label: apt.status_label },
+        ])
+      ).values()
+    ),
+  ];
+
+  useEffect(() => {
+    if (tabParam && ["today", "upcoming", "past", "all"].includes(tabParam)) {
+      setActiveTab(tabParam);
+    }
+  }, [tabParam]);
+
+  const handleTabChange = (value: string) => {
+    setActiveTab(value);
+    // router.push(`?tab=${value}`);
+  };
+
+  // Debug: Log appointments data
+  console.log("Active Tab:", activeTab);
+  console.log("Total Appointments:", appointments.length);
+  console.log("Appointments Data:", appointments);
+
+  // ✅ Split Data based on current date
+  const today = appointments.filter((apt: any) => {
+    const aptDate = new Date(apt.appointment_date);
+    const todayDate = new Date();
+    return (
+      aptDate.getDate() === todayDate.getDate() &&
+      aptDate.getMonth() === todayDate.getMonth() &&
+      aptDate.getFullYear() === todayDate.getFullYear()
+    );
+  });
+
+  const upcoming = appointments.filter((apt: any) => {
+    const aptDate = new Date(apt.appointment_date);
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    return aptDate > todayDate;
+  });
+
+  const past = appointments.filter((apt: any) => {
+    const aptDate = new Date(apt.appointment_date);
+    const todayDate = new Date();
+    todayDate.setHours(0, 0, 0, 0);
+    return aptDate < todayDate;
+  });
+
+  // Debug: Check filtered data
+  console.log("Today's Appointments:", today.length);
+  console.log("Upcoming Appointments:", upcoming.length);
+  console.log("Past Appointments:", past.length);
+
+  // ✅ Filters
+  const applyFilters = (list: any[]) => {
+    return list.filter((apt) => {
+      const name = apt.patient?.name?.toLowerCase() || "";
+      const matchesSearch = name.includes(searchQuery.toLowerCase());
+      const matchesStatus =
+        selectedFilter === "all" || apt.status === selectedFilter;
+      return matchesSearch && matchesStatus;
+    });
+  };
+
+  // ✅ Render Cards
+  const renderCards = (list: any[]) => {
+    if (!list.length) {
+      return (
+        <div className="text-center py-12">
+          <p className="text-muted-foreground">No appointments found</p>
+        </div>
+      );
+    }
+
+    return (
+      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5 mt-5">
+        {list.map((apt: any, index: number) => (
+          <AppointmentCard
+            key={apt.appointment_id || index}
+            appointment={apt}
+            variant={activeTab as "today" | "upcoming" | "past" | "all"}
+          />
+        ))}
+      </div>
+    );
+  };
+
+  // ✅ Tabs with correct data
+  const appointmentTabs: TabItem[] = [
+    {
+      key: "all",
+      label: "All",
+      content: renderCards(applyFilters(appointments)),
+    },
+    {
+      key: "today",
+      label: "Today",
+      content: renderCards(applyFilters(today)),
+    },
+    {
+      key: "upcoming",
+      label: "Upcoming",
+      content: renderCards(applyFilters(upcoming)),
+    },
+    {
+      key: "past",
+      label: "Past",
+      content: renderCards(applyFilters(past)),
+    },
+  ];
+
+  // ✅ Loading & Error
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="text-center py-12">
+        <p className="text-red-500">Something went wrong. Please try again.</p>
+      </div>
+    );
+  }
+
+  return (
+    <div className="p-5 space-y-6">
+      {/* Filters */}
+      <AppointmentFilters
+        searchQuery={searchQuery}
+        selectedFilter={selectedFilter}
+        setSearchQuery={setSearchQuery}
+        setSelectedFilter={setSelectedFilter}
+        statusOptions={statusOptions} 
+      />
+
+      {/* Tabs */}
+      <CustomTabs
+        tabs={appointmentTabs}
+        activeTab={activeTab}
+        onTabChange={handleTabChange}
+        tabsListClassName="max-w-md"
+      />
+    </div>
+  );
+};
+
+export default Appointments;
