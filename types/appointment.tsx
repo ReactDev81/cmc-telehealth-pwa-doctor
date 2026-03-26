@@ -3,7 +3,7 @@ export interface appointmentProps {
   id?: string | number;
   appointmentId?: string;
   status?: string;
-  image?: string; // ✅ URL string
+  image?: string;
   name: string;
   mode: string;
   date?: string;
@@ -15,7 +15,7 @@ export interface Patient {
   id: string;
   user_id: string;
   name: string;
-  avatar?: string; // ✅ image URL
+  avatar?: string;
   slug: string;
 }
 

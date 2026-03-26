@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 
 const Home = () => {
+
     const { user } = useAuth();
     const { data, isLoading, isError, error } = useDoctorHome();
 

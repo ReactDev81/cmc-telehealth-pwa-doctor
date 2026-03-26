@@ -22,31 +22,18 @@ import {
     SheetTrigger,
 } from "@/components/ui";
 import { useAuth } from "@/context/userContext";
-// import {
-//   formatNotificationTime,
-//   getNotificationTypeColor,
-//   getNotificationTypeIcon,
-//   getUserInitials,
-// } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
 import icon from "@/public/assets/icon/logo-light.png";
 import { useUnreadCount } from "@/queries/notifications";
 import type { NavItem } from "@/types/header";
-import {
-    Bell,
-    Calendar,
-    LayoutDashboard,
-    LogOut,
-    Menu,
-    Settings,
-    User as UserIcon,
-} from "lucide-react";
+import { Bell, Calendar, LayoutDashboard, LogOut, Menu, Settings, User as UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 export function Header() {
+
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -99,7 +86,7 @@ export function Header() {
         },
         {
             title: "My Schedules",
-            href: "/schedule",
+            href: "/my-schedules",
             icon: <Calendar className="h-4 w-4" />,
         },
         {
