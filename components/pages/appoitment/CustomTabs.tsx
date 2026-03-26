@@ -20,7 +20,7 @@ interface CustomTabsProps {
     tabsListClassName?: string;
     tabsTriggerClassName?: string;
     tabsContentClassName?: string;
-    color?: string; // Custom color prop
+    color?: string;
 }
 
 const CustomTabs = ({
@@ -32,8 +32,9 @@ const CustomTabs = ({
     tabsListClassName,
     tabsTriggerClassName,
     tabsContentClassName,
-    color = "primary", // Default to primary color variable
+    color = "primary",
 }: CustomTabsProps) => {
+
     const [internalActiveTab, setInternalActiveTab] = React.useState(
         defaultTab || tabs[0]?.key || ""
     );
@@ -51,13 +52,13 @@ const CustomTabs = ({
 
     return (
         <Tabs value={activeTab} onValueChange={handleTabChange} className={cn("w-full", className)}>
+
             <TabsList className={cn("grid w-full grid-cols-4", tabsListClassName)}>
                 {tabs.map((tab) => (
                     <TabsTrigger
                         key={tab.key}
                         value={tab.key}
                         style={{
-                            // Dynamic color using CSS variable
                             ['--tab-active-bg' as string]: `var(--${color})`,
                             ['--tab-active-text' as string]: `var(--${color}-foreground)`,
                         }}
@@ -85,6 +86,7 @@ const CustomTabs = ({
                     </TabsContent>
                 )
             ))}
+
         </Tabs>
     );
 };
