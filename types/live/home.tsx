@@ -1,6 +1,3 @@
-import { Href } from "expo-router";
-import { ImageSourcePropType } from "react-native";
-
 // SpecialityData
 export interface SpecialityProps {
   id: string;
@@ -13,7 +10,7 @@ export interface SpecialityProps {
 // available doctors
 export interface AvailableDoctorsProps {
   id?: string;
-  avatar: ImageSourcePropType;
+  avatar: string;
   consultation_type: string;
   consultation_fee: string;
   name: string;
@@ -27,7 +24,7 @@ export interface AvailableDoctorsProps {
 export interface AdvertisementProps {
   id: string;
   image: string;
-  link: Href;
+  link: string;
 }
 
 // Testimonials
@@ -41,7 +38,7 @@ export interface TestimonialProps {
   is_active?: boolean;
   is_featured?: boolean;
   slug?: string;
-  patient_image: string | ImageSourcePropType;
+  patient_image: string;
   total_reviews: string;
   patient_age: string;
   doctor_name: string;

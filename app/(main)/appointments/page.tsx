@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 
 import CustomTabs, { TabItem } from "@/components/pages/appoitment/CustomTabs";
@@ -9,7 +9,7 @@ import { useMyAppointments } from "@/querys/useAppointments";
 import AppointmentCard from "@/components/pages/appoitment/AppointmentCard";
 import AppointmentFilters from "@/components/pages/appoitment/AppointmentFilters";
 
-const Appointments = () => {
+const AppointmentsContent = () => {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -21,9 +21,14 @@ const Appointments = () => {
       : "today";
 
   const [activeTab, setActiveTab] = useState(defaultTab);
+  const [isMounted, setIsMounted] = useState(false);
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedFilter, setSelectedFilter] = useState("all");
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const { data, isLoading, error } = useMyAppointments(activeTab);
   const appointments = Array.isArray(data?.data) ? data.data : [];
@@ -146,7 +151,7 @@ const Appointments = () => {
   ];
 
   // ✅ Loading & Error
-  if (isLoading) {
+  if (!isMounted || isLoading) {
     return (
       <div className="flex items-center justify-center h-64">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -163,14 +168,20 @@ const Appointments = () => {
   }
 
   return (
-    <div className="p-5 space-y-6">
+    <div className="space-y-6 py-5">
+      <div>
+        <h1 className="mb-2 text-primary">Appointments</h1>
+        <p className="text-muted-foreground">
+          Manage all patient appointments
+        </p>
+      </div>
       {/* Filters */}
       <AppointmentFilters
         searchQuery={searchQuery}
         selectedFilter={selectedFilter}
         setSearchQuery={setSearchQuery}
         setSelectedFilter={setSelectedFilter}
-        statusOptions={statusOptions} 
+        statusOptions={statusOptions}
       />
 
       {/* Tabs */}
@@ -181,6 +192,20 @@ const Appointments = () => {
         tabsListClassName="max-w-md"
       />
     </div>
+  );
+};
+
+const Appointments = () => {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex items-center justify-center h-64">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+        </div>
+      }
+    >
+      <AppointmentsContent />
+    </Suspense>
   );
 };
 

@@ -30,13 +30,12 @@ import { useAuth } from "@/context/userContext";
 // } from "@/lib/helpers";
 import { cn } from "@/lib/utils";
 import icon from "@/public/assets/icon/logo-light.png";
-import { useNotifications, useUnreadCount } from "@/queries/notifications";
+import { useUnreadCount } from "@/queries/notifications";
 import type { NavItem } from "@/types/header";
 import {
   Bell,
   Calendar,
   LayoutDashboard,
-  Loader2,
   LogOut,
   Menu,
   Settings,
@@ -125,7 +124,7 @@ export function Header() {
           : "bg-background",
       )}
     >
-      <div className="container flex h-16 items-center justify-between px-4 sm:px-8 max-w-7xl mx-auto">
+      <div className=" flex h-16 items-center justify-between px-4 sm:px-8 max-w-8xl mx-auto">
         {/* Logo and App Name */}
         <Link href="/" className="flex items-center space-x-2">
           <Image
@@ -158,7 +157,7 @@ export function Header() {
                     variant={pathname === item.href ? "secondary" : "default"}
                     className="ml-auto flex h-5 w-5 items-center justify-center rounded-full p-0"
                   >
-                    {item.badge > 99 ? "99+" : item.badge}
+                    {Number(item.badge) > 99 ? "99+" : item.badge}
                   </Badge>
                 ) : null}
               </Link>
@@ -166,11 +165,8 @@ export function Header() {
           </nav>
         )}
 
-
-
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
-
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon" className="relative">
@@ -183,7 +179,10 @@ export function Header() {
               </Button>
             </DropdownMenuTrigger>
 
-            <DropdownMenuContent align="end" className="w-[calc(100vw-2rem)] sm:w-80">
+            <DropdownMenuContent
+              align="end"
+              className="w-[calc(100vw-2rem)] sm:w-80"
+            >
               <DropdownMenuLabel className="flex items-center justify-between">
                 <span>Notifications</span>
               </DropdownMenuLabel>
@@ -191,7 +190,6 @@ export function Header() {
               <DropdownMenuSeparator />
 
               <ScrollArea className="h-[300px]">
-
                 <div className="p-4 text-center text-muted-foreground">
                   No notifications
                 </div>
@@ -199,31 +197,36 @@ export function Header() {
 
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/doctor/notifications" className="w-full justify-center">
+                <Link
+                  href="/doctor/notifications"
+                  className="w-full justify-center"
+                >
                   View all notifications
                 </Link>
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
-          {(user || initializing) ? (
+          {user || initializing ? (
             <div className="flex items-center gap-3 pl-2 border-l">
               <div className="flex-col text-right hidden lg:flex">
                 <span className="text-sm font-semibold leading-none">
                   {initializing ? "unknown name" : name}
                 </span>
                 <span className="text-[11px] text-muted-foreground font-medium">
-                  {initializing ? "unknown email" : (user?.email || "healthcare@info.test")}
+                  {initializing
+                    ? "unknown email"
+                    : user?.email || "healthcare@info.test"}
                 </span>
               </div>
               <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center border border-border overflow-hidden ring-2 ring-transparent hover:ring-primary/20 transition-all cursor-pointer">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full border-0 p-0 hover:bg-transparent">
+                    <Button
+                      variant="ghost"
+                      className="relative h-8 w-8 rounded-full border-0 p-0 hover:bg-transparent"
+                    >
                       <Avatar className="h-8 w-8">
-                        <AvatarImage
-                          src={user?.avatar || ""}
-                          alt={name}
-                        />
+                        <AvatarImage src={user?.avatar || ""} alt={name} />
                         <AvatarFallback>
                           <UserIcon className="h-4 w-4 text-muted-foreground" />
                         </AvatarFallback>
@@ -239,11 +242,14 @@ export function Header() {
                             {initializing ? "" : name}
                           </p>
                           <p className="text-xs leading-none text-muted-foreground truncate">
-                            {initializing ? "" : (user?.email || "Not signed in")}
+                            {initializing ? "" : user?.email || "Not signed in"}
                           </p>
                         </div>
                         {!initializing && user?.role && (
-                          <Badge variant="outline" className="ml-2 h-5 w-fit capitalize">
+                          <Badge
+                            variant="outline"
+                            className="ml-2 h-5 w-fit capitalize"
+                          >
                             {user.role}
                           </Badge>
                         )}
@@ -260,7 +266,10 @@ export function Header() {
                         </Link>
                       </DropdownMenuItem>
                       <DropdownMenuItem asChild>
-                        <Link href="/doctor/settings" className="cursor-pointer">
+                        <Link
+                          href="/doctor/settings"
+                          className="cursor-pointer"
+                        >
                           <Settings className="mr-2 h-4 w-4" />
                           <span>Settings</span>
                         </Link>
@@ -281,14 +290,20 @@ export function Header() {
                 </DropdownMenu>
 
                 {!isDesktop && (
-                  <Sheet open={isMobileMenuOpen} onOpenChange={setIsMobileMenuOpen}>
+                  <Sheet
+                    open={isMobileMenuOpen}
+                    onOpenChange={setIsMobileMenuOpen}
+                  >
                     <SheetTrigger asChild>
                       <Button variant="ghost" size="icon">
                         <Menu className="h-5 w-5" />
                       </Button>
                     </SheetTrigger>
 
-                    <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                    <SheetContent
+                      side="right"
+                      className="w-[300px] sm:w-[400px]"
+                    >
                       <SheetHeader>
                         <SheetTitle className="flex items-center gap-2 text-left">
                           <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
@@ -297,7 +312,9 @@ export function Header() {
                             </span>
                           </div>
                           <div>
-                            <h2 className="text-lg font-semibold">HealthCare Pro</h2>
+                            <h2 className="text-lg font-semibold">
+                              HealthCare Pro
+                            </h2>
                             <p className="text-xs text-muted-foreground">
                               Telehealth Platform
                             </p>
@@ -324,7 +341,7 @@ export function Header() {
                             <span>{item.title}</span>
                             {item.badge ? (
                               <Badge className="ml-auto">
-                                {item.badge > 99 ? "99+" : item.badge}
+                                {Number(item.badge) > 99 ? "99+" : item.badge}
                               </Badge>
                             ) : null}
                           </Link>
@@ -345,7 +362,6 @@ export function Header() {
               </Link>
             )
           )}
-
         </div>
       </div>
     </header>

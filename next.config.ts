@@ -1,30 +1,28 @@
-// @ts-expect-error - next-pwa does not provide TypeScript definitions
-import withPWAInit from 'next-pwa';
+import withPWAInit from "@ducanh2912/next-pwa";
+import type { NextConfig } from "next";
 
-/** @type {import('next').NextConfig} */
-const nextConfig = {
+const nextConfig: NextConfig = {
   reactStrictMode: true,
   output: "standalone",
   compiler: {
-    removeConsole: process.env.NODE_ENV !== "development"
+    removeConsole: process.env.NODE_ENV !== "development",
   },
   images: {
     remotePatterns: [
       {
-        protocol: 'https',
-        hostname: 'telehealthwebapplive.cmcludhiana.in',
-        pathname: '/**',
+        protocol: "https",
+        hostname: "telehealthwebapplive.cmcludhiana.in",
+        pathname: "/**",
       },
     ],
   },
-  turbopack: {}
+  turbopack: {},
 };
 
 const withPWA = withPWAInit({
   dest: "public",
   register: true,
-  skipWaiting: true,
-  disable: process.env.NODE_ENV === 'development',
+  disable: process.env.NODE_ENV === "development",
 });
 
-export default process.env.NODE_ENV === 'development' ? nextConfig : withPWA(nextConfig);
+export default withPWA(nextConfig);
