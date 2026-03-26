@@ -4,10 +4,29 @@ import { useMyAppointments } from "@/querys/useAppointments";
 import { useMySchedules } from "@/queries/getMySchedules";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar"
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Badge } from "@/components/ui/badge";
+import { format } from "date-fns";
+import { useRouter } from "next/navigation";
 import { Appointment } from "@/types/appointment";
-import { ScheduleDay } from "@/types/schedule";
+import { ScheduleDay, OPDSlot } from "@/types/schedule";
+import DoctorOpdSchedule from "@/components/pages/my-schedules/DoctorOpdSchedule";
+import BookAppointments from "@/components/pages/my-schedules/BookAppointments";
+import { Stethoscope } from "lucide-react";
+
+export const filterAppointmentsByDate = (
+    appointments: any[],
+    selectedDate?: Date
+) => {
+    if (!selectedDate) return [];
+
+    const formattedDate = selectedDate.toLocaleDateString("en-CA");
+    // ✅ gives YYYY-MM-DD in LOCAL timezone
+
+    return appointments.filter(
+        (apt) => apt.appointment_date === formattedDate
+    );
+};
 
 const MySchedulesPage = () => {
 
@@ -16,9 +35,43 @@ const MySchedulesPage = () => {
 
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
     const [currentDate, setCurrentDate] = useState<Date>(new Date());
+    const [selectedSlot, setSelectedSlot] = useState<OPDSlot | undefined>(undefined);
+    const router = useRouter();
 
+    const filteredAppointments = useMemo(() => {
+        return filterAppointmentsByDate(
+            data?.data || [],
+            selectedDate
+        );
+    }, [data, selectedDate]);
+
+    const getOPDSlotsForDate = (date: Date | undefined): OPDSlot[] => {
+        if (!date) return [];
+        const day = date.getDate();
+        const month = date.getMonth();
+        const year = date.getFullYear();
+
+        const scheduleDay = scheduleData?.data?.days?.find((s: ScheduleDay) => {
+            const sDate = new Date(s.date);
+            return sDate.getDate() === day && sDate.getMonth() === month && sDate.getFullYear() === year;
+        });
+
+        return scheduleDay?.slots || [];
+    };
+
+    const onSlotClick = (slot: OPDSlot) => {
+        setSelectedSlot(slot);
+    };
+
+    const onViewAllSlots = (slots: OPDSlot[]) => {
+        console.log("Viewing all slots:", slots);
+        // Implement view all logic if needed
+    };
+
+    // Reset selected slot when date changes
     const onDateClick = (date: Date | undefined) => {
         setSelectedDate(date);
+        setSelectedSlot(undefined);
     };
 
     const onMonthChange = (month: Date) => {
@@ -26,13 +79,8 @@ const MySchedulesPage = () => {
     };
 
     const getOPDCount = (date: Date) => {
-        const day = date.getDate();
-        const month = date.getMonth();
-        const year = date.getFullYear();
-        return scheduleData?.data?.days?.filter((s: ScheduleDay) => {
-            const sDate = new Date(s.date);
-            return sDate.getDate() === day && sDate.getMonth() === month && sDate.getFullYear() === year;
-        }).length || 0;
+        const slots = getOPDSlotsForDate(date);
+        return slots.length;
     };
 
     const hasAppointments = (date: Date) => {
@@ -52,13 +100,7 @@ const MySchedulesPage = () => {
             date.getFullYear() === today.getFullYear();
     };
 
-    const bookedDates = Array.from(
-        { length: 15 },
-        (_, i) => new Date(new Date().getFullYear(), 1, 12 + i)
-    )
-
-    // console.log('data', data);
-    // console.log('scheduleData', scheduleData);
+    console.log('selectedSlot', selectedSlot)
 
     return (
         <div>
@@ -68,11 +110,11 @@ const MySchedulesPage = () => {
                 <p className="text-muted-foreground">Manage your OPD appointments and availability</p>
             </div>
 
-            <Card className="border-border">
+            <Card className="border-border mt-5">
 
                 <CardHeader>
                     <CardTitle>
-                        March 2026
+                        {format(currentDate, "MMMM yyyy")}
                     </CardTitle>
                     <CardDescription>
                         <span className="font-semibold text-primary">OPD sessions</span> this month
@@ -80,7 +122,7 @@ const MySchedulesPage = () => {
                 </CardHeader>
 
                 <CardContent>
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
+                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-3 mt-2">
 
                         {/* Left Column - Calendar */}
                         <div className="lg:col-span-1">
@@ -128,13 +170,16 @@ const MySchedulesPage = () => {
                                                     <span>{date.getDate()}</span>
                                                     {count > 0 && (
                                                         <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2">
-                                                            <Badge variant="outline" className="h-4 px-1 text-[8px] bg-primary/10">
+                                                            <Badge
+                                                                variant="outline"
+                                                                className={`h-4 px-1 text-[8px] bg-primary/10 ${isSelected ? 'text-white' : ''}`}
+                                                            >
                                                                 {count} {count === 1 ? 'OPD' : "OPD's"}
                                                             </Badge>
                                                         </span>
                                                     )}
-                                                    {isTodayDate && !isSelected && (
-                                                        <span className="absolute top-0 right-0 h-3 w-3 bg-primary rounded-full" />
+                                                    {isTodayDate && (
+                                                        <span className={`absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-primary'}`} />
                                                     )}
                                                 </div>
                                             </button>
@@ -146,13 +191,75 @@ const MySchedulesPage = () => {
 
                         {/* Middle Column - Doctor OPD Schedule */}
                         <div className="lg:col-span-1">
-
+                            <DoctorOpdSchedule
+                                title="Doctor OPD Schedule"
+                                date={selectedDate
+                                    ? selectedDate.toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+                                    : 'Select a date'}
+                                count={selectedDate ? getOPDCount(selectedDate) : 0}
+                                countLabel="Slots"
+                                viewAllText="View All Slots"
+                                viewAllCount={selectedDate ? getOPDCount(selectedDate) : 0}
+                                onViewAll={() => {
+                                    if (selectedDate) {
+                                        onViewAllSlots(getOPDSlotsForDate(selectedDate));
+                                    }
+                                }}
+                                emptyIcon={<Stethoscope className="h-8 w-8 mx-auto mb-2 opacity-30" />}
+                                emptyMessage="No doctor OPD scheduled"
+                                emptySubMessage="Select a date with OPD sessions"
+                                OPDSlotsForSelectedDate={getOPDSlotsForDate(selectedDate)}
+                                selectedSlot={selectedSlot}
+                                onSlotClick={onSlotClick}
+                            />
                         </div>
 
 
                         {/* Right Column - Booked Appointments */}
-                        <div className="lg:col-span-1">
+                        <div className="lg:col-span-1 space-y-3">
+                            <div className="bg-primary text-white rounded-t-lg py-2 px-4 -mx-1 mb-2">
+                                <h3 className="text-sm font-semibold">Booked Appointments</h3>
+                                {selectedSlot && (
+                                    <p className="text-[10px] opacity-80">
+                                        {selectedSlot.time_range} • {filteredAppointments.length} Booked
+                                    </p>
+                                )}
+                            </div>
 
+                            {filteredAppointments.length ? (
+                                filteredAppointments.map((appointment) => (
+                                    <BookAppointments
+                                        key={appointment.appointment_id}
+                                        type="patient"
+                                        title={
+                                            appointment.patient?.name ||
+                                            "Unknown Patient"
+                                        }
+                                        avatar={appointment.patient?.avatar || ""}
+                                        doctor={selectedSlot?.doctorName || "Doctor"}
+                                        time={appointment.appointment_time_formatted || appointment.appointment_time}
+                                        appointmentType={
+                                            appointment.consultation_type === "video"
+                                                ? "Video"
+                                                : "In-Person"
+                                        }
+                                        status={(appointment.status_label || appointment.status) as any}
+                                        onClick={() => {
+                                            if (appointment.appointment_id) {
+                                                router.push(`/appointments/${appointment.appointment_id}`);
+                                            }
+                                        }}
+                                    />
+                                ))
+                            ) : (
+                                <div className="text-center py-10 border rounded-lg border-dashed text-muted-foreground">
+                                    <p className="text-sm">
+                                        {selectedSlot
+                                            ? "No appointments booked for this slot"
+                                            : "Select an OPD slot to view appointments"}
+                                    </p>
+                                </div>
+                            )}
                         </div>
 
                     </div>
