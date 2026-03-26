@@ -369,7 +369,7 @@ export function Header() {
                 {/* Footer Section */}
                 <div className="border-t border-border/60 p-3 bg-muted/10 shadow-[0_-4px_12px_rgba(0,0,0,0.02)]">
                   <Link
-                    href="/doctor/notifications"
+                    href="/notifications"
                     className="flex w-full items-center justify-center h-10 text-[11px] font-bold text-primary hover:bg-primary/10 rounded-md transition-all uppercase tracking-widest"
                   >
                     Manage all notifications
