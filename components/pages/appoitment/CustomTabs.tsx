@@ -56,7 +56,7 @@ const CustomTabs = ({
 
             {/* <TabsList className={cn("grid w-full grid-cols-4", tabsListClassName)}> */}
 
-            <TabsList className={cn("flex justify-center items-center w-full ", tabsListClassName)}>
+            <TabsList className={cn("flex justify-center items-center w-full gap-4", tabsListClassName)}>
 
                 {tabs.map((tab) => (
                     <TabsTrigger
@@ -67,7 +67,7 @@ const CustomTabs = ({
                             ['--tab-active-text' as string]: `var(--${color}-foreground)`,
                         }}
                         className={cn(
-                            "transition-all duration-200",
+                            "transition-all duration-200 px-6 py-3.5",
                             "data-[state=active]:bg-(--tab-active-bg)",
                             "data-[state=active]:text-(--tab-active-text)",
                             `hover:bg-${color}-50`,

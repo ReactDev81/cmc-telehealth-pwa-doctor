@@ -72,6 +72,7 @@ export default function AppointmentCard({
     const router = useRouter();
 
     // console.log("CLICK ID:", appointment.appointment_id);
+    console.log("showCallNow:", showCallNow);
 
     return (
         <Card className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
@@ -117,8 +118,6 @@ export default function AppointmentCard({
                                 </div>
                             </div>
 
-
-
                             {showCallNow ? (
                                 <Badge
                                     className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1.5 px-2.5 py-1 text-xs font-medium"
@@ -136,7 +135,7 @@ export default function AppointmentCard({
                                         appointment.status
                                     )} text-xs font-medium px-2 py-0.5 whitespace-nowrap`}
                                 >
-                                    {appointment.status_label}
+                                    {appointment.status_label || appointment.status}
                                 </Badge>
                             )
                             }
@@ -147,11 +146,12 @@ export default function AppointmentCard({
 
                 {/* 🔹 Date & Time */}
                 <div className="mt-4 space-y-1.5">
+
                     <div className="flex items-center gap-2 text-muted-foreground">
                         <Calendar className="h-3.5 w-3.5 shrink-0" />
                         <span className="text-small">
                             {appointment.appointment_date_formatted ||
-                                appointment.appointment_date || appointment.date }
+                                appointment.appointment_date || appointment.date}
                         </span>
                     </div>
 
@@ -172,7 +172,7 @@ export default function AppointmentCard({
                         className="flex-1 h-9"
                         onClick={(e) => {
                             e.stopPropagation();
-                            router.push(`/appointments/${appointment.appointment_id}`);
+                            router.push(`/appointments/${appointment.appointment_id || appointment.id}`);
                         }}
                     >
                         View
