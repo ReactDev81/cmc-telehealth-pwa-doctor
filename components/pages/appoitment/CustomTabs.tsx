@@ -7,7 +7,7 @@ import React from "react";
 
 export interface TabItem {
     key: string;
-    label: string;
+    label: React.ReactNode;
     content?: React.ReactNode;
 }
 

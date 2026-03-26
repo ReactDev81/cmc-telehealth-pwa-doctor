@@ -2,16 +2,26 @@ services:
   cmc-telehealth-pwa-doctor:
     build: .
     container_name: cmc-telehealth-pwa-doctor
+    working_dir: /app
     command: npm run dev -- -p 8000
-    restart: always
+    restart: unless-stopped
+
     volumes:
       - .:/app
-      - /app/node_modules
-      - /app/.next
+      - node_modules:/app/node_modules
+      - next_cache:/app/.next
+
     ports:
       - "8000:8000"
+
     environment:
       - WATCHPACK_POLLING=true
+      - CHOKIDAR_USEPOLLING=true
       - NODE_ENV=development
+
     env_file:
       - .env
+
+volumes:
+  node_modules:
+  next_cache:
