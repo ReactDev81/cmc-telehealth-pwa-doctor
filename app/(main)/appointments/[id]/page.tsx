@@ -47,7 +47,7 @@ export default function AppointmentDetail() {
         {
             key: "prescription",
             label: "Prescription",
-            content: <PrescriptionTab appointment={appointment} />,
+            content: <PrescriptionTab appointmentId={appointment.appointment_id} />,
         },
         {
             key: "review",

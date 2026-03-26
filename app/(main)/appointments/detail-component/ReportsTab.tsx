@@ -75,7 +75,7 @@ export default function Reports({ appointment }: { appointment: any }) {
                             onClick={() => window.open(report.file_url, "_blank")}
                         >
                             <ArrowUpRight className="h-4 w-4" />
-                            View Report
+                            View
                         </Button>
 
                     </CardHeader>

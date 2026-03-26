@@ -61,7 +61,7 @@ export default function PreviousTab({ appointment }: { appointment: any }) {
                             onClick={() => router.push(`/appointments/${item.id}`)}
                         >
                             <ArrowUpRight className="h-4 w-4" />
-                            Overview
+                           View
                         </Button>
                     </CardHeader>
 

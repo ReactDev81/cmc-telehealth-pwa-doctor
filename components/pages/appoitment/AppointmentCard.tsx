@@ -29,8 +29,8 @@ const getStatusColor = (status: string) => {
             return "status-failed";
         case "completed":
             return "status-completed";
-        case "pending":
-            return "status-pending";
+        case "rescheduled":
+            return "status-rescheduled";
         default:
             return "status-default";
     }
