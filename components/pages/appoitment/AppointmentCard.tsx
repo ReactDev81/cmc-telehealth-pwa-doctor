@@ -71,7 +71,7 @@ export default function AppointmentCard({
 
     const router = useRouter();
 
-    console.log("CLICK ID:", appointment.appointment_id);
+    // console.log("CLICK ID:", appointment.appointment_id);
 
     return (
         <Card className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
@@ -82,11 +82,11 @@ export default function AppointmentCard({
                     {/* Avatar */}
                     <Avatar className="h-12 w-12 shrink-0 border-2 border-primary/10">
                         <AvatarImage
-                            src={appointment.patient?.avatar || ""}
-                            alt={appointment.patient?.name || "Patient"}
+                            src={appointment.patient?.avatar || appointment?.patient_image || ""}
+                            alt={appointment.patient?.name || appointment?.patient_name || "Patient"}
                         />
                         <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                            {getInitials(appointment.patient?.name)}
+                            {getInitials(appointment.patient?.name || appointment?.patient_name)}
                         </AvatarFallback>
                     </Avatar>
 
@@ -98,7 +98,7 @@ export default function AppointmentCard({
                             {/* Left */}
                             <div className="flex-1 min-w-0">
                                 <h3 >
-                                    {appointment.patient?.name || "Unknown Patient"}
+                                    {appointment.patient?.name || appointment?.patient_name || "Unknown Patient"}
                                 </h3>
 
                                 <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
@@ -151,7 +151,7 @@ export default function AppointmentCard({
                         <Calendar className="h-3.5 w-3.5 shrink-0" />
                         <span className="text-small">
                             {appointment.appointment_date_formatted ||
-                                appointment.appointment_date}
+                                appointment.appointment_date || appointment.date }
                         </span>
                     </div>
 
@@ -159,7 +159,7 @@ export default function AppointmentCard({
                         <Clock className="h-3.5 w-3.5 shrink-0" />
                         <span className="text-small">
                             {appointment.appointment_time_formatted ||
-                                appointment.appointment_time}
+                                appointment.appointment_time || appointment.time}
                             {appointment.appointment_end_time_formatted &&
                                 ` - ${appointment.appointment_end_time_formatted}`}
                         </span>

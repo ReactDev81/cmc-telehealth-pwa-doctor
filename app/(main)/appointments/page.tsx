@@ -64,16 +64,15 @@ const AppointmentsContent = () => {
     const upcoming = appointments.filter((apt: any) => {
         const aptDate = new Date(apt.appointment_date);
         const todayDate = new Date();
-        todayDate.setHours(0, 0, 0, 0);
         return aptDate > todayDate;
     });
 
     const past = appointments.filter((apt: any) => {
         const aptDate = new Date(apt.appointment_date);
         const todayDate = new Date();
-        todayDate.setHours(0, 0, 0, 0);
         return aptDate < todayDate;
     });
+    console.log("PAST:", past);
 
     // ✅ Filters
     const applyFilters = (list: any[]) => {

@@ -124,7 +124,7 @@ export function Header() {
                     : "bg-background",
             )}
         >
-            <div className=" flex h-16 items-center justify-between px-4 sm:px-8 max-w-8xl mx-auto">
+            <div className=" flex h-16 items-center justify-between px-4 sm:px-8 container mx-auto">
                 {/* Logo and App Name */}
                 <Link href="/" className="flex items-center space-x-2">
                     <Image
