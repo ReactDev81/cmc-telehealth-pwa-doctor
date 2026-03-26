@@ -28,11 +28,11 @@ const AuthLayout = ({ title, subtitle, children }: AuthLayoutProps) => {
                     </div>
 
                     {/* Footer Links */}
-                    <div className="mt-6 text-center text-sm text-muted-foreground">
+                    {/* <div className="mt-6 text-center text-sm text-muted-foreground">
                         <Link href="/" className="hover:text-primary transition-colors">
                             ← Back to Home
                         </Link>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
