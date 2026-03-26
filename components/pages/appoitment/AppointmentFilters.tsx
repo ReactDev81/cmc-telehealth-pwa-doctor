@@ -36,6 +36,7 @@ export default function AppointmentFilters({
                         </div>
                     </div>
 
+
                     <div className="flex gap-2 rounded border">
                         <Select value={selectedFilter} onValueChange={setSelectedFilter}>
                             <SelectTrigger className="w-45">

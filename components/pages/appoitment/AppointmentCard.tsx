@@ -1,11 +1,18 @@
-// components/doctor/appointment/AppointmentCard.tsx
 "use client";
 
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Calendar, Clock, Video, Phone, MapPin, DollarSign, PhoneCall } from "lucide-react";
+import {
+    Calendar,
+    Clock,
+    Video,
+    Phone,
+    MapPin,
+    PhoneCall,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 interface AppointmentCardProps {
     appointment: any;
@@ -13,6 +20,7 @@ interface AppointmentCardProps {
     onCallNow?: () => void;
 }
 
+// ✅ Status Color Mapping (using global classes)
 const getStatusColor = (status: string) => {
     switch (status) {
         case "confirmed":
@@ -28,6 +36,7 @@ const getStatusColor = (status: string) => {
     }
 };
 
+// ✅ Consultation Icon
 const getConsultationIcon = (type: string) => {
     switch (type) {
         case "video":
@@ -42,6 +51,7 @@ const getConsultationIcon = (type: string) => {
     }
 };
 
+// ✅ Initials fallback
 const getInitials = (name: string) => {
     if (!name) return "?";
     return name
@@ -59,11 +69,14 @@ export default function AppointmentCard({
 }: AppointmentCardProps) {
     const showCallNow = appointment.call_now === true;
 
-    return (
-        <Card className="group hover:shadow-lg transition-all duration-300 cursor-pointer">
-            <CardContent>
+    const router = useRouter();
 
-                {/* Header Section */}
+    console.log("CLICK ID:", appointment.appointment_id);
+
+    return (
+        <Card className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+            <CardContent>
+                {/* 🔹 Header */}
                 <div className="flex gap-3">
 
                     {/* Avatar */}
@@ -79,31 +92,36 @@ export default function AppointmentCard({
 
                     {/* Patient Info */}
                     <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-2">
+
+                        <div className="flex items-start justify-between gap-2 flex-nowrap">
+
+                            {/* Left */}
                             <div className="flex-1 min-w-0">
-                                <h3 className="font-semibold text-base leading-tight truncate">
+                                <h3 >
                                     {appointment.patient?.name || "Unknown Patient"}
                                 </h3>
-                                <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
 
+                                <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
                                     <Badge
                                         variant="outline"
-                                        className="gap-1 text-xs font-medium px-2 py-0.5"
+                                        className="gap-1 text-xs font-medium px-2 py-0.5 shrink-0"
                                     >
                                         {getConsultationIcon(appointment.consultation_type)}
                                         <span>
                                             {appointment.consultation_type === "clinic"
                                                 ? "In-Person"
-                                                : appointment.consultation_type_label?.split(" ")[0] || "Video"}
+                                                : appointment.consultation_type_label?.split(" ")[0] ||
+                                                "Video"}
                                         </span>
                                     </Badge>
                                 </div>
                             </div>
 
-                            {/* Call Now Badge */}
+
+
                             {showCallNow ? (
                                 <Badge
-                                    className="bg-green-500 text-white hover:bg-green-600 cursor-pointer shrink-0 gap-1.5 px-2.5 py-1 text-xs font-medium"
+                                    className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1.5 px-2.5 py-1 text-xs font-medium"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         onCallNow?.();
@@ -114,45 +132,61 @@ export default function AppointmentCard({
                                 </Badge>
                             ) : (
                                 <Badge
-                                    className={`${getStatusColor(appointment.status)} text-xs font-medium px-2 py-0.5`}
+                                    className={`${getStatusColor(
+                                        appointment.status
+                                    )} text-xs font-medium px-2 py-0.5 whitespace-nowrap`}
                                 >
                                     {appointment.status_label}
                                 </Badge>
-                            )}
-                        </div>
-                    </div>
-                </div>
+                            )
+                            }
+                        </div >
+                    </div >
+                </div >
+                {/* 
 
-                {/* Date and Time Section */}
+                {/* 🔹 Date & Time */}
                 <div className="mt-4 space-y-1.5">
                     <div className="flex items-center gap-2 text-muted-foreground">
                         <Calendar className="h-3.5 w-3.5 shrink-0" />
-                        <span className="text-sm">
-                            {appointment.appointment_date_formatted || appointment.appointment_date}
+                        <span className="text-small">
+                            {appointment.appointment_date_formatted ||
+                                appointment.appointment_date}
                         </span>
                     </div>
+
                     <div className="flex items-center gap-2 text-muted-foreground">
                         <Clock className="h-3.5 w-3.5 shrink-0" />
-                        <span className="text-sm">
-                            {appointment.appointment_time_formatted || appointment.appointment_time}
+                        <span className="text-small">
+                            {appointment.appointment_time_formatted ||
+                                appointment.appointment_time}
                             {appointment.appointment_end_time_formatted &&
-                                ` - ${appointment.appointment_end_time_formatted}`
-                            }
+                                ` - ${appointment.appointment_end_time_formatted}`}
                         </span>
                     </div>
                 </div>
 
-                <div className="flex gap-3 mt-4">
-                    <Button className="flex-1">View</Button>
+                {/* 🔹 Actions */}
+                <div className="flex gap-3 mt-4 items-stretch">
+                    <Button
+                        className="flex-1 h-9"
+                        onClick={(e) => {
+                            e.stopPropagation();
+                            router.push(`/appointments/${appointment.appointment_id}`);
+                        }}
+                    >
+                        View
+                    </Button>
 
-                    {appointment.status !== "rescheduled" && (
-                        <Button className="flex-1" variant="outline">
-                            Reschedule
-                        </Button>
-                    )}
+                    {/* ✅ Hide for rescheduled + failed */}
+                    {appointment.status !== "rescheduled" &&
+                        appointment.status !== "failed" && (
+                            <Button className="flex-1 h-9" variant="outline">
+                                Reschedule
+                            </Button>
+                        )}
                 </div>
-
-            </CardContent>
-        </Card>
+            </CardContent >
+        </Card >
     );
 }

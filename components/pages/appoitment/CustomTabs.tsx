@@ -53,7 +53,11 @@ const CustomTabs = ({
     return (
         <Tabs value={activeTab} onValueChange={handleTabChange} className={cn("w-full", className)}>
 
-            <TabsList className={cn("grid w-full grid-cols-4", tabsListClassName)}>
+
+            {/* <TabsList className={cn("grid w-full grid-cols-4", tabsListClassName)}> */}
+
+            <TabsList className={cn("flex justify-center items-center w-full ", tabsListClassName)}>
+
                 {tabs.map((tab) => (
                     <TabsTrigger
                         key={tab.key}

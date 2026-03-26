@@ -10,3 +10,11 @@ export const fetchMyAppointments = async (
     });
     return data;
 };
+
+// detail page open 
+export const fetchAppointmentById = async (id: string) => {
+    const { data } = await api.get(`/appointments/${id}`);
+    console.log("dateil page data", data);
+    
+    return data;
+};
