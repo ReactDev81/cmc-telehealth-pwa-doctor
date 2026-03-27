@@ -3,7 +3,7 @@
 import { useParams } from "next/navigation";
 import { useState } from "react";
 
-import CustomTabs, { TabItem } from "@/components/pages/appoitment/CustomTabs";
+import CustomTabs, { TabItem } from "@/components/custom/CustomTabs";
 import { useAppointmentById } from "@/queries/useAppointmentId";
 import OverviewTab from "../detail-component/OverviewTab";
 import ReportsTab from "../detail-component/ReportsTab";
@@ -61,7 +61,7 @@ export default function AppointmentDetail() {
             <h1 className="heading-lg">Appointment Detail</h1>
 
             <AppointmentHeader appointment={appointment} />
-            
+
             <CustomTabs
                 tabs={tabs}
                 activeTab={activeTab}

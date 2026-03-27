@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import CustomTabs, { TabItem } from "@/components/pages/appoitment/CustomTabs";
+import CustomTabs, { TabItem } from "@/components/custom/CustomTabs";
 import { cn } from "@/lib/utils";
 import { useNotifications, useReadNotification } from "@/queries/notifications";
 import { NotificationItem } from "@/types/notification";

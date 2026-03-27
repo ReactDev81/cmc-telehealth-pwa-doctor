@@ -14,6 +14,8 @@ import {
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 import { getStatusColor } from "@/src/utils/getStatusColor";
+import { useState } from "react";
+import { RescheduleAppointmentDialog } from "./Reshedule-dialogbox";
 
 interface AppointmentCardProps {
     appointment: any;
@@ -53,74 +55,78 @@ export default function AppointmentCard({
     variant = "all",
     onCallNow,
 }: AppointmentCardProps) {
+    const [openRescheduleDialog, setOpenRescheduleDialog] = useState(false);
     const showCallNow = appointment.call_now === true;
 
     const router = useRouter();
 
+
+
     // button show hide in rescheduled", "failed", "completed base
     const shouldHideReschedule =
-        (variant === "past" && appointment.status === "completed") ||
-        ["failed", "rescheduled"].includes(appointment.status);
+        variant === "past" ||
+        ["failed", "rescheduled", "cancelled", "completed"].includes(appointment.status);
 
     // console.log("CLICK ID:", appointment.appointment_id);
     console.log("showCallNow:", showCallNow);
 
     return (
-        <Card className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
-            <CardContent>
-                {/* 🔹 Header */}
-                <div className="flex gap-3">
+        <>
+            <Card className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+                <CardContent>
+                    {/* 🔹 Header */}
+                    <div className="flex gap-3">
 
-                    {/* Avatar */}
-                    <Avatar className="h-12 w-12 shrink-0 border-2 border-primary/10">
-                        <AvatarImage
-                            src={appointment.patient?.avatar || appointment?.patient_image || ""}
-                            alt={appointment.patient?.name || appointment?.patient_name || "Patient"}
-                        />
-                        <AvatarFallback className="bg-primary/10 text-primary font-medium">
-                            {getInitials(appointment.patient?.name || appointment?.patient_name)}
-                        </AvatarFallback>
-                    </Avatar>
+                        {/* Avatar */}
+                        <Avatar className="h-12 w-12 shrink-0 border-2 border-primary/10">
+                            <AvatarImage
+                                src={appointment.patient?.avatar || appointment?.patient_image || ""}
+                                alt={appointment.patient?.name || appointment?.patient_name || "Patient"}
+                            />
+                            <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                                {getInitials(appointment.patient?.name || appointment?.patient_name)}
+                            </AvatarFallback>
+                        </Avatar>
 
-                    {/* Patient Info */}
-                    <div className="flex-1 min-w-0">
+                        {/* Patient Info */}
+                        <div className="flex-1 min-w-0">
 
-                        <div className="flex items-start justify-between gap-2 flex-nowrap">
+                            <div className="flex items-start justify-between gap-2 flex-nowrap">
 
-                            {/* Left */}
-                            <div className="flex-1 min-w-0">
-                                <h3 >
-                                    {appointment.patient?.name || appointment?.patient_name || "Unknown Patient"}
-                                </h3>
+                                {/* Left */}
+                                <div className="flex-1 min-w-0">
+                                    <h3 >
+                                        {appointment.patient?.name || appointment?.patient_name || "Unknown Patient"}
+                                    </h3>
 
-                                <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
-                                    <Badge
-                                        variant="outline"
-                                        className="gap-1 text-xs font-medium px-2 py-0.5 shrink-0"
-                                    >
-                                        {getConsultationIcon(appointment.consultation_type)}
-                                        <span>
-                                            {appointment.consultation_type === "clinic"
-                                                ? "In-Person"
-                                                : appointment.consultation_type_label?.split(" ")[0] ||
-                                                "Video"}
-                                        </span>
-                                    </Badge>
+                                    <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                                        <Badge
+                                            variant="outline"
+                                            className="gap-1 text-xs font-medium px-2 py-0.5 shrink-0"
+                                        >
+                                            {getConsultationIcon(appointment.consultation_type)}
+                                            <span>
+                                                {appointment.consultation_type === "clinic"
+                                                    ? "In-Person"
+                                                    : appointment.consultation_type_label?.split(" ")[0] ||
+                                                    "Video"}
+                                            </span>
+                                        </Badge>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {showCallNow ? (
-                                <Badge
-                                    className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1.5 px-2.5 py-1 text-xs font-medium"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onCallNow?.();
-                                    }}
-                                >
-                                    <PhoneCall className="h-3 w-3" />
-                                    Join Now
-                                </Badge>
-                            ) : (
+                                {showCallNow ? (
+                                    <Badge
+                                        className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1.5 px-2.5 py-1 text-xs font-medium"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onCallNow?.();
+                                        }}
+                                    >
+                                        <PhoneCall className="h-3 w-3" />
+                                        Join Now
+                                    </Badge>
+                                ) : (
                                     <Badge
                                         className={`${getStatusColor(
                                             "appointment",
@@ -129,55 +135,66 @@ export default function AppointmentCard({
                                     >
                                         {appointment.status_label || appointment.status}
                                     </Badge>
-                            )
-                            }
+                                )
+                                }
+                            </div >
                         </div >
                     </div >
-                </div >
-                {/* 
+                    {/* 
 
                 {/* 🔹 Date & Time */}
-                <div className="mt-4 space-y-1.5">
+                    <div className="mt-4 space-y-1.5">
 
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                        <Calendar className="h-3.5 w-3.5 shrink-0" />
-                        <span className="text-small">
-                            {appointment.appointment_date_formatted ||
-                                appointment.appointment_date || appointment.date}
-                        </span>
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                            <Calendar className="h-3.5 w-3.5 shrink-0" />
+                            <span className="text-small">
+                                {appointment.appointment_date_formatted ||
+                                    appointment.appointment_date || appointment.date}
+                            </span>
+                        </div>
+
+                        <div className="flex items-center gap-2 text-muted-foreground">
+                            <Clock className="h-3.5 w-3.5 shrink-0" />
+                            <span className="text-small">
+                                {appointment.appointment_time_formatted ||
+                                    appointment.appointment_time || appointment.time}
+                                {appointment.appointment_end_time_formatted &&
+                                    ` - ${appointment.appointment_end_time_formatted}`}
+                            </span>
+                        </div>
                     </div>
 
-                    <div className="flex items-center gap-2 text-muted-foreground">
-                        <Clock className="h-3.5 w-3.5 shrink-0" />
-                        <span className="text-small">
-                            {appointment.appointment_time_formatted ||
-                                appointment.appointment_time || appointment.time}
-                            {appointment.appointment_end_time_formatted &&
-                                ` - ${appointment.appointment_end_time_formatted}`}
-                        </span>
-                    </div>
-                </div>
-
-                {/* 🔹 Actions */}
-                <div className="flex gap-3 mt-4 items-stretch">
-                    <Button
-                        className="flex-1 h-9"
-                        onClick={(e) => {
-                            e.stopPropagation();
-                            router.push(`/appointments/${appointment.appointment_id || appointment.id}`);
-                        }}
-                    >
-                        View
-                    </Button>
-
-                    {/* ✅ Hide for rescheduled + failed */}
-                    {!shouldHideReschedule && (
-                        <Button className="flex-1 h-9" variant="outline">
-                            Reschedule
+                    {/* 🔹 Actions */}
+                    <div className="flex gap-3 mt-4 items-stretch">
+                        <Button
+                            className="flex-1 h-9"
+                            onClick={(e) => {
+                                e.stopPropagation();
+                                router.push(`/appointments/${appointment.appointment_id || appointment.id}`);
+                            }}
+                        >
+                            View
                         </Button>
-                    )}
-                </div>
-            </CardContent >
-        </Card >
+
+                        {/* ✅ Hide for rescheduled + failed */}
+                        {!shouldHideReschedule && (
+                            <Button
+                                className="h-9"
+                                variant="outline"
+                                onClick={() => setOpenRescheduleDialog(true)}
+                            >
+                                Reschedule
+                            </Button>
+                        )}
+                    </div>
+                </CardContent >
+            </Card >
+
+            <RescheduleAppointmentDialog
+                open={openRescheduleDialog}
+                onOpenChange={setOpenRescheduleDialog}
+            />
+
+        </>
     );
 }
