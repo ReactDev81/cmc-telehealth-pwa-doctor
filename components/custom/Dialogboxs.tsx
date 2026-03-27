@@ -31,7 +31,7 @@ export default function CustomDialog({
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
 
             {/* Box */}
             <div className="relative w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-xl">

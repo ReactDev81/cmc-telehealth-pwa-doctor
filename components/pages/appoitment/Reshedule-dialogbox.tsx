@@ -1,6 +1,7 @@
 "use client";
 
 import { getDoctorSlots } from "@/api/resheodule";
+import CustomDialog from "@/components/custom/Dialogboxs";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useAuth } from "@/context/userContext";
 import { rescheduleAppointment } from "@/mutations/reschedule";
@@ -21,7 +22,13 @@ export function RescheduleAppointmentDialog({
     const [selectedSlot, setSelectedSlot] = useState<any>(null); // ✅ selected time slot
     const [slots, setSlots] = useState<any[]>([]);
 
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [dialogData, setDialogData] = useState<{ title: string; description: string } | null>(null);
+    const [loading, setLoading] = useState(false);
+
     const { user } = useAuth();
+
+    
 
     useEffect(() => {
         if (open && user?.doctor_id) {
@@ -137,36 +144,69 @@ export function RescheduleAppointmentDialog({
 
                 {/* Book Button */}
                 <button
-                    disabled={!selectedSlot}
+                    disabled={!selectedSlot || loading}
                     onClick={async () => {
                         if (!selectedSlot) return;
 
-                        // Prepare payload
                         const payload = {
-                            appointment_id: appointmentId,// make sure slot has this
-                            availability_id: selectedSlot.id, // slot id
+                            appointment_id: appointmentId,
+                            availability_id: selectedSlot.id,
                             appointment_date: selectedSlot.date,
-                            appointment_time: selectedSlot.start_time,
+                            appointment_time: selectedSlot.booking_start_time,
                         };
 
-                
-                        console.log("Reschedule payload:", payload); // ✅ check in console
+                        console.log("Reschedule payload:", payload);
 
                         try {
+                            setLoading(true);
                             const res = await rescheduleAppointment(payload);
                             console.log("Reschedule response:", res);
-                            // Optionally close dialog or show toast here
-                        } catch (err) {
+
+                            if (res.success) {
+                                setDialogData({
+                                    title: "Appointment Rescheduled",
+                                    description: res.message || "Your appointment has been successfully rescheduled.",
+                                });
+                                setDialogOpen(true);
+                            } else {
+                                // Optional: handle API returning success: false
+                                setDialogData({
+                                    title: "Error",
+                                    description: res.message || "Something went wrong.",
+                                });
+                                setDialogOpen(true);
+                            }
+                        } catch (err: any) {
                             console.error("Error rescheduling:", err);
+                            setDialogData({
+                                title: "Error",
+                                description:
+                                    err.response?.data?.message || "Failed to reschedule appointment.",
+                            });
+                            setDialogOpen(true);
+                        } finally {
+                            setLoading(false);
                         }
                     }}
                     className={`w-full mt-6 py-3 rounded-xl font-semibold transition ${selectedSlot
-                            ? "bg-green-800 hover:bg-green-700 text-white"
-                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                        ? "bg-green-800 hover:bg-green-700 text-white"
+                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
                         }`}
                 >
-                    Reschedule
+                    {loading ? "Rescheduling..." : "Reschedule"}
                 </button>
+
+                {dialogData && (
+                    <CustomDialog
+                        open={dialogOpen}
+                        onClose={() => setDialogOpen(false)}
+                        type="success"
+                        title={dialogData.title}
+                        description={dialogData.description}
+                        confirmText="OK"
+                        onConfirm={() => setDialogOpen(false)}
+                    />
+                )}
             </DialogContent>
         </Dialog>
     );
