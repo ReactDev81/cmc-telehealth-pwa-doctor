@@ -1,4 +1,5 @@
 "use client";
+
 import {
   Avatar,
   AvatarFallback,
@@ -12,7 +13,6 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  ScrollArea,
   Separator,
   Sheet,
   SheetContent,
@@ -23,17 +23,11 @@ import {
 import { useAuth } from "@/context/userContext";
 import { cn } from "@/lib/utils";
 import icon from "@/public/assets/icon/logo-light.png";
-import { useNotifications, useReadNotification, useUnreadCount } from "@/queries/notifications";
+import { NotificationDropdown } from "./NotificationDropdown";
 import type { NavItem } from "@/types/header";
 import {
-  Bell,
   Calendar,
-  ChevronDown,
-  CheckCircle2,
-  Clock,
-  FileText,
   LayoutDashboard,
-  Loader2,
   LogOut,
   Menu,
   MessageSquare,
@@ -44,11 +38,14 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
   // Use actual media query for responsive check
   const [isDesktop, setIsDesktop] = useState(true);
+
   useEffect(() => {
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 1024); // lg breakpoint
@@ -57,6 +54,7 @@ export function Header() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
+
   // Listen scroll for sticky effect (optional, or remove if unused)
   useEffect(() => {
     const handleScroll = () => {
@@ -65,74 +63,16 @@ export function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
-  const toggleExpand = (e: React.MouseEvent, id: string) => {
-    e.preventDefault();
-    e.stopPropagation();
-    setExpandedId(expandedId === id ? null : id);
-  };
-  const getNotificationTypeIcon = (group: string) => {
-    switch (group?.toLowerCase()) {
-      case "appointment":
-        return <Calendar className="h-4 w-4" />;
-      case "review":
-        return <Settings className="h-4 w-4 text-amber-500" />;
-      case "document":
-        return <FileText className="h-4 w-4" />;
-      case "availability":
-        return <Clock className="h-4 w-4" />;
-      default:
-        return <Bell className="h-4 w-4 text-primary" />;
-    }
-  };
-  const getNotificationTypeColor = (group: string) => {
-    switch (group?.toLowerCase()) {
-      case "appointment":
-        return "text-blue-600";
-      case "review":
-        return "text-amber-500";
-      case "document":
-        return "text-rose-600";
-      case "availability":
-        return "text-emerald-600";
-      default:
-        return "text-primary";
-    }
-  };
-  const formatNotificationTime = (date: string) => {
-    const now = new Date();
-    const then = new Date(date);
-    const diff = now.getTime() - then.getTime();
-    const minutes = Math.floor(diff / 60000);
-    const hours = Math.floor(minutes / 60);
-    const days = Math.floor(hours / 24);
-    if (minutes < 1) return "just now";
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    return `${days}d ago`;
-  };
+
   const pathname = usePathname();
   const { user, initializing, logout } = useAuth();
-  const { data: notificationsData, isLoading } = useNotifications();
-  const markAsReadMutation = useReadNotification();
-  const unreadCount = notificationsData?.meta?.total_unread ?? 0;
-  const notifications = notificationsData?.data ?? [];
-  const topFiveNotifications = notifications.slice(0, 5);
-  // For handling notification "read" actions
-  const [readingId, setReadingId] = useState<string | null>(null);
-  const handleNotificationClick = async (id: string) => {
-    setReadingId(id);
-    try {
-      await markAsReadMutation.mutateAsync(id);
-    } finally {
-      setReadingId(null);
-    }
-  };
+
   // For notification label (Name fallback)
   const name =
     user && (user.first_name || user.last_name)
       ? `${user.role === "doctor" ? "Dr. " : ""}${user.first_name ?? ""} ${user.last_name ?? ""}`.trim()
       : "User";
+
   const navItems: NavItem[] = [
     {
       title: "Dashboard",
@@ -155,6 +95,7 @@ export function Header() {
       icon: <MessageSquare className="h-4 w-4" />,
     },
   ];
+
   return (
     <header
       className={cn(
@@ -176,6 +117,7 @@ export function Header() {
             priority
           />
         </Link>
+
         {isDesktop && (
           <nav className="flex items-center gap-4">
             {navItems.map((item) => (
@@ -194,7 +136,7 @@ export function Header() {
                 {item.badge ? (
                   <Badge
                     variant={pathname === item.href ? "secondary" : "default"}
-                    className="ml-auto flex h-5 w-5 items-center justify-center rounded-full p-0"
+                    className="ml-auto flex h-5 w-5 items-center justify-center text-[10px] rounded-full p-4"
                   >
                     {Number(item.badge) > 99 ? "99+" : item.badge}
                   </Badge>
@@ -203,102 +145,10 @@ export function Header() {
             ))}
           </nav>
         )}
+
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon" className="relative">
-                <Bell className="h-5 w-5" />
-                {unreadCount > 0 && (
-                  <span className="absolute -top-1 -right-1 flex h-4.5 w-4.5 items-center justify-center rounded-full bg-destructive text-[10px] text-white">
-                    {unreadCount > 9 ? "9+" : unreadCount}
-                  </span>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent
-              align="end"
-              className="w-[calc(100vw-2rem)] sm:w-80"
-            >
-              <DropdownMenuLabel className="flex items-center justify-between">
-                <span>Notifications</span>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <ScrollArea className="h-[300px]">
-                {isLoading ? (
-                  <div className="flex items-center justify-center p-4">
-                    <Loader2 className="h-4 w-4 animate-spin" />
-                  </div>
-                ) : topFiveNotifications.length > 0 ? (
-                  topFiveNotifications.map((notification) => (
-                    <DropdownMenuItem
-                      key={notification.id}
-                      className={cn(
-                        "flex cursor-pointer flex-col items-start gap-2 p-3",
-                        !notification.is_read && "bg-accent/50"
-                      )}
-                      onClick={() => handleNotificationClick(notification.id)}
-                    >
-                      <div className="flex w-full items-start justify-between gap-2">
-                        <div className="flex min-w-0 flex-1 items-center gap-2">
-                          <span
-                            className={cn(
-                              "shrink-0",
-                              getNotificationTypeColor(notification.group)
-                            )}
-                          >
-                            {getNotificationTypeIcon(notification.group)}
-                          </span>
-                          <span className="truncate text-sm font-medium">
-                            {notification.title}
-                          </span>
-                        </div>
-                        <span className="shrink-0 text-xs whitespace-nowrap text-muted-foreground">
-                          {formatNotificationTime(notification.created_at)}
-                        </span>
-                      </div>
-                      <p className="line-clamp-2 text-xs text-muted-foreground">
-                        {notification.desc}
-                      </p>
-                      <div className="flex w-full items-center justify-between">
-                        <Badge
-                          variant="outline"
-                          className={cn(
-                            "mt-1 text-xs",
-                            getNotificationTypeColor(notification.group)
-                          )}
-                        >
-                          {notification.group}
-                        </Badge>
-                        {readingId === notification.id ? (
-                          <Loader2 className="h-3 w-3 animate-spin" />
-                        ) : (
-                          notification.is_read && (
-                            <Badge variant="secondary" className="text-[10px]">
-                              Read
-                            </Badge>
-                          )
-                        )}
-                      </div>
-                    </DropdownMenuItem>
-                  ))
-                ) : (
-                  <div className="p-4 text-center text-muted-foreground">
-                    No notifications
-                  </div>
-                )}
-              </ScrollArea>
-              <DropdownMenuSeparator />
-              <DropdownMenuItem asChild>
-                <Link
-                  href="/notifications"
-                  className="w-full justify-center"
-                >
-                  View all notifications
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <NotificationDropdown />
           {user || initializing ? (
             <div className="flex items-center gap-3 pl-2 border-l">
               <div className="flex-col text-right hidden lg:flex">
@@ -326,6 +176,7 @@ export function Header() {
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
+
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-row items-center justify-between min-w-0">
@@ -347,7 +198,9 @@ export function Header() {
                         )}
                       </div>
                     </DropdownMenuLabel>
+
                     <DropdownMenuSeparator />
+
                     <DropdownMenuGroup>
                       <DropdownMenuItem asChild>
                         <Link href="/profile" className="cursor-pointer">
@@ -365,7 +218,9 @@ export function Header() {
                         </Link>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
+
                     <DropdownMenuSeparator />
+
                     <DropdownMenuItem
                       className="cursor-pointer text-destructive focus:text-destructive"
                       onClick={logout}
@@ -376,6 +231,7 @@ export function Header() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
+
                 {!isDesktop && (
                   <Sheet
                     open={isMobileMenuOpen}
@@ -386,6 +242,7 @@ export function Header() {
                         <Menu className="h-5 w-5" />
                       </Button>
                     </SheetTrigger>
+
                     <SheetContent
                       side="right"
                       className="w-[300px] sm:w-[400px]"
@@ -407,7 +264,9 @@ export function Header() {
                           </div>
                         </SheetTitle>
                       </SheetHeader>
+
                       <Separator className="my-4" />
+
                       <nav className="flex flex-col gap-2">
                         {navItems.map((item) => (
                           <Link

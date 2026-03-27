@@ -292,7 +292,7 @@ export default function NotificationsPage() {
         tabs={tabs}
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        tabsListClassName={cn("max-w-2xl w-max-sm mx-auto")}
+        tabsListClassName={cn("max-w-2xl")}
       />
     </>
   );
