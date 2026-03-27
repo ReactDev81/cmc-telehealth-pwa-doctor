@@ -151,6 +151,7 @@ export function Header() {
           <NotificationDropdown />
           {user || initializing ? (
             <div className="flex items-center gap-3 pl-2 border-l">
+
               <div className="flex-col text-right hidden lg:flex">
                 <span className="text-sm font-semibold leading-none">
                   {initializing ? "unknown name" : name}
@@ -161,6 +162,7 @@ export function Header() {
                     : user?.email || "healthcare@info.test"}
                 </span>
               </div>
+
               <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center border border-border overflow-hidden ring-2 ring-transparent hover:ring-primary/20 transition-all cursor-pointer">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
@@ -178,26 +180,6 @@ export function Header() {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent className="w-56" align="end" forceMount>
-                    <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-row items-center justify-between min-w-0">
-                        <div className="flex flex-col space-y-1">
-                          <p className="text-sm leading-none font-medium truncate">
-                            {initializing ? "" : name}
-                          </p>
-                          <p className="text-xs leading-none text-muted-foreground truncate">
-                            {initializing ? "" : user?.email || "Not signed in"}
-                          </p>
-                        </div>
-                        {!initializing && user?.role && (
-                          <Badge
-                            variant="outline"
-                            className="ml-2 h-5 w-fit capitalize"
-                          >
-                            {user.role}
-                          </Badge>
-                        )}
-                      </div>
-                    </DropdownMenuLabel>
 
                     <DropdownMenuSeparator />
 
@@ -206,15 +188,6 @@ export function Header() {
                         <Link href="/profile" className="cursor-pointer">
                           <UserIcon className="mr-2 h-4 w-4" />
                           <span>Profile</span>
-                        </Link>
-                      </DropdownMenuItem>
-                      <DropdownMenuItem asChild>
-                        <Link
-                          href="/doctor/settings"
-                          className="cursor-pointer"
-                        >
-                          <Settings className="mr-2 h-4 w-4" />
-                          <span>Settings</span>
                         </Link>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>

@@ -53,6 +53,8 @@ export default function TransactionsPage() {
         loading={isLoading || isFetching}
         pageCount={pageCount}
         currentPage={page}
+        totalItems={data?.pagination?.total ?? 0}
+        itemsPerPage={per_page}
         onPageChange={setPage}
         enableSearch={true}
         searchValue={searchInput}

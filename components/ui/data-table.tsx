@@ -21,7 +21,28 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, ChevronLeft, ChevronRight } from "lucide-react";
+import { Loader2, X } from "lucide-react";
+import PaginationControls from "@/components/pagination/PaginationControls";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+export interface FilterOption {
+  label: string;
+  value: string;
+}
+
+export interface DataTableFilter {
+  column: string;
+  label: string;
+  options: FilterOption[];
+  value?: string;
+  onChange: (value: string) => void;
+}
 
 interface DataTableProps<T> {
   columns: ColumnDef<T>[];
@@ -31,11 +52,16 @@ interface DataTableProps<T> {
 
   pageCount?: number;
   currentPage?: number;
+  totalItems?: number;
+  itemsPerPage?: number;
   onPageChange?: (page: number) => void;
 
   enableSearch?: boolean;
   searchValue?: string;
   onSearch?: (value: string) => void;
+
+  filters?: DataTableFilter[];
+  onClearFilters?: () => void;
 }
 
 export function DataTable<T>({
@@ -44,35 +70,77 @@ export function DataTable<T>({
   loading = false,
   pageCount = 1,
   currentPage = 1,
+  totalItems = 0,
+  itemsPerPage = 10,
   onPageChange,
   enableSearch = true,
   searchValue = "",
   onSearch,
+  filters = [],
+  onClearFilters,
 }: DataTableProps<T>) {
   const table = useReactTable({
     data,
     columns,
     pageCount,
     manualPagination: true,
+    manualFiltering: true,
+    manualSorting: true,
     state: {},
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
 
-  const canPreviousPage = currentPage > 1;
-  const canNextPage = currentPage < pageCount;
 
   return (
     <div className="space-y-4">
-      {/* Search */}
-      {enableSearch && (
-        <Input
-          placeholder="Search..."
-          value={searchValue}
-          onChange={(e) => onSearch?.(e.target.value)}
-        />
-      )}
+      {/* Toolbar: Search + Filters */}
+      <div className="flex flex-wrap items-center gap-3">
+        {enableSearch && (
+          <div className="flex-1 min-w-[200px]">
+            <Input
+              placeholder="Search..."
+              value={searchValue}
+              onChange={(e) => onSearch?.(e.target.value)}
+              className="h-8"
+            />
+          </div>
+        )}
+
+        <div className="flex flex-wrap items-center gap-2">
+          {filters.map((filter) => (
+            <Select
+              key={filter.column}
+              value={filter.value || "all"}
+              onValueChange={filter.onChange}
+            >
+              <SelectTrigger className="h-8 w-fit min-w-[130px]">
+                <SelectValue placeholder={filter.label} />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All {filter.label}</SelectItem>
+                {filter.options.map((option) => (
+                  <SelectItem key={option.value} value={option.value}>
+                    {option.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          ))}
+
+          {onClearFilters && (
+            <Button
+              variant="ghost"
+              onClick={onClearFilters}
+              className="h-8 px-2 lg:px-3 text-muted-foreground"
+            >
+              Reset
+              <X className="ml-2 h-4 w-4" />
+            </Button>
+          )}
+        </div>
+      </div>
 
       {/* Table */}
       <div className="border rounded-lg overflow-hidden bg-white [&_td]:border-b [&_th]:border-b">
@@ -138,27 +206,16 @@ export function DataTable<T>({
       </div>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center">
-        <Button
-          variant="outline"
-          onClick={() => onPageChange?.(currentPage - 1)}
-          disabled={!canPreviousPage || loading}
-        >
-          <ChevronLeft className="h-4 w-4" />
-        </Button>
+      {onPageChange && (
+        <PaginationControls
+          currentPage={currentPage}
+          totalPages={pageCount}
+          totalItems={totalItems}
+          itemsPerPage={itemsPerPage}
+          onPageChange={onPageChange}
+        />
+      )}
 
-        <p className="text-sm text-muted-foreground">
-          Page {currentPage} of {pageCount}
-        </p>
-
-        <Button
-          variant="outline"
-          onClick={() => onPageChange?.(currentPage + 1)}
-          disabled={!canNextPage || loading}
-        >
-          <ChevronRight className="h-4 w-4" />
-        </Button>
-      </div>
     </div>
   );
 }
