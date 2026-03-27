@@ -19,7 +19,7 @@
 
 "use client";
 
-import StatsCard from "@/components/home/stats-card";
+import StatsCard from "@/components/pages/home/stats-card";
 import AppointmentCard from "@/components/pages/appoitment/AppointmentCard";
 import { useAuth } from "@/context/userContext";
 import { useDoctorHome } from "@/queries/useHome";
@@ -40,7 +40,7 @@ import {
     CalendarCheck,
     Star as StarIcon
 } from "lucide-react";
-import QuickActionsCard, { QuickActionItem } from "@/components/home/quick-actions-card";
+import QuickActionsCard, { QuickActionItem } from "@/components/pages/home/quick-actions-card";
 import NotificationsCardContent from "@/components/ui/notifications-card-content";
 
 const Home = () => {
@@ -107,25 +107,25 @@ const Home = () => {
             id: 1,
             title: "All Patients",
             icon: <Calendar className="h-6 w-6 text-primary" />,
-            href: "/doctor/dashboard/all-patients",
+            href: "/all-patients",
         },
         {
             id: 2,
             title: "Patient Reports",
             icon: <Users className="h-6 w-6 text-primary" />,
-            href: "/doctor/dashboard/reports",
+            href: "/patient-reports",
         },
         {
             id: 3,
             title: "Medicine Inventory",
             icon: <MessageSquare className="h-6 w-6 text-primary" />,
-            href: "/doctor/dashboard/inventory",
+            href: "/medicine-inventory",
         },
         {
             id: 4,
             title: "Payment History",
             icon: <CreditCard className="h-6 w-6 text-primary" />,
-            href: "/doctor/dashboard/payments",
+            href: "/payment-history",
         },
         {
             id: 5,
