@@ -6,23 +6,24 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePrescriptionByAppointmentId } from "@/queries/usePrescriptionByAppointmentId";
+import { getStatusColor } from "@/src/utils/getStatusColor";
 
 // Accordion Item Component
 function MedicineAccordionItem({ medicine, index }: { medicine: any; index: number }) {
     const [isOpen, setIsOpen] = useState(false);
 
-    const getStatusColor = (status: string) => {
-        switch (status?.toLowerCase()) {
-            case "ongoing":
-                return "bg-green-100 text-green-800";
-            case "completed":
-                return "bg-blue-100 text-blue-800";
-            case "cancelled":
-                return "bg-red-100 text-red-800";
-            default:
-                return "bg-gray-100 text-gray-800";
-        }
-    };
+    // const getStatusColor = (status: string) => {
+    //     switch (status?.toLowerCase()) {
+    //         case "ongoing":
+    //             return "bg-green-100 text-green-800";
+    //         case "completed":
+    //             return "bg-blue-100 text-blue-800";
+    //         case "cancelled":
+    //             return "bg-red-100 text-red-800";
+    //         default:
+    //             return "bg-gray-100 text-gray-800";
+    //     }
+    // };
 
     const getMealLabel = (meal: string) => {
         switch (meal) {
@@ -55,7 +56,7 @@ function MedicineAccordionItem({ medicine, index }: { medicine: any; index: numb
                                     <Badge variant="outline" className="text-xs">
                                         {medicine.type}
                                     </Badge>
-                                    <Badge className={getStatusColor(medicine.status)}>
+                                    <Badge className={getStatusColor("session", medicine.status)}>
                                         {medicine.status}
                                     </Badge>
                                 </div>
@@ -160,7 +161,7 @@ export default function PrescriptionTab({ appointmentId }: { appointmentId: stri
 
     return (
         <div className="space-y-6">
-           
+
             {/* Medicines List - Accordion */}
             {medicines.length > 0 && (
                 <div className="space-y-3">
@@ -194,7 +195,7 @@ export default function PrescriptionTab({ appointmentId }: { appointmentId: stri
                         </CardTitle>
                     </CardHeader>
 
-                 
+
                     <CardContent className="space-y-4">
                         {instructionsByDoctor && (
                             <div className="flex items-start gap-3 p-3 bg-muted/30 rounded-lg">

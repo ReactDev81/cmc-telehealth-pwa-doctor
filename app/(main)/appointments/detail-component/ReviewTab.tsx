@@ -47,7 +47,7 @@ export default function ReviewTab({ appointment }: { appointment: any }) {
                                     key={star}
                                     className={`h-6 w-6 cursor-pointer transition ${(hover || rating) >= star
                                             ? "text-yellow-400 fill-yellow-400"
-                                            : "text-gray-300"
+                                        : "text-primary"
                                         }`}
                                     onClick={() => setRating(star)}
                                     onMouseEnter={() => setHover(star)}
@@ -99,7 +99,7 @@ export default function ReviewTab({ appointment }: { appointment: any }) {
                                                 key={star}
                                                 className={`h-4 w-4 ${star <= rev.rating
                                                         ? "text-yellow-400 fill-yellow-400"
-                                                        : "text-gray-300"
+                                                    : "text-primary"
                                                     }`}
                                             />
                                         ))}

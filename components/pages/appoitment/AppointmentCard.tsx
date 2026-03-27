@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
+import { getStatusColor } from "@/src/utils/getStatusColor";
 
 interface AppointmentCardProps {
     appointment: any;
@@ -20,21 +21,6 @@ interface AppointmentCardProps {
     onCallNow?: () => void;
 }
 
-// ✅ Status Color Mapping (using global classes)
-const getStatusColor = (status: string) => {
-    switch (status) {
-        case "confirmed":
-            return "status-confirmed";
-        case "failed":
-            return "status-failed";
-        case "completed":
-            return "status-completed";
-        case "rescheduled":
-            return "status-rescheduled";
-        default:
-            return "status-default";
-    }
-};
 
 // ✅ Consultation Icon
 const getConsultationIcon = (type: string) => {
@@ -70,6 +56,11 @@ export default function AppointmentCard({
     const showCallNow = appointment.call_now === true;
 
     const router = useRouter();
+
+    // button show hide in rescheduled", "failed", "completed base
+    const shouldHideReschedule =
+        (variant === "past" && appointment.status === "completed") ||
+        ["failed", "rescheduled"].includes(appointment.status);
 
     // console.log("CLICK ID:", appointment.appointment_id);
     console.log("showCallNow:", showCallNow);
@@ -130,13 +121,14 @@ export default function AppointmentCard({
                                     Join Now
                                 </Badge>
                             ) : (
-                                <Badge
-                                    className={`${getStatusColor(
-                                        appointment.status
-                                    )} text-xs font-medium px-2 py-0.5 whitespace-nowrap`}
-                                >
-                                    {appointment.status_label || appointment.status}
-                                </Badge>
+                                    <Badge
+                                        className={`${getStatusColor(
+                                            "appointment",
+                                            appointment.status
+                                        )} text-xs font-medium px-2 py-0.5 whitespace-nowrap`}
+                                    >
+                                        {appointment.status_label || appointment.status}
+                                    </Badge>
                             )
                             }
                         </div >
@@ -179,12 +171,11 @@ export default function AppointmentCard({
                     </Button>
 
                     {/* ✅ Hide for rescheduled + failed */}
-                    {appointment.status !== "rescheduled" &&
-                        appointment.status !== "failed" && (
-                            <Button className="flex-1 h-9" variant="outline">
-                                Reschedule
-                            </Button>
-                        )}
+                    {!shouldHideReschedule && (
+                        <Button className="flex-1 h-9" variant="outline">
+                            Reschedule
+                        </Button>
+                    )}
                 </div>
             </CardContent >
         </Card >

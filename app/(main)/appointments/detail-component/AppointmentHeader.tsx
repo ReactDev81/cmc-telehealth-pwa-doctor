@@ -7,7 +7,8 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, Video } from "lucide-react";
+import { Calendar, CheckCircle, Video } from "lucide-react";
+import { getStatusColor } from "@/src/utils/getStatusColor";
 
 const getInitials = (name: string) => {
     if (!name) return "?";
@@ -53,8 +54,12 @@ export default function AppointmentHeader({ appointment }: { appointment: any })
                         </span>
 
                         {/* Status */}
-                        <Badge className="bg-green-100 text-green-700 hover:bg-green-100 gap-1">
-                            <CheckCircle className="h-3 w-3" />
+                        <Badge
+                            className={`${getStatusColor(
+                                "appointment",
+                                appointment?.status
+                            )} gap-1`}
+                        >
                             {appointment?.status_label || "Completed"}
                         </Badge>
 
@@ -63,6 +68,31 @@ export default function AppointmentHeader({ appointment }: { appointment: any })
                             <Video className="h-3 w-3" />
                             {schedule?.consultation_type_label || "Video Consultation"}
                         </Badge>
+                    </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                    <div className="flex items-start gap-3">
+                        <div className="p-2 rounded-lg bg-primary/10">
+                            <Calendar className="h-4 w-4 text-primary" />
+                        </div>
+                        <div>
+                            <p className="text-xs text-muted-foreground uppercase tracking-wide">Date</p>
+                            <p className="font-medium mt-0.5">
+                                {schedule?.date_formatted || appointment?.appointment_date_formatted}
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Time */}
+                    <div className="flex items-center gap-1 mt-5">
+                        <span className="font-medium">|</span>
+
+                        <p className="font-medium">
+                            {schedule?.time_formatted || appointment?.appointment_time_formatted}
+                            {appointment?.appointment_end_time_formatted &&
+                                ` - ${appointment.appointment_end_time_formatted}`}
+                        </p>
                     </div>
                 </div>
 

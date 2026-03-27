@@ -10,24 +10,25 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { FileText, Calendar, ArrowUpRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getStatusColor } from "@/src/utils/getStatusColor";
 
 export default function Reports({ appointment }: { appointment: any }) {
     const reports = appointment?.medical_reports || [];
 
-    const getReportStatusColor = (status: string) => {
-        switch (status) {
-            case "shared":
-                return "bg-blue-100 text-blue-700 border-blue-200";
-            case "pending":
-                return "bg-yellow-100 text-yellow-700 border-yellow-200";
-            case "rejected":
-                return "bg-red-100 text-red-700 border-red-200";
-            case "approved":
-                return "bg-green-100 text-green-700 border-green-200";
-            default:
-                return "bg-gray-100 text-gray-700 border-gray-200";
-        }
-    };
+    // const getReportStatusColor = (status: string) => {
+    //     switch (status) {
+    //         case "shared":
+    //             return "bg-blue-100 text-blue-700 border-blue-200";
+    //         case "pending":
+    //             return "bg-yellow-100 text-yellow-700 border-yellow-200";
+    //         case "rejected":
+    //             return "bg-red-100 text-red-700 border-red-200";
+    //         case "approved":
+    //             return "bg-green-100 text-green-700 border-green-200";
+    //         default:
+    //             return "bg-gray-100 text-gray-700 border-gray-200";
+    //     }
+    // };
 
     // ✅ EMPTY STATE
     if (!reports.length) {
@@ -63,7 +64,10 @@ export default function Reports({ appointment }: { appointment: any }) {
                             <Badge variant="outline">{report.type_label}</Badge>
                             <Badge
                                 variant="outline"
-                                className={`${getReportStatusColor(report.status)} text-xs font-medium px-2 py-0.5`}
+                                className={`${getStatusColor(
+                                    "report",
+                                    report.status
+                                )} text-xs font-medium px-2 py-0.5`}
                             >
                                 {report.status}
                             </Badge>

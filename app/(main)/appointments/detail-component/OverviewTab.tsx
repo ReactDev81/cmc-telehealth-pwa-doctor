@@ -18,13 +18,15 @@ import {
     AlertCircle,
     Copy,
     UserCircle,
+    ArrowBigDownDash,
 } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Activity } from "react";
+import { Activity } from "lucide-react";
+import { getStatusColor } from "@/src/utils/getStatusColor";
 
 export default function OverviewTab({ appointment }: { appointment: any }) {
     const patient = appointment?.patient || {};
@@ -36,38 +38,33 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
         switch (status) {
             case "completed":
                 return {
-                    icon: <CheckCircle className="h-4 w-4 text-green-500" />,
-                    badgeClass: "bg-green-100 text-green-700 hover:bg-green-100",
-                    smallIcon: <CheckCircle className="h-3 w-3 mr-1" />,
+                    icon: <CheckCircle className="h-4 w-4 text-primar" />,
+                  
                 };
 
             case "confirmed":
                 return {
-                    icon: <Calendar className="h-4 w-4 text-blue-500" />,
-                    badgeClass: "bg-blue-100 text-blue-700 hover:bg-blue-100",
-                    smallIcon: <Calendar className="h-3 w-3 mr-1" />,
+                    icon: <Calendar className="h-4 w-4 text-primar" />,
+                  
                 };
 
             case "cancelled":
             case "failed":
                 return {
-                    icon: <XCircle className="h-4 w-4 text-red-500" />,
-                    badgeClass: "bg-red-100 text-red-700 hover:bg-red-100",
-                    smallIcon: <XCircle className="h-3 w-3 mr-1" />,
+                    icon: <XCircle className="h-4 w-4 text-primar" />,
+                   
                 };
 
             case "pending":
                 return {
-                    icon: <Clock className="h-4 w-4 text-yellow-500" />,
-                    badgeClass: "bg-yellow-100 text-yellow-700 hover:bg-yellow-100",
-                    smallIcon: <Clock className="h-3 w-3 mr-1" />,
+                    icon: <Clock className="h-4 w-4 text-primar" />,
+                   
                 };
 
             default:
                 return {
-                    icon: <Clock className="h-4 w-4 text-gray-400" />,
-                    badgeClass: "bg-gray-100 text-gray-700",
-                    smallIcon: <Clock className="h-3 w-3 mr-1" />,
+                    icon: <Clock className="h-4 w-4 text-primary" />,
+                   
                 };
         }
     };
@@ -96,11 +93,9 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
                             <div className="space-y-4">
                                 {/* Main Complaint */}
                                 <div className="flex ml-7 gap-3">
-                                    {/* <div className="p-2 rounded-lg bg-orange-100">
-                                        <AlertCircle className="h-4 w-4 text-orange-600" />
-                                    </div> */}
+
                                     <div className="flex-1">
-                                        
+
                                         <p className="text-base font-medium mt-1 text-foreground">
                                             {patient?.problem || patient?.chief_complaint}
                                         </p>
@@ -156,10 +151,7 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
                                 )}
                             </div>
                         ) : (
-                            <div className="flex items-center gap-3 p-4 rounded-lg bg-muted/30">
-                                <div className="p-2 rounded-lg bg-muted">
-                                    <FileText className="h-4 w-4 text-muted-foreground" />
-                                </div>
+                            <div className="flex items-center gap-3 rounded-lg bg-muted/30">
                                 <p className="text-muted-foreground">No problem/complaint recorded</p>
                             </div>
                         )}
@@ -235,8 +227,12 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
                                     </p>
 
                                     <div className="mt-0.5">
-                                        <Badge className={statusConfig.badgeClass}>
-                                            {statusConfig.smallIcon}
+                                        <Badge
+                                            className={`${getStatusColor(
+                                                "appointment",
+                                                appointment.status
+                                            )}`}
+                                        >
                                             {appointment?.status_label}
                                         </Badge>
                                     </div>
@@ -357,7 +353,7 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
 
                                 {/* Icon */}
                                 <div className="p-2 rounded-lg bg-gray-200">
-                                    <Mail className="h-4 w-4" />
+                                    <Mail className="h-4 w-4 text-primary" />
                                 </div>
 
                                 {/* Content */}
@@ -388,7 +384,7 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
 
                                 {/* Icon */}
                                 <div className="p-2 rounded-lg bg-gray-200">
-                                    <Phone className="h-4 w-4 " />
+                                    <Phone className="h-4 w-4 text-primary" />
                                 </div>
 
                                 {/* Content */}
@@ -419,7 +415,7 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
                                 {/* Blood Group */}
                                 <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/20">
                                     <div className="p-2 rounded-lg bg-gray-200">
-                                        <Droplet className="h-4 w-4" />
+                                        <Droplet className="h-4 w-4 text-primary" />
                                     </div>
                                     <div>
                                         <p className="text-xs text-muted-foreground uppercase tracking-wide">Blood Group</p>
@@ -471,7 +467,7 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
 
                         <div className="flex justify-between items-center">
                             <span className="text-muted-foreground">Payment Status</span>
-                            <Badge className="bg-green-100 text-green-700 hover:bg-green-100">
+                            <Badge className={getStatusColor("payment", payment?.status)}>
                                 {payment?.status_label}
                             </Badge>
                         </div>
