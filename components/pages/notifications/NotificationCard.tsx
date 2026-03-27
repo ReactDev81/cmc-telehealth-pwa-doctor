@@ -2,6 +2,7 @@
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
     Bell,
     Calendar,
@@ -11,6 +12,7 @@ import {
     Loader2,
     Star,
     Check,
+    Eye,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { NotificationItem } from "@/types/notification";
@@ -30,18 +32,18 @@ const getNotificationIcon = (group: string) => {
     }
 };
 
-const getIconStyles = (group: string) => {
+const getIconColor = (group: string) => {
     switch (group) {
         case "appointment":
-            return "bg-gradient-to-br from-blue-500/10 to-blue-600/5 text-blue-600 dark:from-blue-400/20 dark:to-blue-400/5 dark:text-blue-400";
+            return "text-blue-600";
         case "review":
-            return "bg-gradient-to-br from-amber-500/10 to-amber-600/5 text-amber-600 dark:from-amber-400/20 dark:to-amber-400/5 dark:text-amber-400";
+            return "text-amber-600";
         case "availability":
-            return "bg-gradient-to-br from-emerald-500/10 to-emerald-600/5 text-emerald-600 dark:from-emerald-400/20 dark:to-emerald-400/5 dark:text-emerald-400";
+            return "text-emerald-600";
         case "document":
-            return "bg-gradient-to-br from-rose-500/10 to-rose-600/5 text-rose-600 dark:from-rose-400/20 dark:to-rose-400/5 dark:text-rose-400";
+            return "text-rose-600";
         default:
-            return "bg-gradient-to-br from-primary/10 to-primary/5 text-primary";
+            return "text-primary";
     }
 };
 
@@ -73,92 +75,63 @@ export function NotificationCard({
     isReading,
 }: NotificationCardProps) {
     const Icon = getNotificationIcon(notification.group);
-    const iconStyles = getIconStyles(notification.group);
 
     return (
-        <div
+        <Card
             className={cn(
-                "group relative overflow-hidden rounded-2xl border transition-all duration-500 w-full",
-                "hover:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:hover:shadow-[0_8px_30px_rgb(0,0,0,0.2)]",
-                "hover:border-primary/20 active:scale-[0.998]",
-                !notification.is_read
-                    ? "bg-gradient-to-r from-primary/[0.03] to-transparent border-primary/20"
-                    : "bg-card border-border/60"
+                "border-border transition-colors hover:bg-accent/30",
+                !notification.is_read ? "bg-primary/5 border-l-4 border-l-primary" : ""
             )}
         >
-            {/* Unread Indicator Dot */}
-            {!notification.is_read && (
-                <div className="absolute left-0 top-0 h-full w-1 bg-primary" />
-            )}
+            <CardContent className="flex items-start justify-between gap-4 p-4">
+                <div className="flex min-w-0 flex-1 items-start gap-4">
+                    <div
+                        className={cn(
+                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent",
+                            getIconColor(notification.group)
+                        )}
+                    >
+                        <Icon className="h-5 w-5" />
+                    </div>
 
-            <div className="flex items-center gap-4 p-5 h-full">
-                {/* Icon Container */}
-                <div
-                    className={cn(
-                        "relative flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl transition-all duration-500 group-hover:scale-105 group-hover:rotate-3",
-                        iconStyles,
-                        "after:absolute after:inset-0 after:rounded-2xl after:ring-1 after:ring-inset after:ring-black/5 dark:after:ring-white/5"
-                    )}
-                >
-                    <Icon className="h-7 w-7 transition-all duration-500 group-hover:scale-110" />
-                </div>
+                    <div className="min-w-0 flex-1 space-y-1">
+                        <div className="flex items-start justify-between gap-2">
+                            <p className="font-medium">{notification.title}</p>
 
-                {/* Content */}
-                <div className="min-w-0 flex-1 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-                    <div className="space-y-1">
-                        <div className="flex items-center gap-2">
-                            <h4 className={cn(
-                                "text-[15px] font-bold leading-tight transition-colors duration-300",
-                                !notification.is_read ? "text-foreground" : "text-muted-foreground/80"
-                            )}>
-                                {notification.title}
-                            </h4>
-                            <time className="shrink-0 text-[10px] font-semibold uppercase tracking-wider text-muted-foreground/40">
-                                • {formatRelativeTime(notification.created_at)}
-                            </time>
+                            {notification.is_read && (
+                                <Badge variant="secondary">Read</Badge>
+                            )}
                         </div>
-                        <p className="text-[13px] leading-relaxed text-muted-foreground/70 line-clamp-1">
+
+                        <p className="text-sm text-muted-foreground line-clamp-2">
                             {notification.desc}
                         </p>
-                        <Badge
-                            variant="secondary"
-                            className={cn(
-                                "h-5 rounded-md border-0 px-2 text-[10px] font-bold uppercase tracking-widest mt-1",
-                                "bg-muted/50 text-muted-foreground group-hover:bg-primary/10 group-hover:text-primary transition-colors duration-300"
-                            )}
-                        >
-                            {notification.group}
-                        </Badge>
-                    </div>
 
-                    <div className="flex items-center gap-2 shrink-0">
-                        {!notification.is_read ? (
-                            <Button
-                                size="sm"
-                                variant="ghost"
-                                className="h-9 rounded-full px-4 text-[11px] font-bold text-primary hover:bg-primary/10 transition-all duration-300"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    onRead(notification.id);
-                                }}
-                                disabled={isReading}
-                            >
-                                {isReading ? (
-                                    <Loader2 className="mr-2 h-3.5 w-3.5 animate-spin" />
-                                ) : (
-                                    <Check className="mr-2 h-3.5 w-3.5" />
-                                )}
-                                Mark as read
-                            </Button>
-                        ) : (
-                            <div className="flex h-9 items-center gap-1.5 px-4 text-[11px] font-semibold text-muted-foreground/30">
-                                <CheckCheck className="h-3.5 w-3.5" />
-                                <span>Read</span>
-                            </div>
-                        )}
+                        <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                            <Clock className="h-3 w-3" />
+                            {formatRelativeTime(notification.created_at)}
+                        </p>
                     </div>
                 </div>
-            </div>
-        </div>
+
+                <div className="shrink-0 pt-1">
+                    {!notification.is_read && (
+                        <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => onRead(notification.id)}
+                            disabled={isReading}
+                        >
+                            {isReading ? (
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                            ) : (
+                                <Eye className="mr-2 h-4 w-4" />
+                            )}
+                            {isReading ? "Reading..." : "Mark as read"}
+                        </Button>
+                    )}
+                </div>
+            </CardContent>
+        </Card>
     );
 }
