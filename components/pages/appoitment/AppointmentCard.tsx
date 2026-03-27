@@ -13,7 +13,7 @@ import {
     PhoneCallIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { getStatusColor } from "@/src/utils/getStatusColor";
 import { useState } from "react";
 import { RescheduleAppointmentDialog } from "./Reshedule-dialogbox";
@@ -58,11 +58,11 @@ export default function AppointmentCard({
 }: AppointmentCardProps) {
     const [openRescheduleDialog, setOpenRescheduleDialog] = useState(false);
     const showCallNow = appointment.call_now === true;
-
+   
     const router = useRouter();
 
     console.log(appointment);
-    
+
 
 
     // button show hide in rescheduled", "failed", "completed base
@@ -72,6 +72,8 @@ export default function AppointmentCard({
 
     // console.log("CLICK ID:", appointment.appointment_id);
     console.log("showCallNow:", showCallNow);
+
+  
 
     return (
         <>
@@ -188,10 +190,12 @@ export default function AppointmentCard({
                                 className="h-9 flex-1 border-primary hover:opacity-90"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    window.open(appointment.video_consultation.join_url, "_blank");
+                                    // Encode join_url to make it safe for URL param
+                                    // const encodedUrl = encodeURIComponent(appointment.video_consultation.join_url);
+                                    router.push(`/start-consultation?room_url=${appointment.video_consultation.join_url}`);
                                 }}
                             >
-                            <PhoneCallIcon /> Join Now
+                                <PhoneCallIcon /> Join Now
                             </Button>
                         ) : (
                             // Else show Reschedule if allowed
