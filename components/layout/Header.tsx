@@ -434,7 +434,7 @@ export function Header() {
 
                     <DropdownMenuGroup>
                       <DropdownMenuItem asChild>
-                        <Link href="/doctor/profile" className="cursor-pointer">
+                        <Link href="/profile" className="cursor-pointer">
                           <UserIcon className="mr-2 h-4 w-4" />
                           <span>Profile</span>
                         </Link>
