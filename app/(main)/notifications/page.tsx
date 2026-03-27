@@ -15,7 +15,7 @@ import { useMemo, useState } from "react";
 import CustomTabs, { TabItem } from "@/components/pages/appoitment/CustomTabs";
 import { cn } from "@/lib/utils";
 import { useNotifications, useReadNotification } from "@/queries/notifications";
-import { NotificationItem } from "@/types/doctor/notification";
+import { NotificationItem } from "@/types/notification";
 
 import { NotificationCard } from "@/components/pages/notifications/NotificationCard";
 

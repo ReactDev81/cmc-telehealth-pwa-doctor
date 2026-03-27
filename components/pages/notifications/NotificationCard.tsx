@@ -13,7 +13,7 @@ import {
     Check,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { NotificationItem } from "@/types/doctor/notification";
+import { NotificationItem } from "@/types/notification";
 
 const getNotificationIcon = (group: string) => {
     switch (group) {
@@ -74,7 +74,7 @@ export function NotificationCard({
 }: NotificationCardProps) {
     const Icon = getNotificationIcon(notification.group);
     const iconStyles = getIconStyles(notification.group);
-    
+
     return (
         <div
             className={cn(
