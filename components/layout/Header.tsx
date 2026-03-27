@@ -192,7 +192,7 @@ export function Header() {
         </Link>
 
         {isDesktop && (
-          <nav className="flex items-center gap-1">
+          <nav className="flex items-center gap-4">
             {navItems.map((item) => (
               <Link
                 key={item.href}

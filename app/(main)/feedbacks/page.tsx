@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import { useFeedbacks } from "@/queries/useFeedbacks";
 import { FeedbackCard } from "@/components/pages/feedback/FeedbackCard";
-import PaginationControls from "@/components/common/PaginationControls";
+import PaginationControls from "@/components/pagination/PaginationControls";
 import { MessageSquare, Star, AlertCircle } from "lucide-react";
 import { Button, Skeleton } from "@/components/ui";
 
