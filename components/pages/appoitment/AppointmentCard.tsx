@@ -10,6 +10,7 @@ import {
     Phone,
     MapPin,
     PhoneCall,
+    PhoneCallIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
@@ -60,6 +61,8 @@ export default function AppointmentCard({
 
     const router = useRouter();
 
+    console.log(appointment);
+    
 
 
     // button show hide in rescheduled", "failed", "completed base
@@ -115,7 +118,7 @@ export default function AppointmentCard({
                                     </div>
                                 </div>
 
-                                {showCallNow ? (
+                                {/* {showCallNow ? (
                                     <Badge
                                         className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1.5 px-2.5 py-1 text-xs font-medium"
                                         onClick={(e) => {
@@ -136,7 +139,7 @@ export default function AppointmentCard({
                                         {appointment.status_label || appointment.status}
                                     </Badge>
                                 )
-                                }
+                                } */}
                             </div >
                         </div >
                     </div >
@@ -165,7 +168,9 @@ export default function AppointmentCard({
                     </div>
 
                     {/* 🔹 Actions */}
+                    {/* 🔹 Actions */}
                     <div className="flex gap-3 mt-4 items-stretch">
+                        {/* Always show View button */}
                         <Button
                             className="flex-1 h-9"
                             onClick={(e) => {
@@ -176,15 +181,29 @@ export default function AppointmentCard({
                             View
                         </Button>
 
-                        {/* ✅ Hide for rescheduled + failed */}
-                        {!shouldHideReschedule && (
+                        {/* Show Join Now if video consultation is joinable */}
+                        {appointment.video_consultation?.can_join ? (
                             <Button
-                                className="h-9"
                                 variant="outline"
-                                onClick={() => setOpenRescheduleDialog(true)}
+                                className="h-9 flex-1 border-primary hover:opacity-90"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    window.open(appointment.video_consultation.join_url, "_blank");
+                                }}
                             >
-                                Reschedule
+                            <PhoneCallIcon /> Join Now
                             </Button>
+                        ) : (
+                            // Else show Reschedule if allowed
+                            !shouldHideReschedule && (
+                                <Button
+                                    className="h-9 flex-1"
+                                    variant="outline"
+                                    onClick={() => setOpenRescheduleDialog(true)}
+                                >
+                                    Reschedule
+                                </Button>
+                            )
                         )}
                     </div>
                 </CardContent >
