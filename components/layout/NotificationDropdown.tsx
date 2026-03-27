@@ -133,7 +133,7 @@ export function NotificationDropdown() {
                 </div>
               ) : notifications.length > 0 ? (
                 <div className="flex flex-col">
-                  {notifications.slice(0, 8).map((notification) => (
+                  {notifications.slice(0, 5).map((notification) => (
                     <div
                       key={notification.id}
                       className={cn(
@@ -152,8 +152,7 @@ export function NotificationDropdown() {
                             notification.group === "review" && "bg-amber-100/50 text-amber-500",
                             notification.group === "availability" && "bg-emerald-100/50 text-emerald-600",
                             notification.group === "document" && "bg-rose-100/50 text-rose-600",
-                            !notification.group && "bg-primary/10 text-primary",
-                            notification.is_read && "bg-muted text-muted-foreground grayscale-[0.5] opacity-60"
+                            notification.group && "bg-primary/10 text-primary",
                           )}>
                             {getNotificationTypeIcon(notification.group)}
                             {!notification.is_read && (
@@ -164,17 +163,17 @@ export function NotificationDropdown() {
                           <div className="flex items-center justify-between flex-1 min-w-0">
                             <span className={cn(
                               "text-[13px] font-bold truncate transition-colors",
-                              !notification.is_read ? "text-foreground" : "text-muted-foreground"
+                              !notification.is_read ? "text-foreground" : ""
                             )}>
                               {notification.title}
                             </span>
 
                             <div className="flex items-center gap-2 shrink-0">
-                              <span className="text-[10px] text-muted-foreground/50 font-semibold whitespace-nowrap">
+                              <span className="text-[10px] text-muted-foreground font-semibold whitespace-nowrap">
                                 {formatNotificationTime(notification.created_at)}
                               </span>
                               <ChevronDown className={cn(
-                                "h-4 w-4 text-muted-foreground/30 transition-all duration-300",
+                                "h-4 w-4  transition-all duration-300",
                                 expandedId === notification.id ? "rotate-180 text-primary" : "group-hover:text-muted-foreground/60"
                               )} />
                             </div>

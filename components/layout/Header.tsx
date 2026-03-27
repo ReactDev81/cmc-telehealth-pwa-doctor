@@ -136,7 +136,7 @@ export function Header() {
                 {item.badge ? (
                   <Badge
                     variant={pathname === item.href ? "secondary" : "default"}
-                    className="ml-auto flex h-5 w-5 items-center justify-center text-[10px] rounded-full p-4"
+                    className="ml-auto flex h-5 w-5 items-center justify-center text-[10px] bg-primary/10! rounded-full p-4"
                   >
                     {Number(item.badge) > 99 ? "99+" : item.badge}
                   </Badge>
