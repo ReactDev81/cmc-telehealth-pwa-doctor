@@ -19,7 +19,6 @@ interface AppointmentCardProps {
     available?: boolean;
 
     // Patient specific
-    doctor?: string;
     time?: string;
     appointmentType?: "Video" | "Phone" | "In-Person";
     status?: "Confirmed" | "Pending" | "Completed" | "Cancelled" | "Scheduled";
@@ -38,7 +37,6 @@ const AppointmentCard = ({
     timeSlot,
     appointments,
     available = true,
-    doctor,
     time,
     appointmentType,
     status,
@@ -123,7 +121,7 @@ const AppointmentCard = ({
 
     return (
         <Card
-            className={`border-border hover:shadow-md transition-all cursor-pointer ${className}`}
+            className={`border-border py-0 hover:shadow-md transition-all cursor-pointer ${className}`}
             onClick={onClick}
         >
             <CardContent className="p-3">
@@ -138,7 +136,6 @@ const AppointmentCard = ({
                         <div className="flex justify-between items-start">
                             <div>
                                 <p className="font-medium text-sm">{title}</p>
-                                <p className="text-xs text-muted-foreground">{doctor}</p>
                             </div>
                             <Badge className={`${statusColors[status || "Confirmed"] || "bg-gray-100"} text-[8px] px-1.5 py-0.5`}>
                                 {status}

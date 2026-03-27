@@ -217,14 +217,23 @@ const MySchedulesPage = () => {
 
                         {/* Right Column - Booked Appointments */}
                         <div className="lg:col-span-1 space-y-3">
-                            <div className="bg-primary text-white rounded-t-lg py-2 px-4 -mx-1 mb-2">
-                                <h3 className="text-sm font-semibold">Booked Appointments</h3>
-                                {selectedSlot && (
-                                    <p className="text-[10px] opacity-80">
-                                        {selectedSlot.time_range} • {filteredAppointments.length} Booked
-                                    </p>
-                                )}
-                            </div>
+
+                            {/* Header */}
+                            <CardHeader className="bg-primary text-white rounded-t-lg py-2">
+                                <div className="flex justify-between items-center">
+                                    <div>
+                                        <CardTitle className="text-sm">Booked Appointments</CardTitle>
+                                        {selectedSlot && (
+                                            <p className="text-xs opacity-80">
+                                                {selectedSlot.time_range} • {filteredAppointments.length} Booked
+                                            </p>
+                                        )}
+                                    </div>
+                                    {/* <Badge variant="secondary">
+                                        {count} {countLabel}
+                                    </Badge> */}
+                                </div>
+                            </CardHeader>
 
                             {filteredAppointments.length ? (
                                 filteredAppointments.map((appointment) => (
@@ -236,7 +245,6 @@ const MySchedulesPage = () => {
                                             "Unknown Patient"
                                         }
                                         avatar={appointment.patient?.avatar || ""}
-                                        doctor={selectedSlot?.doctorName || "Doctor"}
                                         time={appointment.appointment_time_formatted || appointment.appointment_time}
                                         appointmentType={
                                             appointment.consultation_type === "video"
