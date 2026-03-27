@@ -4,7 +4,6 @@ import * as React from "react";
 import {
   useReactTable,
   getCoreRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   getFilteredRowModel,
   ColumnDef,
@@ -12,7 +11,12 @@ import {
 } from "@tanstack/react-table";
 
 import {
-  Table, TableBody, TableCell, TableHead, TableHeader, TableRow
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
 } from "@/components/ui/table";
 
 import { Input } from "@/components/ui/input";
@@ -24,64 +28,69 @@ interface DataTableProps<T> {
   data: T[];
 
   loading?: boolean;
+
   pageCount?: number;
+  currentPage?: number;
   onPageChange?: (page: number) => void;
 
   enableSearch?: boolean;
+  searchValue?: string;
   onSearch?: (value: string) => void;
 }
 
 export function DataTable<T>({
   columns,
   data,
-  loading,
-  pageCount,
+  loading = false,
+  pageCount = 1,
+  currentPage = 1,
   onPageChange,
   enableSearch = true,
+  searchValue = "",
   onSearch,
 }: DataTableProps<T>) {
-
-  const [globalFilter, setGlobalFilter] = React.useState("");
-
   const table = useReactTable({
     data,
     columns,
-    state: {
-      globalFilter,
-    },
-    onGlobalFilterChange: setGlobalFilter,
+    pageCount,
+    manualPagination: true,
+    state: {},
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
 
-  // search effect
-  React.useEffect(() => {
-    if (onSearch) onSearch(globalFilter);
-  }, [globalFilter]);
+  const canPreviousPage = currentPage > 1;
+  const canNextPage = currentPage < pageCount;
 
   return (
     <div className="space-y-4">
-
       {/* Search */}
       {enableSearch && (
         <Input
           placeholder="Search..."
-          value={globalFilter}
-          onChange={(e) => setGlobalFilter(e.target.value)}
+          value={searchValue}
+          onChange={(e) => onSearch?.(e.target.value)}
         />
       )}
 
       {/* Table */}
-      <div className="border rounded-lg">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map(headerGroup => (
+      <div className="border rounded-lg overflow-hidden bg-white [&_td]:border-b [&_th]:border-b">
+        <Table className="w-full text-sm">
+          <TableHeader className="bg-muted/50">
+            {table.getHeaderGroups().map((headerGroup) => (
               <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map(header => (
-                  <TableHead key={header.id}>
-                    {header.isPlaceholder ? null : flexRender(header.column.columnDef.header, header.getContext())}
+                {headerGroup.headers.map((header) => (
+                  <TableHead
+                    key={header.id}
+                    className="px-4 py-3 text-sm font-semibold"
+                  >
+                    {header.isPlaceholder
+                      ? null
+                      : flexRender(
+                        header.column.columnDef.header,
+                        header.getContext()
+                      )}
                   </TableHead>
                 ))}
               </TableRow>
@@ -91,23 +100,35 @@ export function DataTable<T>({
           <TableBody>
             {loading ? (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center py-10">
-                  <Loader2 className="animate-spin mx-auto" />
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-center py-10"
+                >
+                  <Loader2 className="animate-spin mx-auto h-5 w-5" />
                 </TableCell>
               </TableRow>
             ) : table.getRowModel().rows.length ? (
-              table.getRowModel().rows.map(row => (
+              table.getRowModel().rows.map((row) => (
                 <TableRow key={row.id}>
-                  {row.getVisibleCells().map(cell => (
-                    <TableCell key={cell.id}>
-                      {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                  {row.getVisibleCells().map((cell) => (
+                    <TableCell
+                      key={cell.id}
+                      className="px-4 py-3 align-middle"
+                    >
+                      {flexRender(
+                        cell.column.columnDef.cell,
+                        cell.getContext()
+                      )}
                     </TableCell>
                   ))}
                 </TableRow>
               ))
             ) : (
               <TableRow>
-                <TableCell colSpan={columns.length} className="text-center py-10">
+                <TableCell
+                  colSpan={columns.length}
+                  className="text-center py-10"
+                >
                   No data found
                 </TableCell>
               </TableRow>
@@ -120,18 +141,22 @@ export function DataTable<T>({
       <div className="flex justify-between items-center">
         <Button
           variant="outline"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
+          onClick={() => onPageChange?.(currentPage - 1)}
+          disabled={!canPreviousPage || loading}
         >
-          <ChevronLeft />
+          <ChevronLeft className="h-4 w-4" />
         </Button>
+
+        <p className="text-sm text-muted-foreground">
+          Page {currentPage} of {pageCount}
+        </p>
 
         <Button
           variant="outline"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
+          onClick={() => onPageChange?.(currentPage + 1)}
+          disabled={!canNextPage || loading}
         >
-          <ChevronRight />
+          <ChevronRight className="h-4 w-4" />
         </Button>
       </div>
     </div>

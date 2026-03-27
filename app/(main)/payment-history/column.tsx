@@ -3,6 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table";
 import type { TransactionItem } from "@/types/transactions";
 import { Badge } from "@/components/ui/badge";
+import { getStatusColor } from "@/src/utils/getStatusColor";
 
 const getStatusVariant = (status: string) => {
   switch (status?.toLowerCase()) {
@@ -44,8 +45,16 @@ export const transactionColumns: ColumnDef<TransactionItem>[] = [
     cell: ({ row }) => {
       const item = row.original;
       return (
-        <Badge variant={getStatusVariant(item.status) as any}>
-          {item.status_label || "-"}
+        // <Badge variant={getStatusVariant(item.status) as any}>
+        //   {item.status_label || "-"}
+        // </Badge>
+        <Badge
+          className={`${getStatusColor(
+            "appointment",
+            item.status
+          )} gap-1`}
+        >
+          {item.status_label || "Completed"}
         </Badge>
       );
     },

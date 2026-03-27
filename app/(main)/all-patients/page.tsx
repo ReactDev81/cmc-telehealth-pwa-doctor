@@ -1,14 +1,3 @@
-// const AllPatients = () => {
-//     return (
-//         <div>
-//             <h1>All Patients</h1>
-//         </div>
-//     );
-// };
-
-// export default AllPatients;
-
-
 "use client";
 
 import * as React from "react";

@@ -4,6 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Badge } from "@/components/ui/badge";
 import type { PatientAppointmentRow } from "@/types/patients";
 import { useRouter } from "next/navigation";
+import { getStatusColor } from "@/src/utils/getStatusColor";
+import { Button } from "@/components/ui";
 
 const getStatusVariant = (status: string) => {
     switch (status?.toLowerCase()) {
@@ -69,9 +71,15 @@ export const patientsColumns: ColumnDef<PatientAppointmentRow>[] = [
         header: "Status",
         cell: ({ row }) => {
             const item = row.original;
+
             return (
-                <Badge variant={getStatusVariant(item.status) as any}>
-                    {item.status_label ?? "-"}
+                <Badge
+                    className={`${getStatusColor(
+                        "appointment",
+                        item.status
+                    )} gap-1`}
+                >
+                    {item.status_label || "Completed"}
                 </Badge>
             );
         },
@@ -87,8 +95,12 @@ export const patientsColumns: ColumnDef<PatientAppointmentRow>[] = [
         cell: ({ row }) => {
             const router = useRouter();
             return (
-                <button className="text-primary hover:underline"
-                    onClick={() => router.push(`/appointments/${row.original.appointment_id}`)}>View</button>
+                <Button
+                className="px-3.5 rounded-full"
+                    onClick={() => router.push(`/appointments/${row.original.appointment_id}`)}
+                >
+                    view
+                </Button>
             );
         },
     },
