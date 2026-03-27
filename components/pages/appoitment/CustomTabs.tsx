@@ -1,16 +1,13 @@
 // components/ui/CustomTabs.tsx
 "use client";
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import React from "react";
-
 export interface TabItem {
     key: string;
     label: React.ReactNode;
     content?: React.ReactNode;
 }
-
 interface CustomTabsProps {
     tabs: TabItem[];
     defaultTab?: string;
@@ -22,7 +19,6 @@ interface CustomTabsProps {
     tabsContentClassName?: string;
     color?: string;
 }
-
 const CustomTabs = ({
     tabs,
     defaultTab,
@@ -34,30 +30,22 @@ const CustomTabs = ({
     tabsContentClassName,
     color = "primary",
 }: CustomTabsProps) => {
-
     const [internalActiveTab, setInternalActiveTab] = React.useState(
         defaultTab || tabs[0]?.key || ""
     );
-
     const activeTab = controlledActiveTab !== undefined
         ? controlledActiveTab
         : internalActiveTab;
-
     const handleTabChange = (value: string) => {
         if (controlledActiveTab === undefined) {
             setInternalActiveTab(value);
         }
         onTabChange?.(value);
     };
-
     return (
         <Tabs value={activeTab} onValueChange={handleTabChange} className={cn("w-full", className)}>
-
-
             {/* <TabsList className={cn("grid w-full grid-cols-4", tabsListClassName)}> */}
-
             <TabsList className={cn("flex justify-center items-center w-full gap-4", tabsListClassName)}>
-
                 {tabs.map((tab) => (
                     <TabsTrigger
                         key={tab.key}
@@ -78,7 +66,6 @@ const CustomTabs = ({
                     </TabsTrigger>
                 ))}
             </TabsList>
-
             {tabs.map((tab) => (
                 tab.content && (
                     <TabsContent
@@ -90,9 +77,7 @@ const CustomTabs = ({
                     </TabsContent>
                 )
             ))}
-
         </Tabs>
     );
 };
-
 export default CustomTabs;
