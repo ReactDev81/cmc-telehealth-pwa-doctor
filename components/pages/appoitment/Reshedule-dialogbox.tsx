@@ -3,16 +3,19 @@
 import { getDoctorSlots } from "@/api/resheodule";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useAuth } from "@/context/userContext";
+import { rescheduleAppointment } from "@/mutations/reschedule";
 import { useEffect, useState } from "react";
 
 interface RescheduleAppointmentDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
+    appointmentId: string;
 }
 
 export function RescheduleAppointmentDialog({
     open,
     onOpenChange,
+    appointmentId,
 }: RescheduleAppointmentDialogProps) {
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedSlot, setSelectedSlot] = useState<any>(null); // ✅ selected time slot
@@ -46,6 +49,9 @@ export function RescheduleAppointmentDialog({
             );
 
             setSlots(formattedSlots || []);
+
+            console.log("Selected Slot:", selectedSlot);
+         
 
             // Auto-select first available date
             if (formattedSlots.length > 0) {
@@ -131,10 +137,32 @@ export function RescheduleAppointmentDialog({
 
                 {/* Book Button */}
                 <button
-                    disabled={!selectedSlot} // ✅ disable if no slot selected
+                    disabled={!selectedSlot}
+                    onClick={async () => {
+                        if (!selectedSlot) return;
+
+                        // Prepare payload
+                        const payload = {
+                            appointment_id: appointmentId,// make sure slot has this
+                            availability_id: selectedSlot.id, // slot id
+                            appointment_date: selectedSlot.date,
+                            appointment_time: selectedSlot.start_time,
+                        };
+
+                
+                        console.log("Reschedule payload:", payload); // ✅ check in console
+
+                        try {
+                            const res = await rescheduleAppointment(payload);
+                            console.log("Reschedule response:", res);
+                            // Optionally close dialog or show toast here
+                        } catch (err) {
+                            console.error("Error rescheduling:", err);
+                        }
+                    }}
                     className={`w-full mt-6 py-3 rounded-xl font-semibold transition ${selectedSlot
-                        ? "bg-green-800 hover:bg-green-700 text-white"
-                        : "bg-gray-300 text-gray-500 cursor-not-allowed"
+                            ? "bg-green-800 hover:bg-green-700 text-white"
+                            : "bg-gray-300 text-gray-500 cursor-not-allowed"
                         }`}
                 >
                     Reschedule

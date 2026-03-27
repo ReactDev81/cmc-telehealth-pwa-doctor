@@ -192,7 +192,7 @@ export default function AppointmentCard({
                                     e.stopPropagation();
                                     // Encode join_url to make it safe for URL param
                                     // const encodedUrl = encodeURIComponent(appointment.video_consultation.join_url);
-                                    router.push(`/start-consultation?room_url=${appointment.video_consultation.join_url || appointment.id}`);
+                                    window.open(`/start-consultation?room_url=${appointment.video_consultation.join_url}&appointment_id=${appointment.id}`, "_blank");
                                 }}
                             >
                                 <PhoneCallIcon /> Join Now
@@ -216,6 +216,7 @@ export default function AppointmentCard({
             <RescheduleAppointmentDialog
                 open={openRescheduleDialog}
                 onOpenChange={setOpenRescheduleDialog}
+                appointmentId={appointment.appointment_id || appointment.id}
             />
 
         </>
