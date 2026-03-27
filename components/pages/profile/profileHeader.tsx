@@ -41,13 +41,6 @@ export default function ProfileHeader({
                 {initials}
               </AvatarFallback>
             </Avatar>
-
-            <Button
-              size="icon"
-              className="absolute -bottom-2 -right-2 h-8 w-8 rounded-full bg-primary hover:bg-primary/90"
-            >
-              <Camera className="h-4 w-4" />
-            </Button>
           </div>
 
           <div className="flex-1">

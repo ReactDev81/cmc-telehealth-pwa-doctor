@@ -7,9 +7,11 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { usePrescriptionByAppointmentId } from "@/queries/usePrescriptionByAppointmentId";
 import { getStatusColor } from "@/src/utils/getStatusColor";
+import AddPrescriptionDialog from "@/components/pages/appoitment/AddPrescriptionDialog";
 
 // Accordion Item Component
 function MedicineAccordionItem({ medicine, index }: { medicine: any; index: number }) {
+    console.log("medicine : ", medicine);
     const [isOpen, setIsOpen] = useState(false);
 
     // const getStatusColor = (status: string) => {
@@ -121,6 +123,7 @@ function MedicineAccordionItem({ medicine, index }: { medicine: any; index: numb
 
 export default function PrescriptionTab({ appointmentId }: { appointmentId: string }) {
     const { data, isLoading, error } = usePrescriptionByAppointmentId(appointmentId);
+    const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
 
     if (isLoading) {
         return (
@@ -165,12 +168,16 @@ export default function PrescriptionTab({ appointmentId }: { appointmentId: stri
             {/* Medicines List - Accordion */}
             {medicines.length > 0 && (
                 <div className="space-y-3">
-                    <div className="flex items-center gap-2 mb-4">
-                        <div className="p-2 rounded-lg bg-primary/10">
-                            <Clock className="h-4 w-4 text-primary" />
+                    <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2 mb-4">
+                            <div className="p-2 rounded-lg bg-primary/10">
+                                <Clock className="h-4 w-4 text-primary" />
+                            </div>
+                            <h3 className="font-semibold text-lg">Prescribed Medicines</h3>
+                            <Badge variant="secondary">{medicines.length} Items</Badge>
                         </div>
-                        <h3 className="font-semibold text-lg">Prescribed Medicines</h3>
-                        <Badge variant="secondary">{medicines.length} Items</Badge>
+
+                        <Button onClick={() => setIsAddDialogOpen(true)}>Add Prescription</Button>
                     </div>
 
                     <div className="space-y-3">
@@ -246,6 +253,11 @@ export default function PrescriptionTab({ appointmentId }: { appointmentId: stri
                     )}
                 </Card>
             )}
+            
+            <AddPrescriptionDialog 
+                open={isAddDialogOpen} 
+                onOpenChange={setIsAddDialogOpen} 
+            />
         </div>
     );
 }
