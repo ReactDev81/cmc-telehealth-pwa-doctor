@@ -1,6 +1,5 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { ReactNode } from "react";
 import { OPDSlotCard } from "./OPDSlotCard";
 import { OPDSlot } from "@/types/schedule";
@@ -10,9 +9,6 @@ interface ScheduleCardProps {
     date: string;
     count: number;
     countLabel: string;
-    viewAllText: string;
-    viewAllCount?: number;
-    onViewAll?: () => void;
     emptyIcon?: ReactNode;
     emptyMessage?: string;
     emptySubMessage?: string;
@@ -26,9 +22,6 @@ const DoctorOpdSchedule = ({
     date,
     count,
     countLabel,
-    viewAllText,
-    viewAllCount,
-    onViewAll,
     emptyIcon,
     OPDSlotsForSelectedDate,
     selectedSlot,
@@ -73,15 +66,6 @@ const DoctorOpdSchedule = ({
                         )}
                 </div>
             </CardContent>
-
-            {/* View All Button */}
-            {count > 0 && (
-                <div className="p-4 pt-0 border-border mt-auto">
-                    <Button variant="outline" className="w-full text-xs" size="sm" onClick={onViewAll}>
-                        {viewAllText} ({viewAllCount !== undefined ? viewAllCount : count})
-                    </Button>
-                </div>
-            )}
 
         </Card>
     )

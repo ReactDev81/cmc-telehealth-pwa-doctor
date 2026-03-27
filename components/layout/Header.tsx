@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Avatar,
   AvatarFallback,
@@ -45,14 +44,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
-
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
   // Use actual media query for responsive check
   const [isDesktop, setIsDesktop] = useState(true);
-
   useEffect(() => {
     const handleResize = () => {
       setIsDesktop(window.innerWidth >= 1024); // lg breakpoint
@@ -61,7 +57,6 @@ export function Header() {
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
   }, []);
-
   // Listen scroll for sticky effect (optional, or remove if unused)
   useEffect(() => {
     const handleScroll = () => {
@@ -70,14 +65,12 @@ export function Header() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const toggleExpand = (e: React.MouseEvent, id: string) => {
     e.preventDefault();
     e.stopPropagation();
     setExpandedId(expandedId === id ? null : id);
   };
-
   const getNotificationTypeIcon = (group: string) => {
     switch (group?.toLowerCase()) {
       case "appointment":
@@ -92,7 +85,6 @@ export function Header() {
         return <Bell className="h-4 w-4 text-primary" />;
     }
   };
-
   const getNotificationTypeColor = (group: string) => {
     switch (group?.toLowerCase()) {
       case "appointment":
@@ -107,7 +99,6 @@ export function Header() {
         return "text-primary";
     }
   };
-
   const formatNotificationTime = (date: string) => {
     const now = new Date();
     const then = new Date(date);
@@ -115,13 +106,11 @@ export function Header() {
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(minutes / 60);
     const days = Math.floor(hours / 24);
-
     if (minutes < 1) return "just now";
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
     return `${days}d ago`;
   };
-
   const pathname = usePathname();
   const { user, initializing, logout } = useAuth();
   const { data: notificationsData, isLoading } = useNotifications();
@@ -129,7 +118,6 @@ export function Header() {
   const unreadCount = notificationsData?.meta?.total_unread ?? 0;
   const notifications = notificationsData?.data ?? [];
   const topFiveNotifications = notifications.slice(0, 5);
-
   // For handling notification "read" actions
   const [readingId, setReadingId] = useState<string | null>(null);
   const handleNotificationClick = async (id: string) => {
@@ -140,13 +128,11 @@ export function Header() {
       setReadingId(null);
     }
   };
-
   // For notification label (Name fallback)
   const name =
     user && (user.first_name || user.last_name)
       ? `${user.role === "doctor" ? "Dr. " : ""}${user.first_name ?? ""} ${user.last_name ?? ""}`.trim()
       : "User";
-
   const navItems: NavItem[] = [
     {
       title: "Dashboard",
@@ -169,7 +155,6 @@ export function Header() {
       icon: <MessageSquare className="h-4 w-4" />,
     },
   ];
-
   return (
     <header
       className={cn(
@@ -191,7 +176,6 @@ export function Header() {
             priority
           />
         </Link>
-
         {isDesktop && (
           <nav className="flex items-center gap-4">
             {navItems.map((item) => (
@@ -219,7 +203,6 @@ export function Header() {
             ))}
           </nav>
         )}
-
         {/* Action Buttons */}
         <div className="flex items-center gap-4">
           <DropdownMenu>
@@ -233,7 +216,6 @@ export function Header() {
                 )}
               </Button>
             </DropdownMenuTrigger>
-
             <DropdownMenuContent
               align="end"
               className="w-[calc(100vw-2rem)] sm:w-80"
@@ -241,9 +223,7 @@ export function Header() {
               <DropdownMenuLabel className="flex items-center justify-between">
                 <span>Notifications</span>
               </DropdownMenuLabel>
-
               <DropdownMenuSeparator />
-
               <ScrollArea className="h-[300px]">
                 {isLoading ? (
                   <div className="flex items-center justify-center p-4">
@@ -273,16 +253,13 @@ export function Header() {
                             {notification.title}
                           </span>
                         </div>
-
                         <span className="shrink-0 text-xs whitespace-nowrap text-muted-foreground">
                           {formatNotificationTime(notification.created_at)}
                         </span>
                       </div>
-
                       <p className="line-clamp-2 text-xs text-muted-foreground">
                         {notification.desc}
                       </p>
-
                       <div className="flex w-full items-center justify-between">
                         <Badge
                           variant="outline"
@@ -293,7 +270,6 @@ export function Header() {
                         >
                           {notification.group}
                         </Badge>
-
                         {readingId === notification.id ? (
                           <Loader2 className="h-3 w-3 animate-spin" />
                         ) : (
@@ -312,7 +288,6 @@ export function Header() {
                   </div>
                 )}
               </ScrollArea>
-
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
                 <Link
@@ -351,7 +326,6 @@ export function Header() {
                       </Avatar>
                     </Button>
                   </DropdownMenuTrigger>
-
                   <DropdownMenuContent className="w-56" align="end" forceMount>
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-row items-center justify-between min-w-0">
@@ -373,9 +347,7 @@ export function Header() {
                         )}
                       </div>
                     </DropdownMenuLabel>
-
                     <DropdownMenuSeparator />
-
                     <DropdownMenuGroup>
                       <DropdownMenuItem asChild>
                         <Link href="/profile" className="cursor-pointer">
@@ -393,9 +365,7 @@ export function Header() {
                         </Link>
                       </DropdownMenuItem>
                     </DropdownMenuGroup>
-
                     <DropdownMenuSeparator />
-
                     <DropdownMenuItem
                       className="cursor-pointer text-destructive focus:text-destructive"
                       onClick={logout}
@@ -406,7 +376,6 @@ export function Header() {
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
-
                 {!isDesktop && (
                   <Sheet
                     open={isMobileMenuOpen}
@@ -417,7 +386,6 @@ export function Header() {
                         <Menu className="h-5 w-5" />
                       </Button>
                     </SheetTrigger>
-
                     <SheetContent
                       side="right"
                       className="w-[300px] sm:w-[400px]"
@@ -439,9 +407,7 @@ export function Header() {
                           </div>
                         </SheetTitle>
                       </SheetHeader>
-
                       <Separator className="my-4" />
-
                       <nav className="flex flex-col gap-2">
                         {navItems.map((item) => (
                           <Link

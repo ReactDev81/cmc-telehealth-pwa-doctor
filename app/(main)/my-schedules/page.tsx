@@ -239,13 +239,6 @@ const MySchedulesPage = () => {
                                     : 'Select a date'}
                                 count={selectedDate ? getOPDCount(selectedDate) : 0}
                                 countLabel="Slots"
-                                viewAllText="View All Slots"
-                                viewAllCount={selectedDate ? getOPDCount(selectedDate) : 0}
-                                onViewAll={() => {
-                                    if (selectedDate) {
-                                        onViewAllSlots(getOPDSlotsForDate(selectedDate));
-                                    }
-                                }}
                                 emptyIcon={<Stethoscope className="h-8 w-8 mx-auto mb-2 opacity-30" />}
                                 emptyMessage="No doctor OPD scheduled"
                                 emptySubMessage="Select a date with OPD sessions"
@@ -259,56 +252,61 @@ const MySchedulesPage = () => {
                         {/* Right Column - Booked Appointments */}
                         <div className="lg:col-span-1 space-y-3">
 
-                            {/* Header */}
-                            <CardHeader className="bg-primary text-white rounded-t-lg py-2">
-                                <div className="flex justify-between items-center">
-                                    <div>
-                                        <CardTitle className="text-sm">Booked Appointments</CardTitle>
-                                        {selectedSlot && (
-                                            <p className="text-xs opacity-80">
-                                                {selectedSlot.time_range} • {filteredAppointments.length} Booked
-                                            </p>
-                                        )}
-                                    </div>
-                                    {/* <Badge variant="secondary">
-                                        {count} {countLabel}
-                                    </Badge> */}
-                                </div>
-                            </CardHeader>
+                            <Card className="border-border h-full py-0 flex flex-col">
 
-                            {filteredAppointments.length ? (
-                                filteredAppointments.map((appointment) => (
-                                    <BookAppointments
-                                        key={appointment.appointment_id}
-                                        type="patient"
-                                        title={
-                                            appointment.patient?.name ||
-                                            "Unknown Patient"
-                                        }
-                                        avatar={appointment.patient?.avatar || ""}
-                                        time={(appointment as any).appointment_time_formatted || (appointment as any).appointment_time || (appointment as any).appointmentTime}
-                                        appointmentType={
-                                            (appointment as any).consultation_type === "video"
-                                                ? "Video"
-                                                : "In-Person"
-                                        }
-                                        status={((appointment as any).status_label || (appointment as any).status) as any}
-                                        onClick={() => {
-                                            if (appointment.appointment_id) {
-                                                router.push(`/appointments/${appointment.appointment_id}`);
-                                            }
-                                        }}
-                                    />
-                                ))
-                            ) : (
-                                <div className="text-center py-10 border rounded-lg border-dashed text-muted-foreground">
-                                    <p className="text-sm">
-                                        {selectedSlot
-                                            ? "No appointments booked for this slot"
-                                            : "Select an OPD slot to view appointments"}
-                                    </p>
-                                </div>
-                            )}
+                                {/* Header */}
+                                <CardHeader className="bg-primary text-white rounded-t-lg py-2">
+                                    <div className="flex justify-between items-center">
+                                        <div>
+                                            <CardTitle className="text-sm">Booked Appointments</CardTitle>
+                                            {selectedSlot && (
+                                                <p className="text-xs opacity-80">
+                                                    {selectedSlot.time_range} • {filteredAppointments.length} Booked
+                                                </p>
+                                            )}
+                                        </div>
+                                        <Badge variant="secondary">
+                                            {filteredAppointments.length} Patients
+                                        </Badge>
+                                    </div>
+                                </CardHeader>
+
+                                {filteredAppointments.length ? (
+                                    filteredAppointments.map((appointment) => (
+                                        <CardContent key={appointment.appointment_id}>
+                                            <BookAppointments
+                                                type="patient"
+                                                title={
+                                                    appointment.patient?.name ||
+                                                    "Unknown Patient"
+                                                }
+                                                avatar={appointment.patient?.avatar || ""}
+                                                time={(appointment as any).appointment_time_formatted || (appointment as any).appointment_time || (appointment as any).appointmentTime}
+                                                appointmentType={
+                                                    (appointment as any).consultation_type === "video"
+                                                        ? "Video"
+                                                        : "In-Person"
+                                                }
+                                                status={((appointment as any).status_label || (appointment as any).status) as any}
+                                                onClick={() => {
+                                                    if (appointment.appointment_id) {
+                                                        router.push(`/appointments/${appointment.appointment_id}`);
+                                                    }
+                                                }}
+                                            />
+                                        </CardContent>
+                                    ))
+                                ) : (
+                                    <div className="text-center py-10 border rounded-lg border-dashed text-muted-foreground">
+                                        <p className="text-sm">
+                                            {selectedSlot
+                                                ? "No appointments booked for this slot"
+                                                : "Select an OPD slot to view appointments"}
+                                        </p>
+                                    </div>
+                                )}
+
+                            </Card>
                         </div>
 
                     </div>
