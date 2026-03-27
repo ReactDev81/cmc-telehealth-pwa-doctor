@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import CustomTabs from "@/components/pages/appoitment/CustomTabs";
 import AddressSection from "@/components/pages/profile/addressSection";
 import AwardsSection from "@/components/pages/profile/awardsSection";
@@ -11,163 +11,145 @@ import PersonalInfoSection from "@/components/pages/profile/personalInfoSection"
 import ProfileHeader from "@/components/pages/profile/profileHeader";
 import ReviewsSection from "@/components/pages/profile/reviewsSection";
 import SocialLinksSection from "@/components/pages/profile/socialLinksSection";
-
-interface ProfileData {
-  email?: string | null;
-  bio?: string | null;
-  avatar?: string | null;
-  doctor_departments?: Array<{
-    department_id: string;
-    department_name: string;
-    role: string;
-  }>;
-}
-
-interface Address {
-  address_line1: string;
-  address_line2: string;
-  area: string;
-  landmark: string;
-  city: string;
-  state: string;
-  country: string;
-  pincode: string;
-}
-
-interface Experience {
-  company: string;
-  role: string;
-  period: string;
-}
-
-interface Education {
-  degree: string;
-  institution: string;
-  year: string;
-}
-
-interface Certificate {
-  id: number;
-  name: string;
-  organization: string;
-  issue_date: string;
-  expiry_date: string;
-}
-
-interface Review {
-  id: number;
-  rating: number;
-  comment: string;
-  patient: string;
-  date: string;
-}
-
-interface SocialMedia {
-  linkedin: string;
-  twitter: string;
-  website: string;
-}
-
-interface AwardItem {
-  award_image?: string;
-  title?: string;
-  organization?: string;
-  year?: number | string;
-  description?: string;
-}
-
-interface Awards {
-  awards_info?: AwardItem[];
-}
-
-interface SocialLinks {
-  facebook?: string;
-  twitter?: string;
-  linkedin?: string;
-  instagram?: string;
-  website?: string;
-  [key: string]: string | undefined;
-}
+import { useDoctorProfile } from "@/queries/useProfile";
+import { useDoctorHome } from "@/queries/useHome";
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("personal");
   const [isEditingPersonal, setIsEditingPersonal] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
-  // Mock data - replace with actual API calls
-  const [profileData] = useState<ProfileData>({
-    email: "doctor@example.com",
-    bio: "Experienced doctor with 10+ years of practice",
-    avatar: null,
-    doctor_departments: [
-      { department_id: "1", department_name: "Cardiology", role: "Senior Doctor" },
-      { department_id: "2", department_name: "Internal Medicine", role: "Consultant" }
-    ]
-  });
+  const { data, isLoading, isError, error } = useDoctorProfile();
+  const { data: homeData } = useDoctorHome();
+
+  const profile = data?.data;
+  const homeProfile = homeData?.data;
+  console.log("profile : ", profile);
+
+  const personalInfo = profile?.personal_information;
+  const address = profile?.address;
+  const workingExperience = profile?.working_experience ?? [];
+  const educationInfo = profile?.education_info ?? [];
+  const certificationsInfo = profile?.certifications_info ?? [];
+  const awardsInfo = profile?.awards_info ?? [];
+  const socialMedia = profile?.social_media ?? null;
+  const reviewSummary = profile?.review_summary ?? null;
 
   const [formData, setFormData] = useState({
-    first_name: "John",
-    last_name: "Doe",
-    email: "doctor@example.com",
-    bio: "Experienced doctor with 10+ years of practice",
-    phone: "+1 234-567-8900",
-    license: "MD123456"
+    first_name: "",
+    last_name: "",
+    email: "",
+    bio: "",
+    phone: "",
+    license: "",
   });
 
-  const fullName = `${formData.first_name} ${formData.last_name}`;
-  const initials = `${formData.first_name[0]}${formData.last_name[0]}`;
-  const primaryDepartment = profileData?.doctor_departments?.[0]?.department_name || "General Practice";
-  const primaryRole = profileData?.doctor_departments?.[0]?.role || "Doctor";
+  useEffect(() => {
+    if (personalInfo) {
+      setFormData({
+        first_name: personalInfo.first_name ?? "",
+        last_name: personalInfo.last_name ?? "",
+        email: personalInfo.email ?? "",
+        bio: personalInfo.bio ?? "",
+        phone: "",
+        license: "",
+      });
+    }
+  }, [personalInfo]);
 
-  // Mock data for other sections
-  const address: Address = {
-    address_line1: "123 Medical Center Dr",
-    address_line2: "Suite 456",
-    area: "Downtown",
-    landmark: "Near City Hospital",
-    city: "Medical City",
-    state: "California",
-    country: "United States",
-    pincode: "12345"
-  };
-  const experience: Experience[] = [
-    { company: "City Hospital", role: "Senior Doctor", period: "2018-Present" },
-    { company: "Medical Center", role: "Doctor", period: "2014-2018" }
-  ];
-  const education: Education[] = [
-    { degree: "MD", institution: "Medical University", year: "2014" },
-    { degree: "Bachelor's", institution: "University", year: "2010" }
-  ];
-  const awards: Awards = {
-    awards_info: [
-      { title: "Excellence in Medicine 2022", organization: "Medical Association", year: "2022" },
-      { title: "Best Doctor Award 2020", organization: "Hospital Board", year: "2020" }
-    ]
-  };
-  const certificates: Certificate[] = [
-    { id: 1, name: "Board Certification", organization: "Medical Board", issue_date: "2020", expiry_date: "2025" },
-    { id: 2, name: "Advanced Cardiac Life Support", organization: "American Heart Association", issue_date: "2021", expiry_date: "2023" }
-  ];
-  const socialMedia: SocialLinks = {
-    linkedin: "https://linkedin.com/in/johndoe",
-    twitter: "https://twitter.com/johndoe",
-    website: "https://johndoemd.com"
-  };
-  const reviews: Review[] = [
-    { id: 1, rating: 5, comment: "Excellent doctor!", patient: "Patient A", date: "2024-01-15" },
-    { id: 2, rating: 4, comment: "Very professional", patient: "Patient B", date: "2024-01-10" }
-  ];
-  const averageRating = "4.5";
+  const fullName = `${formData.first_name} ${formData.last_name}`.trim() || "Doctor";
+
+  const initials = `${formData.first_name?.[0] ?? ""}${formData.last_name?.[0] ?? ""}` || "DR";
+
+  const primaryDepartment =
+    personalInfo?.doctor_departments?.[0]?.department_name || "General Practice";
+
+  const primaryRole =
+    personalInfo?.doctor_departments?.[0]?.role || "Doctor";
+
+  const mappedExperience = useMemo(() => {
+    return workingExperience.map((item, index) => ({
+      id: index + 1,
+      company: item.past_associations || "N/A",
+      role: "Doctor",
+      period: item.career_start ? `${item.career_start} - Present` : "N/A",
+    }));
+  }, [workingExperience]);
+
+  const mappedEducation = useMemo(() => {
+    return educationInfo.map((item, index) => ({
+      id: index + 1,
+      degree: item.degree || "N/A",
+      institution: item.institution || "N/A",
+      year: formatEducationYear(item.start_date, item.end_date),
+    }));
+  }, [educationInfo]);
+
+  const mappedCertificates = useMemo(() => {
+    return certificationsInfo
+      .filter(
+        (item) =>
+          item.name ||
+          item.organization ||
+          item.issue_date ||
+          item.expiry_date ||
+          item.certification_image
+      )
+      .map((item, index) => ({
+        id: index + 1,
+        name: item.name || "N/A",
+        organization: item.organization || "N/A",
+        issue_date: item.issue_date || "",
+        expiry_date: item.expiry_date || "",
+        certification_image: item.certification_image || "",
+      }));
+  }, [certificationsInfo]);
+
+  const mappedAwards = useMemo(() => {
+    return {
+      awards_info: awardsInfo.map((item) => ({
+        award_image: item.award_image || "",
+        title: item.title || "N/A",
+        organization: item.organization || "N/A",
+        year: item.year || "",
+        description: item.description || "",
+      })),
+    };
+  }, [awardsInfo]);
+
+  const mappedSocialMedia = useMemo(() => {
+    return {
+      facebook: socialMedia?.facebook || "",
+      twitter: socialMedia?.twitter || "",
+      linkedin: socialMedia?.linkedin || "",
+      instagram: socialMedia?.instagram || "",
+      website: socialMedia?.website || "",
+    };
+  }, [socialMedia]);
+
+  const reviews = useMemo(() => {
+    return homeProfile?.doctor_reviews?.map((review, index) => ({
+      id: parseInt(review.id) || index + 1,
+      patient: review.patient_name,
+      rating: review.rating,
+      date: review.created_at,
+      comment: review.content,
+      patient_image: review.patient_image,
+    })) || [];
+  }, [homeProfile?.doctor_reviews]);
+
+  const averageRating = homeProfile?.review_summary?.average_rating?.toString() || "0";
+  const totalReviews = homeProfile?.review_summary?.total_reviews || 0;
 
   const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
   };
 
   const handleSavePersonalInfo = async () => {
     setIsSaving(true);
     try {
-      // API call to save personal info
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // later connect update profile API here
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       setIsEditingPersonal(false);
     } catch (error) {
       console.error("Error saving personal info:", error);
@@ -178,14 +160,14 @@ const ProfilePage = () => {
 
   const handleCancelPersonalEdit = () => {
     setIsEditingPersonal(false);
-    // Reset form data to original values
+
     setFormData({
-      first_name: "John",
-      last_name: "Doe",
-      email: "doctor@example.com",
-      bio: "Experienced doctor with 10+ years of practice",
-      phone: "+1 234-567-8900",
-      license: "MD123456"
+      first_name: personalInfo?.first_name ?? "",
+      last_name: personalInfo?.last_name ?? "",
+      email: personalInfo?.email ?? "",
+      bio: personalInfo?.bio ?? "",
+      phone: "",
+      license: "",
     });
   };
 
@@ -193,71 +175,112 @@ const ProfilePage = () => {
     {
       key: "personal",
       label: "Personal Info",
-      content: <PersonalInfoSection
-        isEditing={isEditingPersonal}
-        setIsEditing={setIsEditingPersonal}
-        formData={formData}
-        profileData={profileData}
-        fullName={fullName}
-        primaryDepartment={primaryDepartment}
-        primaryRole={primaryRole}
-        isSaving={isSaving}
-        onInputChange={handleInputChange}
-        onSave={handleSavePersonalInfo}
-        onCancel={handleCancelPersonalEdit}
-      />,
+      content: (
+        <PersonalInfoSection
+          isEditing={isEditingPersonal}
+          setIsEditing={setIsEditingPersonal}
+          formData={formData}
+          profileData={{
+            email: personalInfo?.email ?? "",
+            bio: personalInfo?.bio ?? "",
+            avatar: personalInfo?.avatar ?? "",
+            doctor_departments: personalInfo?.doctor_departments ?? [],
+          }}
+          fullName={fullName}
+          primaryDepartment={primaryDepartment}
+          primaryRole={primaryRole}
+          isSaving={isSaving}
+          onInputChange={handleInputChange}
+          onSave={handleSavePersonalInfo}
+          onCancel={handleCancelPersonalEdit}
+        />
+      ),
     },
     {
       key: "address",
       label: "Address",
-      content: <AddressSection address={address} />,
+      content: (
+        <AddressSection
+          address={{
+            address_line1: address?.address_line1 ?? "",
+            address_line2: address?.address_line2 ?? "",
+            area: address?.area ?? "",
+            landmark: address?.landmark ?? "",
+            city: address?.city ?? "",
+            state: address?.state ?? "",
+            country: address?.country ?? "",
+            pincode: address?.pincode ?? "",
+          }}
+        />
+      ),
     },
     {
       key: "experience",
       label: "Experience",
-      content: <ExperienceSection experience={experience} />,
+      content: <ExperienceSection experience={mappedExperience} />,
     },
     {
       key: "education",
       label: "Education",
-      content: <EducationSection education={education} />,
+      content: <EducationSection education={mappedEducation} />,
     },
     {
       key: "awards",
       label: "Awards",
-      content: <AwardsSection awards={awards} />,
+      content: <AwardsSection awards={mappedAwards} />,
     },
     {
       key: "certificates",
       label: "Certificates",
-      content: <CertificatesSection certificates={certificates} />,
+      content: <CertificatesSection certificates={mappedCertificates} />,
     },
     {
       key: "social",
       label: "Social Links",
-      content: <SocialLinksSection socialMedia={socialMedia} />,
+      content: <SocialLinksSection socialMedia={mappedSocialMedia} />,
     },
     {
       key: "reviews",
       label: "Reviews",
-      content: <ReviewsSection reviews={reviews} averageRating={averageRating} />,
+      content: (
+        <ReviewsSection reviews={reviews} averageRating={reviewSummary?.average_rating?.toString() || "0"} />
+      ),
     },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="flex min-h-[300px] items-center justify-center">
+        <p className="text-sm text-muted-foreground">Loading profile...</p>
+      </div>
+    );
+  }
+
+  if (isError) {
+    return (
+      <div className="flex min-h-[300px] items-center justify-center">
+        <p className="text-sm text-red-500">
+          {getErrorMessage(error)}
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col gap-4">
       <ProfileHeader
         fullName={fullName}
-        avatar={profileData?.avatar}
+        avatar={personalInfo?.avatar ?? ""}
         initials={initials}
         department={primaryDepartment}
         role={primaryRole}
-        email={profileData?.email}
+        email={personalInfo?.email ?? ""}
         phone={formData.phone}
         license={formData.license}
         averageRating={averageRating}
-        reviewsCount={reviews.length}
+        reviewsCount={totalReviews}
       />
+
       <CustomTabs
         tabs={tabs}
         activeTab={activeTab}
@@ -269,3 +292,36 @@ const ProfilePage = () => {
 };
 
 export default ProfilePage;
+
+function formatEducationYear(
+  startDate?: string | null,
+  endDate?: string | null
+) {
+  if (!startDate && !endDate) return "N/A";
+
+  const startYear = startDate ? new Date(startDate).getFullYear() : "";
+  const endYear = endDate ? new Date(endDate).getFullYear() : "";
+
+  if (startYear && endYear) return `${startYear} - ${endYear}`;
+  if (startYear) return `${startYear}`;
+  if (endYear) return `${endYear}`;
+
+  return "N/A";
+}
+
+function getErrorMessage(error: unknown) {
+  if (
+    typeof error === "object" &&
+    error !== null &&
+    "response" in error &&
+    typeof (error as any).response?.data?.message === "string"
+  ) {
+    return (error as any).response.data.message;
+  }
+
+  if (error instanceof Error) {
+    return error.message;
+  }
+
+  return "Failed to load profile.";
+}

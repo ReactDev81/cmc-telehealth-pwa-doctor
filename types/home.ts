@@ -34,6 +34,11 @@ export interface DoctorReview {
   created_at: string;
 }
 
+export interface ReviewSummary {
+  average_rating: number;
+  total_reviews: number;
+}
+
 export interface DoctorHomeData {
   id: string;
   name: string;
@@ -49,12 +54,13 @@ export interface DoctorHomeData {
     last_name: string;
     slug: string;
     avatar: string | null;
-    location: string | null;
+    location: null;
   };
   summary: DashboardSummary;
   todays_appointments: DashboardAppointment[];
   upcoming_appointments: DashboardAppointment[];
   doctor_reviews: DoctorReview[];
+  review_summary: ReviewSummary;
 }
 
 export interface GetDoctorHomeResponse {

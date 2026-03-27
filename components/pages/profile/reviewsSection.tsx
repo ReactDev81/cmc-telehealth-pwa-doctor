@@ -9,6 +9,7 @@ interface ReviewItem {
   rating: number;
   date: string;
   comment: string;
+  patient_image: string | null;
 }
 
 interface ReviewsSectionProps {
@@ -21,10 +22,11 @@ export default function ReviewsSection({
   averageRating,
 }: ReviewsSectionProps) {
   // Convert ReviewItem to DoctorReview format for FeedbackCard
+  console.log("average ratings : ", averageRating)
   const doctorReviews: DoctorReview[] = reviews.map((review) => ({
     id: review.id.toString(),
     patient_name: review.patient,
-    patient_image: null,
+    patient_image: review.patient_image,
     patient_age: "",
     patient_location: null,
     title: "",
@@ -39,6 +41,8 @@ export default function ReviewsSection({
     created_at: review.date,
   }));
 
+  console.log("reviews : ", reviews);
+
   return (
     <Card className="border-border">
       <CardHeader>
@@ -49,16 +53,22 @@ export default function ReviewsSection({
       </CardHeader>
 
       <CardContent>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {reviews.map((review, index) => (
-            <FeedbackCard
-              key={review.id || index}
-              review={doctorReviews[index]}
-              className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both h-full"
-              style={{ animationDelay: `${index * 50}ms` }}
-            />
-          ))}
-        </div>
+        {reviews.length === 0 ? (
+          <div className="text-center py-8">
+            <p className="text-muted-foreground">No reviews available yet.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {reviews.map((review, index) => (
+              <FeedbackCard
+                key={review.id || index}
+                review={doctorReviews[index]}
+                className="animate-in fade-in slide-in-from-bottom-4 duration-500 fill-mode-both h-full"
+                style={{ animationDelay: `${index * 50}ms` }}
+              />
+            ))}
+          </div>
+        )}
       </CardContent>
     </Card>
   );
