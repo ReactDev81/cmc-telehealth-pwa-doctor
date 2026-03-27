@@ -2,6 +2,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Clock, Video, Phone, MapPin } from "lucide-react";
+import { getStatusColor } from "@/src/utils/getStatusColor";
 
 interface AppointmentCardProps {
     // Common props
@@ -105,14 +106,6 @@ const AppointmentCard = ({
         "In-Person": <MapPin className="h-3 w-3" />
     };
 
-    const statusColors: Record<string, string> = {
-        Confirmed: "bg-green-100 text-green-800",
-        Pending: "bg-yellow-100 text-yellow-800",
-        Completed: "bg-blue-100 text-blue-800",
-        Cancelled: "bg-red-100 text-red-800",
-        Scheduled: "bg-indigo-100 text-indigo-800"
-    };
-
     const typeColors = {
         Video: "border-blue-200",
         Phone: "border-gray-200",
@@ -137,7 +130,7 @@ const AppointmentCard = ({
                             <div>
                                 <p className="font-medium text-sm">{title}</p>
                             </div>
-                            <Badge className={`${statusColors[status || "Confirmed"] || "bg-gray-100"} text-[8px] px-1.5 py-0.5`}>
+                            <Badge className={`${getStatusColor('appointment', status)} text-[8px] px-1.5 py-0.5`}>
                                 {status}
                             </Badge>
                         </div>

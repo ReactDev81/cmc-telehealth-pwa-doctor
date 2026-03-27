@@ -4,7 +4,7 @@ import { useMyAppointments } from "@/queries/useAppointments";
 import { useMySchedules } from "@/queries/getMySchedules";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar"
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { useRouter } from "next/navigation";
@@ -39,11 +39,44 @@ const MySchedulesPage = () => {
     const router = useRouter();
 
     const filteredAppointments = useMemo(() => {
-        return filterAppointmentsByDate(
+        const dateFiltered = filterAppointmentsByDate(
             data?.data || [],
             selectedDate
         );
-    }, [data, selectedDate]);
+
+        if (selectedSlot) {
+            // Priority 1: Use appointments inside the slot if available
+            if (selectedSlot.appointments && selectedSlot.appointments.length > 0) {
+                return selectedSlot.appointments;
+            }
+
+            // Priority 2: Filter the date-filtered appointments by matching time or slot link
+            // Most appointments will match the slot's start_time or fall within time_range
+            return dateFiltered.filter((appt: any) => {
+                const apptTime = appt.appointment_time; // format like "18:00:00" or "06:00 PM"
+                const slotStart = selectedSlot.start_time; // format like "18:00:00"
+
+                // Try direct match first (often both are in HH:mm:ss format from API)
+                if (apptTime === slotStart) return true;
+
+                // Fallback: compare formatted times if they exist
+                const apptFormatted = appt.appointment_time_formatted; // e.g. "06:00 PM"
+                const slotTimeRange = selectedSlot.time_range; // e.g. "6:00 PM - 7:30 PM"
+                if (apptFormatted && slotTimeRange && slotTimeRange.startsWith(apptFormatted.replace(/^0/, ''))) {
+                    return true;
+                }
+
+                // General check: see if appt time is mentioned in slot time range string
+                if (apptFormatted && slotTimeRange && slotTimeRange.includes(apptFormatted)) {
+                    return true;
+                }
+
+                return false;
+            });
+        }
+
+        return dateFiltered;
+    }, [data, selectedDate, selectedSlot]);
 
     const getOPDSlotsForDate = (date: Date | undefined): OPDSlot[] => {
         if (!date) return [];
@@ -68,11 +101,21 @@ const MySchedulesPage = () => {
         // Implement view all logic if needed
     };
 
-    // Reset selected slot when date changes
     const onDateClick = (date: Date | undefined) => {
         setSelectedDate(date);
-        setSelectedSlot(undefined);
+        const slots = getOPDSlotsForDate(date);
+        setSelectedSlot(slots.length > 0 ? slots[0] : undefined);
     };
+
+    // Auto-select first slot when schedule data is loaded or date changes
+    useEffect(() => {
+        if (selectedDate && scheduleData?.data) {
+            const slots = getOPDSlotsForDate(selectedDate);
+            if (slots.length > 0 && !selectedSlot) {
+                setSelectedSlot(slots[0]);
+            }
+        }
+    }, [selectedDate, scheduleData, selectedSlot]);
 
     const onMonthChange = (month: Date) => {
         setCurrentDate(month);
@@ -99,8 +142,6 @@ const MySchedulesPage = () => {
             date.getMonth() === today.getMonth() &&
             date.getFullYear() === today.getFullYear();
     };
-
-    console.log('selectedSlot', selectedSlot)
 
     return (
         <div>
@@ -245,13 +286,13 @@ const MySchedulesPage = () => {
                                             "Unknown Patient"
                                         }
                                         avatar={appointment.patient?.avatar || ""}
-                                        time={appointment.appointment_time_formatted || appointment.appointment_time}
+                                        time={(appointment as any).appointment_time_formatted || (appointment as any).appointment_time || (appointment as any).appointmentTime}
                                         appointmentType={
-                                            appointment.consultation_type === "video"
+                                            (appointment as any).consultation_type === "video"
                                                 ? "Video"
                                                 : "In-Person"
                                         }
-                                        status={(appointment.status_label || appointment.status) as any}
+                                        status={((appointment as any).status_label || (appointment as any).status) as any}
                                         onClick={() => {
                                             if (appointment.appointment_id) {
                                                 router.push(`/appointments/${appointment.appointment_id}`);

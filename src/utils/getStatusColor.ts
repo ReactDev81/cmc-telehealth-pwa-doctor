@@ -4,7 +4,7 @@ import { STATUS_STYLES } from "./statusStyles";
 
 type StatusType = "appointment" | "session" | "report" | "payment";
 
-export const getStatusColor = (type: StatusType, status: string) => {
+export const getStatusColor = (type: StatusType, status?: string) => {
     const normalizedStatus = status?.toLowerCase();
 
     return (
