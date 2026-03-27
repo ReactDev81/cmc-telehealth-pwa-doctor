@@ -3,6 +3,7 @@
 import { CardContent } from "@/components/ui/card";
 import { Bell } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { Button } from "./button";
 
 interface NotificationItem {
   id: string;
@@ -42,7 +43,7 @@ export default function NotificationsCardContent({
   const visibleNotifications = notifications.slice(0, limit);
 
   return (
-    <CardContent className="flex flex-col flex-1 justify-between">
+    <CardContent className="flex flex-col flex-1 justify-between p-0">
 
       {/* 🔄 Loading */}
       {loading ? (
@@ -67,7 +68,7 @@ export default function NotificationsCardContent({
       ) : (
 
         /* ✅ Data */
-        <div className="space-y-4">
+        <div className="space-y-4 p-4">
           {visibleNotifications.map((notification) => (
             <div
               key={notification.id}
@@ -114,12 +115,13 @@ export default function NotificationsCardContent({
       )}
 
       {/* 🔽 Bottom Action */}
-      <button
-        className="mt-4 text-sm text-primary hover:underline text-center"
+      <Button
+        variant="link"
+        className="text-sm hover:underline text-center"
         onClick={onViewAll}
       >
         View All Notifications
-      </button>
+      </Button>
     </CardContent>
   );
 }

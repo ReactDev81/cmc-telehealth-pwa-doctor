@@ -1,6 +1,6 @@
 "use client"
 
-import { useMyAppointments } from "@/querys/useAppointments";
+import { useMyAppointments } from "@/queries/useAppointments";
 import { useMySchedules } from "@/queries/getMySchedules";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card";
 import { Calendar } from "@/components/ui/calendar"

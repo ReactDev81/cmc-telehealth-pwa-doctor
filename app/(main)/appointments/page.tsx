@@ -3,7 +3,7 @@
 import AppointmentCard from "@/components/pages/appoitment/AppointmentCard";
 import AppointmentFilters from "@/components/pages/appoitment/AppointmentFilters";
 import CustomTabs, { TabItem } from "@/components/pages/appoitment/CustomTabs";
-import { useMyAppointments } from "@/querys/useAppointments";
+import { useMyAppointments } from "@/queries/useAppointments";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useState } from "react";
 
