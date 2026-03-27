@@ -192,7 +192,10 @@ export default function AppointmentCard({
                                     e.stopPropagation();
                                     // Encode join_url to make it safe for URL param
                                     // const encodedUrl = encodeURIComponent(appointment.video_consultation.join_url);
-                                    window.open(`/start-consultation?room_url=${appointment.video_consultation.join_url}&appointment_id=${appointment.id}`, "_blank");
+                                    window.open(`/start-consultation?room_url=${appointment.video_consultation.join_url}&appointment_id=${appointment.appointment_id}`, "_blank");
+
+                                    console.log(appointment.id);
+                                    
                                 }}
                             >
                                 <PhoneCallIcon /> Join Now
