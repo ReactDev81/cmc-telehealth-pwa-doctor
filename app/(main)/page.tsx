@@ -131,7 +131,7 @@ const Home = () => {
             id: 5,
             title: "All Reviews",
             icon: <Star className="h-6 w-6 text-primary" />,
-            href: "/doctor/dashboard/reviews",
+            href: "/feedbacks",
         },
     ];
 
