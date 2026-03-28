@@ -56,7 +56,6 @@ const Home = () => {
     const { mutate: markAsRead } = useReadNotification();
 
     const dashboard = data?.data;
-    console.log("DASHBOARD:", dashboard);
     const summary = dashboard?.summary;
     const notifications = notificationsData?.data || [];
 

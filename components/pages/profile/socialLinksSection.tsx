@@ -36,7 +36,6 @@ interface SocialLinksSectionProps {
 export default function SocialLinksSection({
   socialMedia,
 }: SocialLinksSectionProps) {
-  console.log("social : ", socialMedia);
 
   const safeSocialMedia = socialMedia
     ? Object.entries(socialMedia)

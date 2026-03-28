@@ -22,7 +22,6 @@ export default function ReviewsSection({
   averageRating,
 }: ReviewsSectionProps) {
   // Convert ReviewItem to DoctorReview format for FeedbackCard
-  console.log("average ratings : ", averageRating)
   const doctorReviews: DoctorReview[] = reviews.map((review) => ({
     id: review.id.toString(),
     patient_name: review.patient,
@@ -40,8 +39,6 @@ export default function ReviewsSection({
     rating_stars: averageRating,
     created_at: review.date,
   }));
-
-  console.log("reviews : ", reviews);
 
   return (
     <Card className="border-border">

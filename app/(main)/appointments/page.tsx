@@ -26,7 +26,6 @@ const AppointmentsContent = () => {
 
   const { data, isLoading, error } = useMyAppointments(activeTab);
   const appointments = Array.isArray(data?.data) ? data.data : [];
-  console.log(appointments);
   // ✅ Unique status list
   const statusOptions = [
     { value: "all", label: "All Status" },

@@ -34,7 +34,6 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
     : Array.isArray(awards)
       ? awards
       : [];
-  console.log("Doctor Awards : ", safeAwards);
   return (
     <div className="space-y-4">
       <SectionHeader

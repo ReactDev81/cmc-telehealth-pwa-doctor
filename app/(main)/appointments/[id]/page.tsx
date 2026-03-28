@@ -28,8 +28,6 @@ export default function AppointmentDetail() {
 
     const appointment = data?.data;
 
-    console.log("appointment : ", appointment);
-
     const tabs: TabItem[] = [
         {
             key: "overview",

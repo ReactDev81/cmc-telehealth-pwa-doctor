@@ -12,7 +12,6 @@ export const fetchMyAppointments = async (filter: string = "today"): Promise<App
 // detail page open 
 export const fetchAppointmentById = async (id: string) => {
     const { data } = await api.get(`/appointments/${id}`);
-    console.log("dateil page data", data);
     
     return data;
 };

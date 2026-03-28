@@ -61,17 +61,12 @@ export default function AppointmentCard({
    
     const router = useRouter();
 
-    console.log(appointment);
-
 
 
     // button show hide in rescheduled", "failed", "completed base
     const shouldHideReschedule =
         variant === "past" ||
         ["failed", "rescheduled", "cancelled", "completed"].includes(appointment.status);
-
-    // console.log("CLICK ID:", appointment.appointment_id);
-    console.log("showCallNow:", showCallNow);
 
   
 
