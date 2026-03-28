@@ -177,6 +177,11 @@ export interface SocialMedia {
   website: string | null;
 }
 
+export interface ReviewSummary {
+  average_rating: number;
+  total_reviews: number;
+}
+
 export interface DoctorProfileData {
   personal_information: PersonalInformation;
   working_experience: WorkingExperienceItem[];
@@ -187,6 +192,7 @@ export interface DoctorProfileData {
   fellowships_training: unknown[];
   additional_information: AdditionalInformation | null;
   social_media: SocialMedia | null;
+  review_summary: ReviewSummary | null;
 }
 
 export interface GetDoctorProfileResponse {

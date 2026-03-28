@@ -1,8 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Camera, Mail, Phone, Star } from "lucide-react";
+import { Mail, Phone, Star } from "lucide-react";
 
 interface ProfileHeaderProps {
   fullName: string;
@@ -13,8 +12,10 @@ interface ProfileHeaderProps {
   email?: string | null;
   phone?: string | null;
   license?: string | null;
-  averageRating: string;
-  reviewsCount: number;
+  reviewSummary?: {
+    average_rating: number;
+    total_reviews: number;
+  };
 }
 
 export default function ProfileHeader({
@@ -26,10 +27,10 @@ export default function ProfileHeader({
   email,
   phone,
   license,
-  averageRating,
-  reviewsCount,
+  reviewSummary,
 }: ProfileHeaderProps) {
-  console.log("Average Rating : ", averageRating);
+  const averageRatingValue = reviewSummary?.average_rating || 0;
+  const totalReviewsValue = reviewSummary?.total_reviews || 0;
   return (
     <Card className="border-border">
       <CardContent className="pt-6">
@@ -76,14 +77,14 @@ export default function ProfileHeader({
 
           <div className="flex flex-col gap-2">
             <div className="text-center">
-              <div className="text-3xl font-bold text-primary">{averageRating}</div>
+              <div className="text-3xl font-bold text-primary">{averageRatingValue}</div>
 
               <div className="flex items-center justify-center gap-1 mb-1">
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
                     className={`h-4 w-4 ${
-                      i < Math.round(parseFloat(averageRating))
+                      i < Math.round(averageRatingValue)
                         ? "fill-amber-400 text-amber-400"
                         : "text-gray-300"
                     }`}
@@ -91,7 +92,7 @@ export default function ProfileHeader({
                 ))}
               </div>
 
-              <p className="text-xs text-muted-foreground">{reviewsCount} reviews</p>
+              <p className="text-xs text-muted-foreground">{totalReviewsValue} reviews</p>
             </div>
           </div>
         </div>

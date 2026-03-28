@@ -66,6 +66,7 @@ interface CertificateItem {
   issue_date?: string | null;
   expiry_date?: string | null;
   organization?: string | null;
+  certification_image?: string | null;
 }
 
 interface CertificatesSectionProps {
@@ -100,6 +101,8 @@ export default function CertificatesSection({
               subtitle={cert.organization || "Issuer not provided"}
               meta={`${cert.issue_date || "N/A"} - ${cert.expiry_date || "N/A"
                 }`}
+                isView={true}
+                viewUrl={cert.certification_image}
             // badge={<Badge variant="secondary">Valid</Badge>}
             // actions={<ActionButtons />}
             />

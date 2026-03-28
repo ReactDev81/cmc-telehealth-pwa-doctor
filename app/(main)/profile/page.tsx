@@ -24,7 +24,6 @@ const ProfilePage = () => {
 
   const profile = data?.data;
   const homeProfile = homeData?.data;
-  console.log("profile : ", profile);
 
   const personalInfo = profile?.personal_information;
   const address = profile?.address;
@@ -33,7 +32,7 @@ const ProfilePage = () => {
   const certificationsInfo = profile?.certifications_info ?? [];
   const awardsInfo = profile?.awards_info ?? [];
   const socialMedia = profile?.social_media ?? null;
-  const reviewSummary = profile?.review_summary ?? null;
+  const reviewSummary = profile?.review_summary ?? undefined;
 
   const [formData, setFormData] = useState({
     first_name: "",
@@ -138,9 +137,6 @@ const ProfilePage = () => {
     })) || [];
   }, [homeProfile?.doctor_reviews]);
 
-  const averageRating = homeProfile?.review_summary?.average_rating?.toString() || "0";
-  const totalReviews = homeProfile?.review_summary?.total_reviews || 0;
-
   const handleInputChange = (field: string, value: string) => {
     setFormData((prev) => ({ ...prev, [field]: value }));
   };
@@ -193,6 +189,7 @@ const ProfilePage = () => {
           onInputChange={handleInputChange}
           onSave={handleSavePersonalInfo}
           onCancel={handleCancelPersonalEdit}
+          averageRating={reviewSummary}
         />
       ),
     },
@@ -277,8 +274,7 @@ const ProfilePage = () => {
         email={personalInfo?.email ?? ""}
         phone={formData.phone}
         license={formData.license}
-        averageRating={averageRating}
-        reviewsCount={totalReviews}
+        reviewSummary={reviewSummary}
       />
 
       <CustomTabs

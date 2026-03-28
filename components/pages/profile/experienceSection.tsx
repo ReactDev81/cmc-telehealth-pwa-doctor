@@ -35,13 +35,13 @@ export default function ExperienceSection({
           <ProfileItemCard
             key={index}
             icon={<Briefcase className="h-6 w-6" />}
-            title={exp.designation || exp.title || exp.past_associations || exp.hospital_name || "Unknown"}
-            meta={`${exp.start_date || exp.career_start || ''}${exp.end_date ? ` - ${exp.end_date}` : ''}`}
-            badge={
-              (exp.current || exp.is_current) ? (
-                <Badge className="bg-primary/10 text-primary">Current</Badge>
-              ) : undefined
-            }
+            title={exp.company || "Unknown"}
+            meta={`${exp.period || ''}`}
+            // badge={
+            //   (exp.current || exp.is_current) ? (
+            //     <Badge className="bg-primary/10 text-primary">Current</Badge>
+            //   ) : undefined
+            // }
             description={exp.description}
           />
         ))}

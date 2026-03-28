@@ -46,12 +46,10 @@
 //         </div>
 //       </CardContent>
 //     </Card>
-//   );
-// }
-
 import Image from "next/image";
 import { Card, CardContent } from "@/components/ui/card";
 import { ReactNode } from "react";
+import { Button } from "@/components/ui";
 
 interface ProfileItemCardProps {
   icon?: ReactNode;
@@ -64,6 +62,8 @@ interface ProfileItemCardProps {
   description?: string;
   actions?: ReactNode;
   iconClassName?: string;
+  isView?: boolean;
+  viewUrl?: string | null;
 }
 
 export function ProfileItemCard({
@@ -77,7 +77,14 @@ export function ProfileItemCard({
   description,
   actions,
   iconClassName = "bg-primary/10 text-primary",
+  isView = false,
+  viewUrl,
 }: ProfileItemCardProps) {
+  const handleView = () => {
+    if (viewUrl) {
+      window.open(viewUrl, "_blank", "noopener,noreferrer");
+    }
+  };
   return (
     <Card className="border-border">
       <CardContent className="pt-6">
@@ -101,16 +108,17 @@ export function ProfileItemCard({
           <div className="flex-1 min-w-0">
             <div className="mb-2 flex items-start justify-between gap-3">
               <div className="min-w-0">
-                <h4 className="font-semibold break-words">{title}</h4>
+                <div className="flex items-center gap-4">
+                  <h4 className="font-semibold wrap-break-word">{title}</h4>
+                  {badge}
+                </div>
 
                 {subtitle && (
-                  <p className="text-sm text-muted-foreground break-words">
+                  <p className="text-sm text-muted-foreground wrap-break-word">
                     {subtitle}
                   </p>
                 )}
               </div>
-
-              {badge}
             </div>
 
             {meta && (
@@ -125,6 +133,13 @@ export function ProfileItemCard({
 
             {actions && <div className="mt-3">{actions}</div>}
           </div>
+          {isView && viewUrl && (
+            <div className="mt-3">
+              <Button onClick={handleView}>
+                View
+              </Button>
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>

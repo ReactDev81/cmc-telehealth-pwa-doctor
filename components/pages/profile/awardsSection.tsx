@@ -56,6 +56,8 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
             description={award.description || "No description available"}
             badge={<Badge variant="secondary">{award.year || "N/A"}</Badge>}
             iconClassName="bg-amber-50 text-amber-500"
+            isView={true}
+            viewUrl={award.award_image}
           />
         ))}
       </div>
