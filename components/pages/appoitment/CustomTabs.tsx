@@ -71,7 +71,7 @@ const CustomTabs = ({
                     <TabsContent
                         key={tab.key}
                         value={tab.key}
-                        className={tabsContentClassName}
+                        className={"mt-4 " + tabsContentClassName}
                     >
                         {tab.content}
                     </TabsContent>

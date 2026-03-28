@@ -11,7 +11,6 @@ import AddPrescriptionDialog from "@/components/pages/appoitment/AddPrescription
 
 // Accordion Item Component
 function MedicineAccordionItem({ medicine, index }: { medicine: any; index: number }) {
-    console.log("medicine : ", medicine);
     const [isOpen, setIsOpen] = useState(false);
 
     // const getStatusColor = (status: string) => {
