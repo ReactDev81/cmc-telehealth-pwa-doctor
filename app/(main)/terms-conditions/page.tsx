@@ -1,10 +1,11 @@
 "use client";
 
 import { useAppProfileScreens } from "@/queries/useAppProfileScreens";
+import { useAuth } from "@/context/userContext";
 
 const Page = () => {
-
-    const { data, isLoading, error } = useAppProfileScreens();
+    const { token } = useAuth();
+    const { data, isLoading, error } = useAppProfileScreens(token || undefined);
 
     const termsAndConditionsData = data?.term_and_conditions;
 
