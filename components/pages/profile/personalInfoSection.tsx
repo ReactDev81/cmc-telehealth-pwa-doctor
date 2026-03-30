@@ -16,6 +16,7 @@ interface DepartmentItem {
 interface ProfileData {
   email?: string | null;
   bio?: string | null;
+  avatar?: string | null;
   doctor_departments?: DepartmentItem[];
 }
 
@@ -38,6 +39,10 @@ interface PersonalInfoSectionProps {
   onInputChange: (field: string, value: string) => void;
   onSave: () => void;
   onCancel: () => void;
+  averageRating?: {
+    average_rating: number;
+    total_reviews: number;
+  };
 }
 
 export default function PersonalInfoSection({

@@ -220,7 +220,7 @@ export default function AddPrescriptionDialog({
     onOpenChange(false);
   };
 
-  const medicineList = medicinesQuery.data || [];
+  const medicineList = medicinesQuery.data?.data || [];
 
   return (
     <>

@@ -8,12 +8,20 @@ export default function ReviewTab({ appointment }: { appointment: any }) {
 
     const formattedReview = reviewData
         ? {
+            id: reviewData?.id || String(Math.random()),
             patient_name: appointment?.patient?.name || "Anonymous",
             patient_image: appointment?.patient?.avatar || "",
+            patient_age: appointment?.patient?.age || "",
             patient_location: appointment?.patient?.city || "India",
             rating: reviewData?.rating || 0,
             title: reviewData?.title || "",
             content: reviewData?.content || "",
+            total_reviews: 0,
+            doctor_name: appointment?.doctor?.name || "",
+            doctor_avatar: appointment?.doctor?.avatar || "",
+            doctor_experience: "",
+            doctor_departments: "",
+            rating_stars: String(reviewData?.rating || 0),
             created_at: reviewData?.created_at || "",
         }
         : null;

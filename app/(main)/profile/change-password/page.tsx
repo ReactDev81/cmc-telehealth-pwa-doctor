@@ -8,7 +8,7 @@ import { ArrowLeft, Eye, EyeOff } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { useForm, FormProvider } from "react-hook-form";
 import { toast } from "sonner";
 import * as z from "zod";
 
@@ -57,7 +57,7 @@ export default function ChangePasswordPage() {
       onSuccess: async (response) => {
         toast.success(
           response.message ||
-            "Password changed successfully! Please login again.",
+          "Password changed successfully! Please login again.",
         );
         await logout(); // Clear cookies and token, causing a hard redirect to login internally
       },
@@ -74,7 +74,7 @@ export default function ChangePasswordPage() {
         } else {
           toast.error(
             error?.response?.data?.message ||
-              "Error changing password. Please try again.",
+            "Error changing password. Please try again.",
           );
         }
       },

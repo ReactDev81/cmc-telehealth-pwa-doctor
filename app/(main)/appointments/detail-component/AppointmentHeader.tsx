@@ -75,7 +75,7 @@ export default function AppointmentHeader({ appointment }: { appointment: any })
                         <div className="flex items-center justify-between flex-wrap gap-4">
 
                             <div className="flex items-center text-lg  flex-wrap gap-2">
-                               
+
 
                                 <div className="flex items-center gap-1">
                                     <p className="mt-0.5  flex items-center font-bold">
@@ -112,11 +112,11 @@ export default function AppointmentHeader({ appointment }: { appointment: any })
                                     ["confirmed", "rescheduled"].includes(appointment?.status) && (
                                         <Button
                                             variant="default"
-                                            className="opacity-75 hover:opacity-100 bg-primary text-white"
+                                            className="bg-red-700"
                                             onClick={() => setOpen(true)}
                                             disabled={loading}
                                         >
-                                            {loading ? "Cancelling..." : "Do you want to cancel this appointment?"}
+                                            {loading ? "Cancelling..." : "Cancel Appointment"}
                                         </Button>
                                     )}
                             </div>
