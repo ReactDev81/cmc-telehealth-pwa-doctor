@@ -1,7 +1,9 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { Mail, Phone, Star } from "lucide-react";
+import { Key, Mail, Phone, Star } from "lucide-react";
+import Link from "next/link";
 
 interface ProfileHeaderProps {
   fullName: string;
@@ -75,7 +77,13 @@ export default function ProfileHeader({
             </div>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-4 min-w-[140px]">
+            <Button variant="outline" size="sm" className="w-full text-xs" asChild>
+              <Link href="/profile/change-password">
+                <Key className="mr-2 h-3 w-3" />
+                Change Password
+              </Link>
+            </Button>
             <div className="text-center">
               <div className="text-3xl font-bold text-primary">{averageRatingValue}</div>
 
@@ -83,17 +91,18 @@ export default function ProfileHeader({
                 {Array.from({ length: 5 }).map((_, i) => (
                   <Star
                     key={i}
-                    className={`h-4 w-4 ${
-                      i < Math.round(averageRatingValue)
+                    className={`h-4 w-4 ${i < Math.round(averageRatingValue)
                         ? "fill-amber-400 text-amber-400"
                         : "text-gray-300"
-                    }`}
+                      }`}
                   />
                 ))}
               </div>
 
-              <p className="text-xs text-muted-foreground">{totalReviewsValue} reviews</p>
+              <p className="text-xs text-muted-foreground mb-3">{totalReviewsValue} reviews</p>
             </div>
+
+
           </div>
         </div>
       </CardContent>

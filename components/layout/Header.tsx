@@ -10,7 +10,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
   Separator,
@@ -23,7 +22,6 @@ import {
 import { useAuth } from "@/context/userContext";
 import { cn } from "@/lib/utils";
 import icon from "@/public/assets/icon/logo-light.png";
-import { NotificationDropdown } from "./NotificationDropdown";
 import type { NavItem } from "@/types/header";
 import {
   Calendar,
@@ -31,13 +29,13 @@ import {
   LogOut,
   Menu,
   MessageSquare,
-  Settings,
   User as UserIcon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { NotificationDropdown } from "./NotificationDropdown";
 
 export function Header() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -151,7 +149,6 @@ export function Header() {
           <NotificationDropdown />
           {user || initializing ? (
             <div className="flex items-center gap-3 pl-2 border-l">
-
               <div className="flex-col text-right hidden lg:flex">
                 <span className="text-sm font-semibold leading-none">
                   {initializing ? "unknown name" : name}
@@ -180,9 +177,6 @@ export function Header() {
                   </DropdownMenuTrigger>
 
                   <DropdownMenuContent className="w-56" align="end" forceMount>
-
-                    <DropdownMenuSeparator />
-
                     <DropdownMenuGroup>
                       <DropdownMenuItem asChild>
                         <Link href="/profile" className="cursor-pointer">
@@ -196,7 +190,10 @@ export function Header() {
 
                     <DropdownMenuItem
                       className="cursor-pointer text-destructive focus:text-destructive"
-                      onClick={logout}
+                      onClick={async () => {
+                        await logout();
+                        window.location.href = "/auth/login";
+                      }}
                       disabled={initializing}
                     >
                       <LogOut className="mr-2 h-4 w-4" />

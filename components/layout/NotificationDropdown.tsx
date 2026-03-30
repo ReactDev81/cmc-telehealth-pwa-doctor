@@ -162,7 +162,7 @@ export function NotificationDropdown() {
 
                           <div className="flex items-center justify-between flex-1 min-w-0">
                             <span className={cn(
-                              "text-[13px] font-bold truncate transition-colors",
+                              "text-[13px] truncate transition-colors",
                               !notification.is_read ? "text-foreground" : ""
                             )}>
                               {notification.title}
