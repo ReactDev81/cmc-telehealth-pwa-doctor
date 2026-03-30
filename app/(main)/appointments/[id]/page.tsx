@@ -1,8 +1,6 @@
 "use client";
-
 import { useParams } from "next/navigation";
 import { useState } from "react";
-
 import CustomTabs, { TabItem } from "@/components/custom/CustomTabs";
 import { useAppointmentById } from "@/queries/useAppointmentId";
 import OverviewTab from "../detail-component/OverviewTab";
@@ -10,8 +8,6 @@ import ReportsTab from "../detail-component/ReportsTab";
 import PreviousTab from "../detail-component/PreviousTab";
 import PrescriptionTab from "../detail-component/PrescriptionTab";
 import ReviewTab from "../detail-component/ReviewTab";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { Card } from "@/components/ui/card";
 import AppointmentHeader from "../detail-component/AppointmentHeader";
 
 export default function AppointmentDetail() {
@@ -20,7 +16,6 @@ export default function AppointmentDetail() {
 
     const { data, isLoading, error } = useAppointmentById(id);
 
-    // ✅ ADD THIS
     const [activeTab, setActiveTab] = useState("overview");
 
     if (isLoading) return <div>Loading...</div>;
@@ -65,7 +60,7 @@ export default function AppointmentDetail() {
             <CustomTabs
                 tabs={tabs}
                 activeTab={activeTab}
-                onTabChange={setActiveTab}   // ✅ IMPORTANT
+                onTabChange={setActiveTab} 
                 tabsListClassName="w-full mb-5"
             />
         </div>

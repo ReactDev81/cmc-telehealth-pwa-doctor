@@ -164,204 +164,6 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
           </CardContent>
         </Card>
 
-        {/* Appointment Details */}
-        <Card className="overflow-hidden">
-          <CardHeader className=" bg-muted/30">
-            <CardTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5 text-primary" />
-              <span className="text-base font-semibold">
-                Appointment Details
-              </span>
-            </CardTitle>
-          </CardHeader>
-
-          <CardContent className="p-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Date */}
-
-              <div className="flex items-center gap-2">
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <Calendar className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                      Date
-                    </p>
-                    <p className="font-medium mt-0.5">
-                      {schedule?.date_formatted ||
-                        appointment?.appointment_date_formatted}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Time */}
-                <div className="flex items-center gap-1 mt-5">
-                  <span className="font-medium">|</span>
-
-                  <p className="font-medium">
-                    {schedule?.time_formatted ||
-                      appointment?.appointment_time_formatted}
-                    {appointment?.appointment_end_time_formatted &&
-                      ` - ${appointment.appointment_end_time_formatted}`}
-                  </p>
-                </div>
-              </div>
-
-              {/* Consultation Type */}
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  {schedule?.consultation_type === "video" ? (
-                    <Video className="h-4 w-4 text-primary" />
-                  ) : schedule?.consultation_type === "phone" ? (
-                    <Phone className="h-4 w-4 text-primary" />
-                  ) : (
-                    <MapPin className="h-4 w-4 text-primary" />
-                  )}
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                    Consultation Type
-                  </p>
-                  <p className="font-medium mt-0.5">
-                    {schedule?.consultation_type_label ||
-                      appointment?.consultation_type_label}
-                  </p>
-                </div>
-              </div>
-
-              {/* Status */}
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  {statusConfig.icon}
-                </div>
-
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                    Status
-                  </p>
-
-                  <div className="mt-0.5">
-                    <Badge
-                      className={`${getStatusColor(
-                        "appointment",
-                        appointment.status,
-                      )}`}
-                    >
-                      {appointment?.status_label}
-                    </Badge>
-                  </div>
-                </div>
-              </div>
-
-              {/* Booking Type */}
-              <div className="flex items-start gap-3">
-                <div className="p-2 rounded-lg bg-primary/10">
-                  <CreditCard className="h-4 w-4 text-primary" />
-                </div>
-                <div>
-                  <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                    Booking Type
-                  </p>
-                  <p className="font-medium mt-0.5">
-                    {schedule?.booking_type || "Online"}
-                  </p>
-                </div>
-              </div>
-
-              {/* Can Reschedule */}
-              {!["completed", "failed", "rescheduled", "cancelled"].includes(
-                schedule?.status,
-              ) && (
-                <div className="flex items-start gap-3">
-                  <div className="p-2 rounded-lg bg-primary/10">
-                    <Calendar className="h-4 w-4 text-primary" />
-                  </div>
-                  <div>
-                    <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                      Can Reschedule
-                    </p>
-
-                    <div className="mt-0.5">
-                      {appointment?.can_reschedule ? (
-                        <Badge
-                          variant="outline"
-                          className="bg-green-50 text-green-700 border-green-200"
-                        >
-                          <CheckCircle className="h-3 w-3 mr-1" />
-                          Yes
-                        </Badge>
-                      ) : (
-                        <Badge
-                          variant="outline"
-                          className="bg-red-50 text-red-700 border-red-200"
-                        >
-                          <XCircle className="h-3 w-3 mr-1" />
-                          No
-                        </Badge>
-                      )}
-                    </div>
-                  </div>
-                </div>
-              )}
-
-              {/* Additional Info - Duration (if available) */}
-              {appointment?.appointment_time &&
-                appointment?.appointment_end_time && (
-                  <div className="flex items-start gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10">
-                      <Clock className="h-4 w-4 text-primary" />
-                    </div>
-                    <div>
-                      <p className="text-xs text-muted-foreground uppercase tracking-wide">
-                        Duration
-                      </p>
-                      <p className="font-medium mt-0.5">
-                        {(() => {
-                          const start = new Date(
-                            `2000-01-01 ${appointment.appointment_time}`,
-                          );
-                          const end = new Date(
-                            `2000-01-01 ${appointment.appointment_end_time}`,
-                          );
-                          const diff =
-                            (end.getTime() - start.getTime()) / (1000 * 60);
-                          return `${diff} minutes`;
-                        })()}
-                      </p>
-                    </div>
-                  </div>
-                )}
-            </div>
-
-            {/* Notes Section (if available) */}
-          </CardContent>
-        </Card>
-
-        {/* Doctor Info */}
-        <Card>
-          <CardContent>
-            <div className="flex items-center gap-4">
-              <Avatar className="h-14 w-14">
-                <AvatarImage src={doctor?.avatar} />
-                <AvatarFallback>{doctor?.name?.slice(0, 2)}</AvatarFallback>
-              </Avatar>
-
-              <div>
-                <h3 className="font-semibold">{doctor?.name}</h3>
-                <p className="text-muted-foreground text-sm">
-                  {doctor?.department}
-                </p>
-                <p className="text-sm">{doctor?.years_experience}</p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
-
-      {/* RIGHT SIDE */}
-      <div className="space-y-6">
-        {/* Contact Info */}
         <Card className="overflow-hidden">
           <CardHeader className="bg-muted/30">
             <CardTitle className="flex items-center gap-2">
@@ -460,6 +262,32 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
             </div>
           </CardContent>
         </Card>
+
+        {/* Doctor Info */}
+        <Card>
+          <CardContent>
+            <div className="flex items-center gap-4">
+              <Avatar className="h-14 w-14">
+                <AvatarImage src={doctor?.avatar} />
+                <AvatarFallback>{doctor?.name?.slice(0, 2)}</AvatarFallback>
+              </Avatar>
+
+              <div>
+                <h3 className="font-semibold">{doctor?.name}</h3>
+                <p className="text-muted-foreground text-sm">
+                  {doctor?.department}
+                </p>
+                <p className="text-sm">{doctor?.years_experience}</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* RIGHT SIDE */}
+      <div className="space-y-6">
+        {/* Contact Info */}
+    
 
         {/* Payment Info */}
         <Card>

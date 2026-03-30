@@ -1,123 +1,51 @@
-"use client";
-
-import { useState } from "react";
-import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
-} from "@/components/ui/card";
-
-import { Button } from "@/components/ui/button";
-import { Textarea } from "@/components/ui/textarea";
-import { Star } from "lucide-react";
+import { FeedbackCard } from "@/components/pages/feedback/FeedbackCard";
+import {  ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 export default function ReviewTab({ appointment }: { appointment: any }) {
-    const canAddReview = appointment?.can_add_review;
-    const reviews = appointment?.doctor?.review || [];
 
-    const [rating, setRating] = useState(0);
-    const [hover, setHover] = useState(0);
-    const [comment, setComment] = useState("");
+    const reviewData = appointment?.doctor?.review;
 
-    // ⭐ Submit handler (API baad me connect karenge)
-    const handleSubmit = () => {
-        console.log("Rating:", rating);
-        console.log("Comment:", comment);
-
-        alert("Review submitted (API connect karna baaki hai)");
-    };
+    const formattedReview = reviewData
+        ? {
+            patient_name: appointment?.patient?.name || "Anonymous",
+            patient_image: appointment?.patient?.avatar || "",
+            patient_location: appointment?.patient?.city || "India",
+            rating: reviewData?.rating || 0,
+            title: reviewData?.title || "",
+            content: reviewData?.content || "",
+            created_at: reviewData?.created_at || "",
+        }
+        : null;
 
     return (
         <div className="space-y-6">
 
-            {/* ⭐ Add Review Section */}
-            {canAddReview && (
-                <Card className="rounded-2xl border shadow-sm">
-                    <CardHeader>
-                        <CardTitle>Add Review</CardTitle>
-                    </CardHeader>
+            {!formattedReview ? (
+                <div className="text-center py-10 text-muted-foreground">
+                    No review available
+                </div>
+            ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
 
-                    <CardContent className="space-y-4">
+                    {/* 🔹 Card Wrapper */}
+                    <div className="space-y-3 relative">
 
-                        {/* ⭐ Star Rating */}
-                        <div className="flex gap-1">
-                            {[1, 2, 3, 4, 5].map((star) => (
-                                <Star
-                                    key={star}
-                                    className={`h-6 w-6 cursor-pointer transition ${(hover || rating) >= star
-                                            ? "text-yellow-400 fill-yellow-400"
-                                        : "text-primary"
-                                        }`}
-                                    onClick={() => setRating(star)}
-                                    onMouseEnter={() => setHover(star)}
-                                    onMouseLeave={() => setHover(0)}
-                                />
-                            ))}
-                        </div>
+                        <FeedbackCard review={formattedReview} />
 
-                        {/* 📝 Comment */}
-                        <Textarea
-                            placeholder="Write your feedback..."
-                            value={comment}
-                            onChange={(e) => setComment(e.target.value)}
-                        />
-
-                        {/* 🚀 Submit */}
-                        <Button
-                            disabled={!rating || !comment}
-                            onClick={handleSubmit}
+                        {/* ✅ View Button (only here) */}
+                            <Link href="/feedbacks"
+                                
+                            className="absolute top-25 right-6 bg-primary text-white rounded-full p-1"
                         >
-                            Submit Review
-                        </Button>
-                    </CardContent>
-                </Card>
+                            <ArrowRight />
+                        </Link>
+
+                    </div>
+
+                </div>
             )}
 
-            {/* 📋 Existing Reviews */}
-            <Card className="rounded-2xl border shadow-sm">
-                <CardHeader>
-                    <CardTitle>Patient Reviews</CardTitle>
-                </CardHeader>
-
-                <CardContent>
-                    {!reviews.length ? (
-                        <div className="text-center py-8 text-muted-foreground">
-                            No reviews yet
-                        </div>
-                    ) : (
-                        <div className="space-y-4">
-                            {reviews.map((rev: any, index: number) => (
-                                <div
-                                    key={index}
-                                    className="border-b pb-4 last:border-none"
-                                >
-                                    {/* ⭐ Stars */}
-                                    <div className="flex gap-1 mb-1">
-                                        {[1, 2, 3, 4, 5].map((star) => (
-                                            <Star
-                                                key={star}
-                                                className={`h-4 w-4 ${star <= rev.rating
-                                                        ? "text-yellow-400 fill-yellow-400"
-                                                    : "text-primary"
-                                                    }`}
-                                            />
-                                        ))}
-                                    </div>
-
-                                    {/* 📝 Comment */}
-                                    <p className="text-sm">{rev.comment}</p>
-
-                                    {/* 👤 Name */}
-                                    <p className="text-xs text-muted-foreground mt-1">
-                                        - {rev.patient_name || "Anonymous"}
-                                    </p>
-                                </div>
-                            ))}
-                        </div>
-                    )}
-                </CardContent>
-            </Card>
         </div>
     );
 }

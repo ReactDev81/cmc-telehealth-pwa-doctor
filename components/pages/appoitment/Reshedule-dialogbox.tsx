@@ -2,6 +2,7 @@
 
 import { getDoctorSlots } from "@/api/resheodule";
 import CustomDialog from "@/components/custom/Dialogboxs";
+import { Button } from "@/components/ui";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useAuth } from "@/context/userContext";
 import { rescheduleAppointment } from "@/mutations/reschedule";
@@ -11,24 +12,28 @@ interface RescheduleAppointmentDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     appointmentId: string;
+    setCustomDialogOpen: (val: boolean) => void;   // ✅ new
+    setDialogData: (data: any) => void;
 }
 
 export function RescheduleAppointmentDialog({
     open,
     onOpenChange,
     appointmentId,
+    setCustomDialogOpen,
+    setDialogData,
 }: RescheduleAppointmentDialogProps) {
     const [selectedDate, setSelectedDate] = useState("");
     const [selectedSlot, setSelectedSlot] = useState<any>(null); // ✅ selected time slot
     const [slots, setSlots] = useState<any[]>([]);
 
-    const [dialogOpen, setDialogOpen] = useState(false);
-    const [dialogData, setDialogData] = useState<{ title: string; description: string } | null>(null);
     const [loading, setLoading] = useState(false);
+
+    
 
     const { user } = useAuth();
 
-    
+
 
     useEffect(() => {
         if (open && user?.doctor_id) {
@@ -58,7 +63,7 @@ export function RescheduleAppointmentDialog({
             setSlots(formattedSlots || []);
 
             console.log("Selected Slot:", selectedSlot);
-         
+
 
             // Auto-select first available date
             if (formattedSlots.length > 0) {
@@ -105,8 +110,8 @@ export function RescheduleAppointmentDialog({
                                     setSelectedDate(date);
                                     setSelectedSlot(null); // reset slot when date changes
                                 }}
-                                className={`flex flex-col items-center p-3  rounded-xl text-center transition ${selectedDate === date
-                                    ? "bg-green-800 text-white"
+                                className={`flex flex-col items-center p-3  rounded-lg text-center transition ${selectedDate === date
+                                    ? "bg-primary text-white"
                                     : "bg-gray-100 text-gray-700"
                                     }`}
                             >
@@ -125,8 +130,8 @@ export function RescheduleAppointmentDialog({
                             <div
                                 key={slot.id}
                                 onClick={() => setSelectedSlot(slot)}
-                                className={`py-3 px-2 flex flex-col items-center justify-center text-center cursor-pointer rounded-xl transition
-                                ${selectedSlot?.id === slot.id ? "bg-green-800 text-white" : "bg-gray-100 hover:bg-green-100"}
+                                className={`py-3 px-2 flex flex-col items-center justify-center text-center cursor-pointer rounded-lg transition
+                                ${selectedSlot?.id === slot.id ? "bg-primary text-white" : "bg-gray-100 hover:bg-green-100"}
                                 `}
                             >
                                 <p className="font-medium text-xs">
@@ -135,7 +140,7 @@ export function RescheduleAppointmentDialog({
                                 <p className="text-xs">
                                     {slot.consultation_type_label}
                                     {slot.consultation_type === "in-person" && slot.opd_type
-                                        ? ` (${slot.opd_type})` 
+                                        ? ` (${slot.opd_type})`
                                         : ""}
                                 </p>
                             </div>
@@ -160,53 +165,57 @@ export function RescheduleAppointmentDialog({
                         try {
                             setLoading(true);
                             const res = await rescheduleAppointment(payload);
-                            console.log("Reschedule response:", res);
+
+                            console.log("✅ FULL API RESPONSE:", res);       // pura response
+                            console.log("✅ SUCCESS:", res.success);
+                            console.log("✅ MESSAGE:", res.message);
+                            console.log("✅ DATA:", res.data);
 
                             if (res.success) {
                                 setDialogData({
                                     title: "Appointment Rescheduled",
-                                    description: res.message || "Your appointment has been successfully rescheduled.",
+                                    description: res.message, // ✅ API message
+                                     type: "success",
                                 });
-                                setDialogOpen(true);
+
+                                onOpenChange(false);       // close main dialog
+                                setCustomDialogOpen(true); // open custom dialog
                             } else {
                                 // Optional: handle API returning success: false
                                 setDialogData({
                                     title: "Error",
                                     description: res.message || "Something went wrong.",
+                                    type: "danger",
                                 });
-                                setDialogOpen(true);
+                                onOpenChange(false);
+                                setCustomDialogOpen(true);
                             }
                         } catch (err: any) {
                             console.error("Error rescheduling:", err);
+
                             setDialogData({
-                                title: "Error",
+                                title: "Validation Error",
                                 description:
-                                    err.response?.data?.message || "Failed to reschedule appointment.",
+                                    err.response?.data?.errors?.message ||
+                                    err.response?.data?.message ||
+                                    "Something went wrong",
                             });
-                            setDialogOpen(true);
+
+                            onOpenChange(false);
+                            setCustomDialogOpen(true);
                         } finally {
                             setLoading(false);
                         }
                     }}
-                    className={`w-full mt-6 py-3 rounded-xl font-semibold transition ${selectedSlot
-                        ? "bg-green-800 hover:bg-green-700 text-white"
+                    className={`w-full mt-6 py-3 rounded-lg font-semibold transition ${selectedSlot
+                        ? "bg-primary text-white"
                         : "bg-gray-300 text-gray-500 cursor-not-allowed"
                         }`}
                 >
                     {loading ? "Rescheduling..." : "Reschedule"}
                 </button>
 
-                {dialogData && (
-                    <CustomDialog
-                        open={dialogOpen}
-                        onClose={() => setDialogOpen(false)}
-                        type="success"
-                        title={dialogData.title}
-                        description={dialogData.description}
-                        confirmText="OK"
-                        onConfirm={() => setDialogOpen(false)}
-                    />
-                )}
+               
             </DialogContent>
         </Dialog>
     );

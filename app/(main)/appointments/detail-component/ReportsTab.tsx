@@ -15,21 +15,6 @@ import { getStatusColor } from "@/src/utils/getStatusColor";
 export default function Reports({ appointment }: { appointment: any }) {
     const reports = appointment?.medical_reports || [];
 
-    // const getReportStatusColor = (status: string) => {
-    //     switch (status) {
-    //         case "shared":
-    //             return "bg-blue-100 text-blue-700 border-blue-200";
-    //         case "pending":
-    //             return "bg-yellow-100 text-yellow-700 border-yellow-200";
-    //         case "rejected":
-    //             return "bg-red-100 text-red-700 border-red-200";
-    //         case "approved":
-    //             return "bg-green-100 text-green-700 border-green-200";
-    //         default:
-    //             return "bg-gray-100 text-gray-700 border-gray-200";
-    //     }
-    // };
-
     // ✅ EMPTY STATE
     if (!reports.length) {
         return (
@@ -75,7 +60,7 @@ export default function Reports({ appointment }: { appointment: any }) {
 
                         <Button
                             size="sm"
-                            className="gap-2"
+                            className="gap-2 cursor-pointer"
                             onClick={() => window.open(report.file_url, "_blank")}
                         >
                             <ArrowUpRight className="h-4 w-4" />

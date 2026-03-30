@@ -1,7 +1,7 @@
 "use client";
 
 import { ReactNode } from "react";
-import { X } from "lucide-react";
+import { X, CheckCircle, XCircle } from "lucide-react";
 
 interface CustomDialogProps {
     open: boolean;
@@ -28,10 +28,12 @@ export default function CustomDialog({
     loading,
     type = "danger",
 }: CustomDialogProps) {
+
+
     if (!open) return null;
 
     return (
-        <div className="fixed inset-0 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
 
             {/* Box */}
             <div className="relative w-full max-w-md rounded-2xl bg-white p-6 text-center shadow-xl">
@@ -49,7 +51,13 @@ export default function CustomDialog({
                     className={`mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full ${type === "danger" ? "bg-red-100" : "bg-green-100"
                         }`}
                 >
-                    {icon}
+                    {icon ? (
+                        icon
+                    ) : type === "success" ? (
+                        <CheckCircle className="h-7 w-7 text-green-600" />
+                    ) : (
+                        <XCircle className="h-7 w-7 text-red-600" />
+                    )}
                 </div>
 
                 {/* Title */}
@@ -62,21 +70,21 @@ export default function CustomDialog({
 
                 {/* Buttons */}
                 <div className="flex gap-4 mt-6">
-                    {type === "danger" && (
+                    {/* {type === "danger" && (
                         <button
                             onClick={onClose}
-                            className="flex-1 rounded-lg bg-gray-100 text-xs  font-medium hover:bg-gray-200"
+                            className="flex-1 rounded-lg bg-gray-100 py-2 text-xs font-medium hover:bg-gray-200"
                         >
                             {cancelText}
                         </button>
-                    )}
+                    )} */}
 
                     <button
                         onClick={onConfirm}
                         disabled={loading}
                         className={`flex-1 rounded-lg py-2 text-xs font-medium text-white ${type === "danger"
-                                ? "bg-primary hover:bg-green-800"
-                            : "bg-primary hover:bg-green-800"
+                            ? "bg-red-600 hover:bg-red-700"
+                            : "bg-green-600 hover:bg-green-700"
                             }`}
                     >
                         {loading ? "Processing..." : confirmText}

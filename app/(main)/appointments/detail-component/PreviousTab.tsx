@@ -63,7 +63,7 @@ export default function PreviousTab({ appointment }: { appointment: any }) {
 
                         <Button
                             size="sm"
-                            className="gap-2"
+                            className="gap-2 cursor-pointer"
                             onClick={() => router.push(`/appointments/${item.id}`)}
                         >
                             <ArrowUpRight className="h-4 w-4" />

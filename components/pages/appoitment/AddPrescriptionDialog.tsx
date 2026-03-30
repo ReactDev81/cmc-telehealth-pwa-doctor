@@ -225,17 +225,10 @@ export default function AddPrescriptionDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="w-full max-w-2xl p-0 overflow-hidden">
+        <DialogContent className="w-full max-w-2xl! p-0 overflow-hidden">
           <DialogHeader className="border-b px-6 py-4">
             <div className="flex items-center justify-between">
               <DialogTitle>Add Prescription</DialogTitle>
-              {/* <button
-                type="button"
-                onClick={() => onOpenChange(false)}
-                className="rounded-md p-1 hover:bg-muted"
-              >
-                <X className="h-4 w-4" />
-              </button> */}
             </div>
           </DialogHeader>
 
