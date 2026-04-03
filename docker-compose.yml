@@ -2,10 +2,11 @@ services:
   nextjs-app:
     build:
       context: .
-      args:
-        NEXT_PUBLIC_API_BASE_URL: https://telehealthwebapplive.cmcludhiana.in/api/v2
 
     container_name: nextjs-app
+
+    volumes:
+      - ./public/config.js:/app/public/config.js
 
     ports:
       - "8000:3000"

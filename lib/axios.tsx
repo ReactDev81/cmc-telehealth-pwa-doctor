@@ -1,8 +1,25 @@
 import axios from "axios";
 import { getAuthToken } from "./authToken";
 
+declare global {
+    interface Window {
+        APP_CONFIG: {
+            API_BASE_URL: string;
+        };
+    }
+}
+
+const getBaseURL = () => {
+    if (typeof window !== "undefined" && window.APP_CONFIG) {
+        return window.APP_CONFIG.API_BASE_URL;
+    }
+
+    // fallback (important for SSR / safety)
+    return "https://telehealthwebapplive.cmcludhiana.in/api/v2";
+};
+
 const api = axios.create({
-    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+    baseURL: getBaseURL(),
     timeout: 30000,
     headers: {
         Accept: "application/json",

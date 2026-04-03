@@ -24,6 +24,9 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
             className={cn("antialiased", fontMono.variable, "font-sans", inter.variable)}
             suppressHydrationWarning
         >
+            <head>
+                <script src="/config.js" defer />
+            </head>
             <body className="min-h-full flex flex-col" suppressHydrationWarning>
                 <Providers>
                     {children}
