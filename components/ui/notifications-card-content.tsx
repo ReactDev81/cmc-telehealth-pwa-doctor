@@ -97,9 +97,15 @@ export default function NotificationsCardContent({
                 </p>
 
                 <p className="text-xs text-muted-foreground mt-1">
-                  {formatDistanceToNow(new Date(notification.created_at), {
-                    addSuffix: true,
-                  })}
+                  {(() => {
+                    try {
+                      const date = new Date(notification.created_at);
+                      if (isNaN(date.getTime())) return "";
+                      return formatDistanceToNow(date, { addSuffix: true });
+                    } catch (e) {
+                      return "";
+                    }
+                  })()}
                 </p>
               </div>
             </div>

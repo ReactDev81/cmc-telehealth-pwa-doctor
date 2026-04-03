@@ -13,19 +13,6 @@ import AddPrescriptionDialog from "@/components/pages/appoitment/AddPrescription
 function MedicineAccordionItem({ medicine, index }: { medicine: any; index: number }) {
     const [isOpen, setIsOpen] = useState(false);
 
-    // const getStatusColor = (status: string) => {
-    //     switch (status?.toLowerCase()) {
-    //         case "ongoing":
-    //             return "bg-green-100 text-green-800";
-    //         case "completed":
-    //             return "bg-blue-100 text-blue-800";
-    //         case "cancelled":
-    //             return "bg-red-100 text-red-800";
-    //         default:
-    //             return "bg-gray-100 text-gray-800";
-    //     }
-    // };
-
     const getMealLabel = (meal: string) => {
         switch (meal) {
             case "before_meal":

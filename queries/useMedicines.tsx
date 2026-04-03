@@ -21,6 +21,5 @@ export const useMedicines = ({
         search,
       }),
     placeholderData: (previousData) => previousData,
-    select: (data) => data.data || [],
   });
 };

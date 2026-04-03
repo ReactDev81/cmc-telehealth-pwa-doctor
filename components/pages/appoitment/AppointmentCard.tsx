@@ -17,6 +17,7 @@ import { useParams, useRouter } from "next/navigation";
 import { getStatusColor } from "@/src/utils/getStatusColor";
 import { useState } from "react";
 import { RescheduleAppointmentDialog } from "./Reshedule-dialogbox";
+import CustomDialog from "@/components/custom/Dialogboxs";
 
 interface AppointmentCardProps {
     appointment: any;
@@ -57,8 +58,13 @@ export default function AppointmentCard({
     onCallNow,
 }: AppointmentCardProps) {
     const [openRescheduleDialog, setOpenRescheduleDialog] = useState(false);
+    const [customDialogOpen, setCustomDialogOpen] = useState(false);
+    const [dialogData, setDialogData] = useState<any>(null);
+
+
+
     const showCallNow = appointment.call_now === true;
-   
+
     const router = useRouter();
 
 
@@ -66,13 +72,14 @@ export default function AppointmentCard({
     // button show hide in rescheduled", "failed", "completed base
     const shouldHideReschedule =
         variant === "past" ||
-        ["failed", "rescheduled", "cancelled", "completed"].includes(appointment.status);
+        ["failed", "cancelled", "rescheduled", "completed"].includes(appointment.status);
 
-  
+
+
 
     return (
         <>
-            <Card className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 cursor-pointer">
+            <Card className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
                 <CardContent>
                     {/* 🔹 Header */}
                     <div className="flex gap-3">
@@ -115,7 +122,7 @@ export default function AppointmentCard({
                                     </div>
                                 </div>
 
-                                {/* {showCallNow ? (
+                                {showCallNow ? (
                                     <Badge
                                         className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1.5 px-2.5 py-1 text-xs font-medium"
                                         onClick={(e) => {
@@ -136,7 +143,7 @@ export default function AppointmentCard({
                                         {appointment.status_label || appointment.status}
                                     </Badge>
                                 )
-                                } */}
+                                }
                             </div >
                         </div >
                     </div >
@@ -164,12 +171,12 @@ export default function AppointmentCard({
                         </div>
                     </div>
 
-                    {/* 🔹 Actions */}
-                    {/* 🔹 Actions */}
-                    <div className="flex gap-3 mt-4 items-stretch">
+                   
+                    {/* Actions */}
+                    <div className="flex gap-3 mt-4 items-stretch ">
                         {/* Always show View button */}
                         <Button
-                            className="flex-1 h-9"
+                            className="flex-1 h-9 cursor-pointer"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 router.push(`/appointments/${appointment.appointment_id || appointment.id}`);
@@ -182,15 +189,10 @@ export default function AppointmentCard({
                         {appointment.video_consultation?.can_join ? (
                             <Button
                                 variant="outline"
-                                className="h-9 flex-1 border-primary hover:opacity-90"
+                                className="h-9 flex-1 border-primary cursor-pointer hover:opacity-90"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    // Encode join_url to make it safe for URL param
-                                    // const encodedUrl = encodeURIComponent(appointment.video_consultation.join_url);
                                     window.open(`/start-consultation?room_url=${appointment.video_consultation.join_url}&appointment_id=${appointment.appointment_id}`, "_blank");
-
-                                    console.log(appointment.id);
-                                    
                                 }}
                             >
                                 <PhoneCallIcon /> Join Now
@@ -215,6 +217,24 @@ export default function AppointmentCard({
                 open={openRescheduleDialog}
                 onOpenChange={setOpenRescheduleDialog}
                 appointmentId={appointment.appointment_id || appointment.id}
+                setCustomDialogOpen={setCustomDialogOpen}   
+                setDialogData={setDialogData}
+            />
+
+            <CustomDialog
+                open={customDialogOpen}
+                onClose={() => {
+                    setCustomDialogOpen(false);
+                    setDialogData(null);
+                }}
+                type={dialogData?.title === "Validation Error" ? "danger" : "success"}
+                title={dialogData?.title || ""}
+                description={dialogData?.description || ""}
+                confirmText="OK"
+                onConfirm={() => {
+                    setCustomDialogOpen(false);
+                    setDialogData(null);
+                }}
             />
 
         </>

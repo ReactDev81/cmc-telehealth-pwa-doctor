@@ -41,7 +41,7 @@ export const STATUS_STYLES = {
     completed:
       "bg-emerald-100 text-emerald-700 border border-emerald-200",
     rescheduled:
-      "bg-gray-100 text-gray-700 border border-gray-200",
+      "bg-yellow-100 text-gray-700 border border-gray-200",
     pending:
       "bg-amber-100 text-amber-700 border border-amber-200",
     cancelled:

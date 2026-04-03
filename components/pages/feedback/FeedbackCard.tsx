@@ -71,6 +71,8 @@ export const FeedbackCard: React.FC<FeedbackCardProps> = ({ review, className, s
                     <p className="text-sm text-gray-600 leading-relaxed line-clamp-3">
                         {review.content}
                     </p>
+
+                    
                 </div>
             </CardContent>
         </Card>
