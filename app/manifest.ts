@@ -2,9 +2,9 @@ import type { MetadataRoute } from 'next'
 
 export default function manifest(): MetadataRoute.Manifest {
     return {
-        name: 'CMC Telehealth PWA',
-        short_name: 'CMC Telehealth PWA',
-        description: 'A Progressive Web App built with Next.js',
+        name: 'Telehealth',
+        short_name: 'Telehealth',
+        description: 'A Progressive Web App for Telehealth',
         start_url: '/',
         display: 'standalone',
         scope: "/",
