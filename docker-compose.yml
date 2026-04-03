@@ -7,7 +7,5 @@ services:
 
     ports:
       - "8000:3000"
-    volumes:
-      - /root/cmc-telehealth-pwa-doctor:/app
 
     restart: always
