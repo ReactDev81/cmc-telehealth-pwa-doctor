@@ -2,6 +2,7 @@ services:
   nextjs-app:
     build:
       context: .
+    image: cmc-telehealth-pwa-doctor-nextjs-app:latest
 
     container_name: nextjs-app
 
