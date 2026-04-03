@@ -5,9 +5,6 @@ services:
 
     container_name: nextjs-app
 
-    volumes:
-      - ./public/config.js:/app/public/config.js
-
     ports:
       - "8000:3000"
 

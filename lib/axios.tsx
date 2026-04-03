@@ -1,21 +1,16 @@
 import axios from "axios";
 import { getAuthToken } from "./authToken";
 
-declare global {
-    interface Window {
-        APP_CONFIG: {
-            API_BASE_URL: string;
-        };
-    }
-}
+const FALLBACK_API = "https://telehealthwebapplive.cmcludhiana.in/api/v2";
 
 const getBaseURL = () => {
-    if (typeof window !== "undefined" && window.APP_CONFIG) {
-        return window.APP_CONFIG.API_BASE_URL;
+    // Browser
+    if (typeof window !== "undefined") {
+        return window?.APP_CONFIG?.API_BASE_URL || FALLBACK_API;
     }
 
-    // fallback (important for SSR / safety)
-    return "https://telehealthwebapplive.cmcludhiana.in/api/v2";
+    // Server / build
+    return process.env.NEXT_PUBLIC_API_BASE_URL || FALLBACK_API;
 };
 
 const api = axios.create({
