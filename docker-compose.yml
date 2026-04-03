@@ -1,27 +1,11 @@
+version: "3.8"
+
 services:
-  cmc-telehealth-pwa-doctor:
+  nextjs-app:
     build: .
-    container_name: cmc-telehealth-pwa-doctor
-    working_dir: /app
-    command: npm run dev -- -p 8000
-    restart: unless-stopped
-
-    volumes:
-      - .:/app
-      - node_modules:/app/node_modules
-      - next_cache:/app/.next
-
+    container_name: nextjs-app
     ports:
-      - "8000:8000"
-
-    environment:
-      - WATCHPACK_POLLING=true
-      - CHOKIDAR_USEPOLLING=true
-      - NODE_ENV=development
-
+      - "8000:3000"
+    restart: always
     env_file:
       - .env
-
-volumes:
-  node_modules:
-  next_cache:
