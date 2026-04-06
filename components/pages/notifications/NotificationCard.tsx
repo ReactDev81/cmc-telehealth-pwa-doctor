@@ -113,7 +113,7 @@ export function NotificationCard({
                             </p>
                             <p className="flex items-center gap-1 text-[10px] text-muted-foreground mt-1.5">
                                 <Clock className="h-2.5 w-2.5" />
-                                {formatRelativeTime(notification.created_at)}
+                                {notification.created_at}
                             </p>
                         </div>
                     </div>

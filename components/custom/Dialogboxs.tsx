@@ -41,7 +41,7 @@ export default function CustomDialog({
                 {/* Close Button */}
                 <button
                     onClick={onClose}
-                    className="absolute right-4 top-4 text-gray-400 hover:text-gray-700"
+                    className="absolute right-3 top-0 text-gray-500 hover:text-gray-700"
                 >
                     <X className="h-5 w-5" />
                 </button>
@@ -83,8 +83,8 @@ export default function CustomDialog({
                         onClick={onConfirm}
                         disabled={loading}
                         className={`flex-1 rounded-lg py-2 text-xs font-medium text-white ${type === "danger"
-                            ? "bg-red-600 hover:bg-red-700"
-                            : "bg-green-600 hover:bg-green-700"
+                            ? "bg-destructive hover:bg-destructive/90"
+                            : "bg-success hover:bg-success/90"
                             }`}
                     >
                         {loading ? "Processing..." : confirmText}

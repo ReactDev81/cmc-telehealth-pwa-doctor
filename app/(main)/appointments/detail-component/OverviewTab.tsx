@@ -327,7 +327,7 @@ export default function OverviewTab({ appointment }: { appointment: any }) {
                 </p>
                 {doctor?.years_experience && (
                   <p className="text-xs text-muted-foreground mt-0.5">
-                    {doctor?.years_experience}
+                    {doctor?.years_experience} exp
                   </p>
                 )}
               </div>

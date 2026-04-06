@@ -34,6 +34,8 @@ export default function AwardsSection({ awards }: AwardsSectionProps) {
     : Array.isArray(awards)
       ? awards
       : [];
+
+  console.log("safeAwards : ", safeAwards);
   return (
     <div className="space-y-4">
       <SectionHeader

@@ -117,30 +117,29 @@ export default function AppointmentCard({
                                             </span>
                                         </Badge>
                                     </div>
+                                    {showCallNow ? (
+                                        <Badge
+                                            className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1 px-2 sm:px-2.5 py-1 text-[10px] sm:text-xs font-medium whitespace-nowrap self-start sm:self-auto"
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                onCallNow?.();
+                                            }}
+                                        >
+                                            <PhoneCall className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                                            <span className="hidden xs:inline">Join Now</span>
+                                            <span className="xs:hidden">Join</span>
+                                        </Badge>
+                                    ) : (
+                                        <Badge
+                                            className={`${getStatusColor(
+                                                "appointment",
+                                                appointment.status
+                                            )} text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 whitespace-nowrap shrink-0 self-start sm:self-auto`}
+                                        >
+                                            {appointment.status_label || appointment.status}
+                                        </Badge>
+                                    )}
                                 </div>
-
-                                {showCallNow ? (
-                                    <Badge
-                                        className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1 px-2 sm:px-2.5 py-1 text-[10px] sm:text-xs font-medium whitespace-nowrap self-start sm:self-auto"
-                                        onClick={(e) => {
-                                            e.stopPropagation();
-                                            onCallNow?.();
-                                        }}
-                                    >
-                                        <PhoneCall className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                                        <span className="hidden xs:inline">Join Now</span>
-                                        <span className="xs:hidden">Join</span>
-                                    </Badge>
-                                ) : (
-                                    <Badge
-                                        className={`${getStatusColor(
-                                            "appointment",
-                                            appointment.status
-                                        )} text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 whitespace-nowrap shrink-0 self-start sm:self-auto`}
-                                    >
-                                        {appointment.status_label || appointment.status}
-                                    </Badge>
-                                )}
                             </div>
                         </div>
                     </div>
@@ -197,7 +196,7 @@ export default function AppointmentCard({
                             // Else show Reschedule if allowed
                             !shouldHideReschedule && (
                                 <Button
-                                        className="flex-1 h-8 sm:h-9 text-xs md:py-0 py-2 sm:text-sm"
+                                    className="flex-1 h-8 sm:h-9 text-xs md:py-0 py-2 sm:text-sm"
                                     variant="outline"
                                     onClick={() => setOpenRescheduleDialog(true)}
                                 >
@@ -213,7 +212,7 @@ export default function AppointmentCard({
                 open={openRescheduleDialog}
                 onOpenChange={setOpenRescheduleDialog}
                 appointmentId={appointment.appointment_id || appointment.id}
-                setCustomDialogOpen={setCustomDialogOpen}   
+                setCustomDialogOpen={setCustomDialogOpen}
                 setDialogData={setDialogData}
             />
 

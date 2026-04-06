@@ -220,7 +220,7 @@ const Home = () => {
                                     error={notificationsError?.message || null}
                                     limit={3}
                                     onClickItem={(id) => markAsRead(id)}
-                                            onViewAll={() => router.push("/notifications")}
+                                    onViewAll={() => router.push("/notifications")}
                                     getIcon={(group) => getNotificationIcon(group)}
                                 />
                             </div>

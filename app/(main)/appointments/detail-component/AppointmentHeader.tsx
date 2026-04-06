@@ -94,8 +94,7 @@ export default function AppointmentHeader({ appointment }: { appointment: any })
                                 {!successOpen &&
                                     ["confirmed", "rescheduled"].includes(appointment?.status) && (
                                         <Button
-                                            variant="default"
-                                            className="bg-red-700 hover:bg-red-800"
+                                            variant="destructive"
                                             onClick={() => setOpen(true)}
                                             disabled={loading}
                                         >
