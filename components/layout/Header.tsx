@@ -222,14 +222,14 @@ export function Header() {
                   onOpenChange={setIsMobileMenuOpen}
                 >
                   <SheetTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <Menu className="h-5 w-5" />
+                    <Button variant="ghost" size="icon" className="h-10 w-10">
+                      <Menu className="h-6! w-6!" />
                     </Button>
                   </SheetTrigger>
 
                   <SheetContent
                     side="right"
-                    className="w-[280px] sm:w-[350px] p-0"
+                    className="w-87.5 p-0"
                   >
                     {/* Header with Logo and Close */}
                     <SheetHeader className="border-b p-4">
@@ -261,8 +261,6 @@ export function Header() {
                         </div>
                       </div>
                     </SheetHeader>
-
-
 
                     {/* Navigation Items */}
                     <nav className="flex flex-col gap-1 p-4">

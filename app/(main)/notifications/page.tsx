@@ -289,12 +289,12 @@ export default function NotificationsPage() {
       </div>
 
       
-        <CustomTabs
-          tabs={tabs}
-          activeTab={activeTab}
-          onTabChange={setActiveTab}
-          tabsListClassName="md:max-w-2xl w-full overflow-x-auto overflow-y-hidden scrollbar-hide flex-nowrap justify-start sm:justify-start md:justify-start lg:justify-start"
-        />
+      <CustomTabs
+        tabs={tabs}
+        activeTab={activeTab}
+        onTabChange={setActiveTab}
+        tabsListClassName="md:max-w-2xl w-full overflow-x-auto overflow-y-hidden flex-nowrap justify-start sm:justify-start md:justify-start lg:justify-start [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      />
       
     </>
   );

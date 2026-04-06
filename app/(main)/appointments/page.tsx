@@ -175,7 +175,7 @@ const AppointmentsContent = () => {
         tabs={appointmentTabs}
         activeTab={activeTab}
         onTabChange={handleTabChange}
-        tabsListClassName="w-full md:max-w-lg overflow-x-auto overflow-y-hidden scrollbar-hide flex-nowrap justify-start sm:justify-start md:justify-start lg:justify-start"
+        tabsListClassName="w-full md:max-w-lg overflow-x-auto overflow-y-hidden scrollbar-hide flex-nowrap justify-start sm:justify-start md:justify-start lg:justify-start [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
       />
     </div>
   );

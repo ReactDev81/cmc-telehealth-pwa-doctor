@@ -99,9 +99,7 @@ export default function AppointmentDetail() {
                     tabs={tabs}
                     activeTab={activeTab}
                     onTabChange={setActiveTab}
-                    tabsListClassName="w-full overflow-x-auto overflow-y-hidden scrollbar-hide flex-nowrap justify-start sm:justify-start md:justify-start lg:justify-start"
-          
-                    
+                    tabsListClassName="w-full overflow-x-auto overflow-y-hidden  flex-nowrap justify-start sm:justify-start md:justify-start lg:justify-start [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
                 />
             </div>
         </div>
