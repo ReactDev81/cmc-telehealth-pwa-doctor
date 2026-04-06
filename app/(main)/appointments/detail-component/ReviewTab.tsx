@@ -44,9 +44,9 @@ export default function ReviewTab({ appointment }: { appointment: any }) {
                         {/* ✅ View Button (only here) */}
                             <Link href="/feedbacks"
                                 
-                            className="absolute top-25 right-6 bg-primary text-white rounded-full p-1"
+                            className="absolute md:top-28 top-22 md:right-6 right-3 bg-primary text-white rounded-full p-1"
                         >
-                            <ArrowRight />
+                            <ArrowRight className="h-4 w-4 md:h-5 md:w-5"/>
                         </Link>
 
                     </div>

@@ -217,27 +217,24 @@ export function Header() {
                       side="right"
                       className="w-[300px] sm:w-[400px]"
                     >
-                      <SheetHeader>
+                      <SheetHeader className="border-b">
                         <SheetTitle className="flex items-center gap-2 text-left">
-                          <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary">
-                            <span className="text-lg font-bold text-primary-foreground">
-                              HP
-                            </span>
-                          </div>
-                          <div>
-                            <h2 className="text-lg font-semibold">
-                              HealthCare Pro
-                            </h2>
-                            <p className="text-xs text-muted-foreground">
-                              Telehealth Platform
-                            </p>
-                          </div>
+                          <Link href="/" className="flex items-center space-x-2">
+                            <Image
+                              src={icon}
+                              alt="Logo"
+                              width={180}
+                              height={32}
+                              className="w-32 md:w-44 h-auto"
+                              priority
+                            />
+                          </Link>
                         </SheetTitle>
                       </SheetHeader>
 
-                      <Separator className="my-4" />
+                    
 
-                      <nav className="flex flex-col gap-2">
+                      <nav className="flex flex-col gap-2 mt-4">
                         {navItems.map((item) => (
                           <Link
                             key={item.href}

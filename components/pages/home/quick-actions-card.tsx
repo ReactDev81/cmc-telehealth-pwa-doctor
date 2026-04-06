@@ -29,12 +29,12 @@ export default function QuickActionsCard({
       </CardHeader>
 
       <CardContent>
-        <div className="grid gap-3 md:grid-cols-5">
+        <div className="grid gap-3 md:grid-cols-5 ">
           {actions.map((action) => (
             <Button
               key={action.id}
               variant="outline"
-              className="h-auto flex-col gap-2 py-6"
+              className="h-auto flex-col gap-2 py-6 cursor-pointer"
               onClick={() => router.push(action.href)}
             >
               {action.icon}

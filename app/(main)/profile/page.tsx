@@ -264,7 +264,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 md:px-4">
       <ProfileHeader
         fullName={fullName}
         avatar={personalInfo?.avatar ?? ""}
@@ -281,7 +281,7 @@ const ProfilePage = () => {
         tabs={tabs}
         activeTab={activeTab}
         onTabChange={setActiveTab}
-        tabsListClassName="w-full"
+        tabsListClassName="w-full overflow-x-auto overflow-y-hidden scrollbar-hide flex-nowrap justify-start sm:justify-start md:justify-start lg:justify-start"
       />
     </div>
   );

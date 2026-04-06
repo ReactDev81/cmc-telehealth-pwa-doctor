@@ -9,6 +9,7 @@ import PreviousTab from "../detail-component/PreviousTab";
 import PrescriptionTab from "../detail-component/PrescriptionTab";
 import ReviewTab from "../detail-component/ReviewTab";
 import AppointmentHeader from "../detail-component/AppointmentHeader";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export default function AppointmentDetail() {
     const params = useParams();
@@ -18,8 +19,34 @@ export default function AppointmentDetail() {
 
     const [activeTab, setActiveTab] = useState("overview");
 
-    if (isLoading) return <div>Loading...</div>;
-    if (error) return <div>Error loading appointment</div>;
+    // Loading skeleton
+    if (isLoading) {
+        return (
+            <div className="space-y-4 sm:space-y-6 px-3 sm:px-4 md:px-6 py-4 sm:py-6">
+                <div className="flex flex-col gap-2">
+                    <Skeleton className="h-8 w-48 sm:h-9 sm:w-56" />
+                    <Skeleton className="h-32 w-full rounded-xl" />
+                    <Skeleton className="h-12 w-full rounded-lg" />
+                    <Skeleton className="h-64 w-full rounded-xl" />
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="flex items-center justify-center min-h-[400px] px-4">
+                <div className="text-center">
+                    <div className="text-red-500 text-base sm:text-lg font-semibold mb-2">
+                        Error Loading Appointment
+                    </div>
+                    <p className="text-sm text-muted-foreground">
+                        Failed to load appointment details. Please try again.
+                    </p>
+                </div>
+            </div>
+        );
+    }
 
     const appointment = data?.data;
 
@@ -42,7 +69,7 @@ export default function AppointmentDetail() {
         {
             key: "prescription",
             label: "Prescription",
-            content: <PrescriptionTab appointmentId={appointment.appointment_id} />,
+            content: <PrescriptionTab appointmentId={appointment?.appointment_id} />,
         },
         {
             key: "review",
@@ -52,17 +79,31 @@ export default function AppointmentDetail() {
     ];
 
     return (
-        <div className="space-y-4">
-            <h1 className="heading-lg">Appointment Detail</h1>
+        <div className="space-y-3 sm:space-y-4 md:space-y-5 md:px-4">
+            {/* Page Title */}
+            <div>
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-primary tracking-tight">
+                    Appointment Detail
+                </h1>
+                <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                    View and manage appointment details, reports, and prescriptions
+                </p>
+            </div>
 
+            {/* Appointment Header */}
             <AppointmentHeader appointment={appointment} />
 
-            <CustomTabs
-                tabs={tabs}
-                activeTab={activeTab}
-                onTabChange={setActiveTab} 
-                tabsListClassName="w-full mb-5"
-            />
+            {/* Custom Tabs with Horizontal Scroll on Mobile */}
+            <div className="w-full mt-5 md:mt-0">
+                <CustomTabs
+                    tabs={tabs}
+                    activeTab={activeTab}
+                    onTabChange={setActiveTab}
+                    tabsListClassName="w-full overflow-x-auto overflow-y-hidden scrollbar-hide flex-nowrap justify-start sm:justify-start md:justify-start lg:justify-start"
+          
+                    
+                />
+            </div>
         </div>
     );
 }

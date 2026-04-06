@@ -46,7 +46,7 @@ export default function PatientsPage() {
     const pageCount = data?.pagination?.last_page ?? 1;
 
     return (
-        <div className="space-y-6 p-4">
+        <div className="space-y-6 md:px-4">
             <div>
                 <h1 className="text-2xl font-semibold">All Patients</h1>
                 <p className="text-sm text-muted-foreground">

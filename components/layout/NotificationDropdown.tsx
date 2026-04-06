@@ -107,7 +107,7 @@ export function NotificationDropdown() {
 
       <DropdownMenuContent
         align="end"
-        className="w-[calc(100vw-2rem)] sm:w-96 p-0 overflow-hidden shadow-2xl border-border/50"
+        className="w-[calc(100vw)] sm:w-96 p-0 overflow-hidden shadow-2xl border-border/50"
       >
         <div className="flex flex-col max-h-[550px] bg-background">
           {/* Header Section */}

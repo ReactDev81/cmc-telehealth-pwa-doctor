@@ -21,9 +21,9 @@ export default function AppointmentFilters({
     statusOptions,
 }: AppointmentFiltersProps) {
     return (
-        <Card className="border-border">
-            <CardContent>
-                <div className="flex flex-col gap-4 md:flex-row">
+      
+            <CardContent className="p-0">
+                <div className="flex flex-col md:gap-4 gap-2 md:flex-row">
                     <div className="flex-1">
                         <div className="relative">
                             <Search className="absolute top-1/2 left-3 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -37,9 +37,9 @@ export default function AppointmentFilters({
                     </div>
 
 
-                    <div className="flex gap-2 rounded border">
+                    <div className="flex gap-2 rounded">
                         <Select value={selectedFilter} onValueChange={setSelectedFilter}>
-                            <SelectTrigger className="w-45">
+                            <SelectTrigger className="w-auto">
                                 <Filter className="mr-2 h-4 w-4" />
                                 <SelectValue placeholder="Filter by status" />
                             </SelectTrigger>
@@ -54,6 +54,6 @@ export default function AppointmentFilters({
                     </div>
                 </div>
             </CardContent>
-        </Card>
+ 
     );
 }

@@ -21,7 +21,7 @@ import {
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, X } from "lucide-react";
+import { Loader2, X, Search } from "lucide-react";
 import PaginationControls from "@/components/pagination/PaginationControls";
 import {
   Select,
@@ -84,26 +84,42 @@ export function DataTable<T>({
     columns,
     pageCount,
     manualPagination: true,
-    manualFiltering: true,
+    manualFiltering: false, // Change to false to enable client-side filtering
     manualSorting: true,
-    state: {},
+    state: {
+      globalFilter: searchValue, // Add this
+    },
+    onGlobalFilterChange: (value) => {
+      onSearch?.(value as string); // Trigger search when filter changes
+    },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
   });
 
+  // Clear all filters
+  const handleClearAll = () => {
+    if (onClearFilters) {
+      onClearFilters();
+    }
+    if (onSearch) {
+      onSearch("");
+    }
+    table.setGlobalFilter("");
+  };
 
   return (
     <div className="space-y-4">
       {/* Toolbar: Search + Filters */}
       <div className="flex flex-wrap items-center gap-3">
         {enableSearch && (
-          <div className="flex-1 min-w-[200px]">
+          <div className="relative flex-1 min-w-[200px]">
+            <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search..."
               value={searchValue}
               onChange={(e) => onSearch?.(e.target.value)}
-              className="h-8"
+              className="h-9 pl-8 text-sm"
             />
           </div>
         )}
@@ -115,7 +131,7 @@ export function DataTable<T>({
               value={filter.value || "all"}
               onValueChange={filter.onChange}
             >
-              <SelectTrigger className="h-8 w-fit min-w-[130px]">
+              <SelectTrigger className="h-9 w-fit min-w-[130px] text-sm">
                 <SelectValue placeholder={filter.label} />
               </SelectTrigger>
               <SelectContent>
@@ -129,14 +145,14 @@ export function DataTable<T>({
             </Select>
           ))}
 
-          {onClearFilters && (
+          {(searchValue || filters.some(f => f.value && f.value !== "all")) && (
             <Button
               variant="ghost"
-              onClick={onClearFilters}
-              className="h-8 px-2 lg:px-3 text-muted-foreground"
+              onClick={handleClearAll}
+              className="h-9 px-3 text-muted-foreground text-sm"
             >
               Reset
-              <X className="ml-2 h-4 w-4" />
+              <X className="ml-2 h-3.5 w-3.5" />
             </Button>
           )}
         </div>
@@ -151,7 +167,7 @@ export function DataTable<T>({
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
-                    className="px-4 py-3 text-sm font-semibold"
+                    className="px-3 py-3 sm:px-4 text-xs sm:text-sm font-semibold"
                   >
                     {header.isPlaceholder
                       ? null
@@ -181,7 +197,7 @@ export function DataTable<T>({
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
                       key={cell.id}
-                      className="px-4 py-3 align-middle"
+                      className="px-3 py-3 sm:px-4 align-middle text-xs sm:text-sm"
                     >
                       {flexRender(
                         cell.column.columnDef.cell,
@@ -195,7 +211,7 @@ export function DataTable<T>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="text-center py-10"
+                  className="text-center py-10 text-sm text-muted-foreground"
                 >
                   No data found
                 </TableCell>
@@ -206,7 +222,7 @@ export function DataTable<T>({
       </div>
 
       {/* Pagination */}
-      {onPageChange && (
+      {onPageChange && pageCount > 1 && (
         <PaginationControls
           currentPage={currentPage}
           totalPages={pageCount}
@@ -215,7 +231,6 @@ export function DataTable<T>({
           onPageChange={onPageChange}
         />
       )}
-
     </div>
   );
 }

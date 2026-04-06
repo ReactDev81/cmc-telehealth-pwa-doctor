@@ -79,37 +79,34 @@ export default function AppointmentCard({
 
     return (
         <>
-            <Card className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300">
-                <CardContent>
+            <Card className="group hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 h-full">
+                <CardContent className="p-3 sm:p-4 md:p-5">
                     {/* 🔹 Header */}
-                    <div className="flex gap-3">
-
+                    <div className="flex gap-2 sm:gap-3">
                         {/* Avatar */}
-                        <Avatar className="h-12 w-12 shrink-0 border-2 border-primary/10">
+                        <Avatar className="h-10 w-10 sm:h-12 sm:w-12 shrink-0 border-2 border-primary/10">
                             <AvatarImage
                                 src={appointment.patient?.avatar || appointment?.patient_image || ""}
                                 alt={appointment.patient?.name || appointment?.patient_name || "Patient"}
                             />
-                            <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                            <AvatarFallback className="bg-primary/10 text-primary font-medium text-xs sm:text-sm">
                                 {getInitials(appointment.patient?.name || appointment?.patient_name)}
                             </AvatarFallback>
                         </Avatar>
 
                         {/* Patient Info */}
                         <div className="flex-1 min-w-0">
-
-                            <div className="flex items-start justify-between gap-2 flex-nowrap">
-
+                            <div className="flex flex-row sm:items-start justify-between gap-1.5 sm:gap-2">
                                 {/* Left */}
                                 <div className="flex-1 min-w-0">
-                                    <h3 >
+                                    <h3 className="text-sm sm:text-base font-semibold truncate">
                                         {appointment.patient?.name || appointment?.patient_name || "Unknown Patient"}
                                     </h3>
 
-                                    <div className="flex items-center gap-1.5 mt-1.5 flex-wrap">
+                                    <div className="flex items-center gap-1.5 mt-1 flex-wrap">
                                         <Badge
                                             variant="outline"
-                                            className="gap-1 text-xs font-medium px-2 py-0.5 shrink-0"
+                                            className="gap-1 text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 shrink-0"
                                         >
                                             {getConsultationIcon(appointment.consultation_type)}
                                             <span>
@@ -124,45 +121,43 @@ export default function AppointmentCard({
 
                                 {showCallNow ? (
                                     <Badge
-                                        className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1.5 px-2.5 py-1 text-xs font-medium"
+                                        className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1 px-2 sm:px-2.5 py-1 text-[10px] sm:text-xs font-medium whitespace-nowrap self-start sm:self-auto"
                                         onClick={(e) => {
                                             e.stopPropagation();
                                             onCallNow?.();
                                         }}
                                     >
-                                        <PhoneCall className="h-3 w-3" />
-                                        Join Now
+                                        <PhoneCall className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                                        <span className="hidden xs:inline">Join Now</span>
+                                        <span className="xs:hidden">Join</span>
                                     </Badge>
                                 ) : (
                                     <Badge
                                         className={`${getStatusColor(
                                             "appointment",
                                             appointment.status
-                                        )} text-xs font-medium px-2 py-0.5 whitespace-nowrap`}
+                                        )} text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 whitespace-nowrap shrink-0 self-start sm:self-auto`}
                                     >
                                         {appointment.status_label || appointment.status}
                                     </Badge>
-                                )
-                                }
-                            </div >
-                        </div >
-                    </div >
-                    {/* 
+                                )}
+                            </div>
+                        </div>
+                    </div>
 
-                {/* 🔹 Date & Time */}
-                    <div className="mt-4 space-y-1.5">
-
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                            <Calendar className="h-3.5 w-3.5 shrink-0" />
-                            <span className="text-small">
+                    {/* 🔹 Date & Time */}
+                    <div className="mt-3 sm:mt-4 space-y-1.5">
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground">
+                            <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" />
+                            <span className="text-xs sm:text-sm truncate">
                                 {appointment.appointment_date_formatted ||
                                     appointment.appointment_date || appointment.date}
                             </span>
                         </div>
 
-                        <div className="flex items-center gap-2 text-muted-foreground">
-                            <Clock className="h-3.5 w-3.5 shrink-0" />
-                            <span className="text-small">
+                        <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground">
+                            <Clock className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" />
+                            <span className="text-xs sm:text-sm truncate">
                                 {appointment.appointment_time_formatted ||
                                     appointment.appointment_time || appointment.time}
                                 {appointment.appointment_end_time_formatted &&
@@ -171,12 +166,11 @@ export default function AppointmentCard({
                         </div>
                     </div>
 
-                   
                     {/* Actions */}
-                    <div className="flex gap-3 mt-4 items-stretch ">
+                    <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mt-4 sm:mt-5">
                         {/* Always show View button */}
                         <Button
-                            className="flex-1 h-9 cursor-pointer"
+                            className="flex-1 h-8 sm:h-9 text-xs sm:text-sm cursor-pointer md:py-0 py-2"
                             onClick={(e) => {
                                 e.stopPropagation();
                                 router.push(`/appointments/${appointment.appointment_id || appointment.id}`);
@@ -189,19 +183,21 @@ export default function AppointmentCard({
                         {appointment.video_consultation?.can_join ? (
                             <Button
                                 variant="outline"
-                                className="h-9 flex-1 border-primary cursor-pointer hover:opacity-90"
+                                className="flex-1 h-8 sm:h-9 border-primary cursor-pointer hover:opacity-90  text-xs sm:text-sm gap-1.5 flex items-center justify-center"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     window.open(`/start-consultation?room_url=${appointment.video_consultation.join_url}&appointment_id=${appointment.appointment_id}`, "_blank");
                                 }}
                             >
-                                <PhoneCallIcon /> Join Now
+                                <PhoneCallIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />
+                                <span className="hidden xs:inline">Join Now</span>
+                                <span className="xs:hidden">Join</span>
                             </Button>
                         ) : (
                             // Else show Reschedule if allowed
                             !shouldHideReschedule && (
                                 <Button
-                                    className="h-9 flex-1"
+                                        className="flex-1 h-8 sm:h-9 text-xs md:py-0 py-2 sm:text-sm"
                                     variant="outline"
                                     onClick={() => setOpenRescheduleDialog(true)}
                                 >
@@ -210,8 +206,8 @@ export default function AppointmentCard({
                             )
                         )}
                     </div>
-                </CardContent >
-            </Card >
+                </CardContent>
+            </Card>
 
             <RescheduleAppointmentDialog
                 open={openRescheduleDialog}

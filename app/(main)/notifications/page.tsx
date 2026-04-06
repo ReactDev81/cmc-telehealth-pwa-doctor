@@ -269,7 +269,7 @@ export default function NotificationsPage() {
         <div className="space-y-4">
 
           <div className="space-y-1">
-            <h1>
+            <h1 className="font-bold">
               Notifications
             </h1>
             <p className="text-muted-foreground/60 text-sm font-medium flex items-center gap-2">
@@ -288,12 +288,14 @@ export default function NotificationsPage() {
         </div>
       </div>
 
-      <CustomTabs
-        tabs={tabs}
-        activeTab={activeTab}
-        onTabChange={setActiveTab}
-        tabsListClassName={cn("max-w-2xl")}
-      />
+      
+        <CustomTabs
+          tabs={tabs}
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          tabsListClassName="md:max-w-2xl w-full overflow-x-auto overflow-y-hidden scrollbar-hide flex-nowrap justify-start sm:justify-start md:justify-start lg:justify-start"
+        />
+      
     </>
   );
 }

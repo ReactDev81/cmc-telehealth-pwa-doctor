@@ -204,8 +204,8 @@ export default function AddPrescriptionDialog({
       onError: (error: any) => {
         alert(
           error?.response?.data?.errors?.message ||
-            error?.message ||
-            "Failed to add prescription. Please try again."
+          error?.message ||
+          "Failed to add prescription. Please try again."
         );
       },
     });
@@ -225,30 +225,34 @@ export default function AddPrescriptionDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="w-full max-w-2xl! p-0 overflow-hidden">
-          <DialogHeader className="border-b px-6 py-4">
+        <DialogContent className="w-[95vw] max-w-2xl! p-0 overflow-hidden rounded-xl sm:rounded-2xl">
+          <DialogHeader className="border-b px-4 sm:px-6 py-3 sm:py-4">
             <div className="flex items-center justify-between">
-              <DialogTitle>Add Prescription</DialogTitle>
+              <DialogTitle className="text-base sm:text-lg md:text-xl">
+                Add Prescription
+              </DialogTitle>
             </div>
           </DialogHeader>
 
-          <div className="max-h-[80vh] overflow-y-auto px-6 py-5">
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
+          <div className="max-h-[80vh] overflow-y-auto px-4 sm:px-6 py-4 sm:py-5">
+            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
               {/* Medicine search / selected medicine */}
-              <div className="space-y-2">
-                <Label>Medicine</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label className="text-xs sm:text-sm">Medicine</Label>
 
                 {selectedMedicineName ? (
-                  <div className="flex items-center justify-between rounded-lg border bg-muted/40 px-3 py-2">
+                  <div className="flex items-center justify-between rounded-lg border bg-muted/40 px-2 sm:px-3 py-1.5 sm:py-2">
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">{selectedMedicineName}</span>
+                      <span className="font-medium text-xs sm:text-sm">
+                        {selectedMedicineName}
+                      </span>
                     </div>
                     <button
                       type="button"
                       onClick={clearSelectedMedicine}
                       className="rounded-md p-1 text-muted-foreground hover:bg-muted"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-3 w-3 sm:h-4 sm:w-4" />
                     </button>
                   </div>
                 ) : (
@@ -257,12 +261,13 @@ export default function AddPrescriptionDialog({
                       placeholder="Search medicine..."
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
+                      className="h-9 sm:h-10 text-xs sm:text-sm"
                     />
 
                     {!!searchQuery && (
-                      <div className="max-h-56 overflow-y-auto rounded-md border bg-background">
+                      <div className="max-h-48 sm:max-h-56 overflow-y-auto rounded-md border bg-background">
                         {medicinesQuery.isLoading ? (
-                          <div className="p-3 text-sm text-muted-foreground">
+                          <div className="p-2 sm:p-3 text-xs sm:text-sm text-muted-foreground">
                             Searching...
                           </div>
                         ) : medicineList.length > 0 ? (
@@ -271,16 +276,16 @@ export default function AddPrescriptionDialog({
                               key={medicine.id}
                               type="button"
                               onClick={() => handleSelectMedicine(medicine)}
-                              className="flex w-full items-center justify-between px-3 py-2 text-left hover:bg-muted"
+                              className="flex w-full items-center justify-between px-2 sm:px-3 py-1.5 sm:py-2 text-left hover:bg-muted"
                             >
-                              <span>{medicine.name}</span>
-                              <span className="text-xs text-muted-foreground">
+                              <span className="text-xs sm:text-sm">{medicine.name}</span>
+                              <span className="text-[9px] sm:text-xs text-muted-foreground">
                                 {medicine.type || "tablet"}
                               </span>
                             </button>
                           ))
                         ) : (
-                          <div className="p-3 text-sm text-muted-foreground">
+                          <div className="p-2 sm:p-3 text-xs sm:text-sm text-muted-foreground">
                             No medicines found
                           </div>
                         )}
@@ -290,15 +295,15 @@ export default function AddPrescriptionDialog({
                 )}
 
                 {errors.medicine_name && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-[11px] sm:text-sm text-red-500">
                     {errors.medicine_name.message}
                   </p>
                 )}
               </div>
 
               {/* Dosage */}
-              <div className="space-y-2">
-                <Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label className="text-xs sm:text-sm">
                   Dosage{medicationType ? ` (${medicationType})` : ""} *
                 </Label>
                 <Select
@@ -307,53 +312,53 @@ export default function AddPrescriptionDialog({
                     setValue("dosage", value, { shouldValidate: true })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 sm:h-10 text-xs sm:text-sm">
                     <SelectValue placeholder="Select dosage" />
                   </SelectTrigger>
                   <SelectContent>
                     {dosageOptions.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
+                      <SelectItem key={item.value} value={item.value} className="text-xs sm:text-sm">
                         {item.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 {errors.dosage && (
-                  <p className="text-sm text-red-500">{errors.dosage.message}</p>
+                  <p className="text-[11px] sm:text-sm text-red-500">{errors.dosage.message}</p>
                 )}
               </div>
 
               {/* Frequency */}
-              <div className="space-y-2">
-                <Label>Frequency *</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label className="text-xs sm:text-sm">Frequency *</Label>
                 <Select
                   value={watch("frequency")}
                   onValueChange={(value) =>
                     setValue("frequency", value, { shouldValidate: true })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 sm:h-10 text-xs sm:text-sm">
                     <SelectValue placeholder="Select frequency" />
                   </SelectTrigger>
                   <SelectContent>
                     {frequencyOptions.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
+                      <SelectItem key={item.value} value={item.value} className="text-xs sm:text-sm">
                         {item.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 {errors.frequency && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-[11px] sm:text-sm text-red-500">
                     {errors.frequency.message}
                   </p>
                 )}
               </div>
 
               {/* Timings */}
-              <div className="space-y-3">
-                <Label>Timings</Label>
-                <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+              <div className="space-y-2 sm:space-y-3">
+                <Label className="text-xs sm:text-sm">Timings</Label>
+                <div className="grid grid-cols-2 gap-2 sm:gap-3">
                   <CheckboxField
                     label="Morning"
                     checked={!!watch("timing_morning")}
@@ -398,32 +403,35 @@ export default function AddPrescriptionDialog({
                 direction="row"
                 error={errors.meal?.message}
               />
+
               {/* Dates */}
-              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
-                <div className="space-y-2">
-                  <Label>Start Date</Label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm">Start Date</Label>
                   <Input
                     type="date"
                     min={getTodayDate()}
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
+                    className="h-9 sm:h-10 text-xs sm:text-sm"
                   />
                 </div>
 
-                <div className="space-y-2">
-                  <Label>End Date</Label>
+                <div className="space-y-1.5 sm:space-y-2">
+                  <Label className="text-xs sm:text-sm">End Date</Label>
                   <Input
                     type="date"
                     min={startDate || getTodayDate()}
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
+                    className="h-9 sm:h-10 text-xs sm:text-sm"
                   />
                 </div>
               </div>
 
               {/* Stamp preference */}
-              <div className="space-y-2">
-                <Label>Stamp Preference *</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label className="text-xs sm:text-sm">Stamp Preference *</Label>
                 <Select
                   value={watch("stamp_preference")}
                   onValueChange={(value) =>
@@ -432,27 +440,27 @@ export default function AddPrescriptionDialog({
                     })
                   }
                 >
-                  <SelectTrigger>
+                  <SelectTrigger className="h-9 sm:h-10 text-xs sm:text-sm">
                     <SelectValue placeholder="Select stamp preference" />
                   </SelectTrigger>
                   <SelectContent>
                     {stampOptions.map((item) => (
-                      <SelectItem key={item.value} value={item.value}>
+                      <SelectItem key={item.value} value={item.value} className="text-xs sm:text-sm">
                         {item.label}
                       </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
                 {errors.stamp_preference && (
-                  <p className="text-sm text-red-500">
+                  <p className="text-[11px] sm:text-sm text-red-500">
                     {errors.stamp_preference.message}
                   </p>
                 )}
               </div>
 
               {/* Notes */}
-              <div className="space-y-2">
-                <Label>Notes</Label>
+              <div className="space-y-1.5 sm:space-y-2">
+                <Label className="text-xs sm:text-sm">Notes</Label>
                 <Textarea
                   placeholder="Write instructions..."
                   value={watch("instructions") || ""}
@@ -462,12 +470,13 @@ export default function AddPrescriptionDialog({
                     })
                   }
                   rows={4}
+                  className="text-xs sm:text-sm"
                 />
               </div>
 
               <Button
                 type="submit"
-                className="w-full"
+                className="w-full h-9 sm:h-10 text-xs sm:text-sm"
                 disabled={addPrescription.isPending}
               >
                 {addPrescription.isPending ? "Saving..." : "Add Prescription"}
@@ -492,9 +501,9 @@ function CheckboxField({
   onCheckedChange: (checked: boolean) => void;
 }) {
   return (
-    <div className="flex items-center space-x-2 rounded-md border p-3">
-      <Checkbox checked={checked} onCheckedChange={onCheckedChange} />
-      <Label>{label}</Label>
+    <div className="flex items-center space-x-2 rounded-md border p-2 sm:p-3">
+      <Checkbox checked={checked} onCheckedChange={onCheckedChange} className="h-3 w-3 sm:h-4 sm:w-4" />
+      <Label className="text-[10px] sm:text-sm">{label}</Label>
     </div>
   );
 }
@@ -508,14 +517,14 @@ function SuccessDialog({
 }) {
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-sm">
+      <DialogContent className="w-[90vw] max-w-sm rounded-xl">
         <DialogHeader>
-          <DialogTitle>Prescription Added</DialogTitle>
+          <DialogTitle className="text-base sm:text-lg">Prescription Added</DialogTitle>
         </DialogHeader>
-        <p className="text-sm text-muted-foreground">
+        <p className="text-xs sm:text-sm text-muted-foreground">
           The prescription has been added successfully.
         </p>
-        <Button onClick={onClose} className="mt-4 w-full">
+        <Button onClick={onClose} className="mt-4 w-full h-9 sm:h-10 text-xs sm:text-sm">
           OK
         </Button>
       </DialogContent>

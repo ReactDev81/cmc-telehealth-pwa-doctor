@@ -146,9 +146,13 @@ const MySchedulesPage = () => {
     return (
         <div>
 
-            <div>
-                <h1 className="text-3xl font-bold tracking-tight">Doctor's Schedule</h1>
-                <p className="text-muted-foreground">Manage your OPD appointments and availability</p>
+            <div className="space-y-1 sm:space-y-2">
+                <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-primary">
+                    Doctor's Schedule
+                </h1>
+                <p className="text-xs sm:text-sm text-muted-foreground">
+                    Manage your OPD appointments and availability
+                </p>
             </div>
 
             <Card className="border-border mt-5">
@@ -210,17 +214,17 @@ const MySchedulesPage = () => {
                                                 <div className="flex flex-col items-center justify-center">
                                                     <span>{date.getDate()}</span>
                                                     {count > 0 && (
-                                                        <span className="absolute bottom-1 left-1/2 transform -translate-x-1/2">
+                                                        <span className="absolute md:bottom-1 -bottom-1 left-1/2 transform -translate-x-1/2">
                                                             <Badge
                                                                 variant="outline"
-                                                                className={`h-4 px-1 text-[8px] bg-primary/10 ${isSelected ? 'text-white' : ''}`}
+                                                                className={`h-4 md:px-1 px-0.5 md:text-[8px] text-[7px] bg-primary/10 ${isSelected ? 'text-white' : ''}`}
                                                             >
                                                                 {count} {count === 1 ? 'OPD' : "OPD's"}
                                                             </Badge>
                                                         </span>
                                                     )}
                                                     {isTodayDate && (
-                                                        <span className={`absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-primary'}`} />
+                                                        <span className={`absolute md:top-1.5 top-1 md:right-1.5 right-1 h-1.5 w-1.5 rounded-full ${isSelected ? 'bg-white' : 'bg-primary'}`} />
                                                     )}
                                                 </div>
                                             </button>

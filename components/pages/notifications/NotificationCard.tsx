@@ -83,53 +83,100 @@ export function NotificationCard({
                 !notification.is_read ? "bg-primary/5 border-l-4 border-l-primary" : ""
             )}
         >
-            <CardContent className="flex items-start justify-between gap-4 p-4">
-                <div className="flex min-w-0 flex-1 items-start gap-4">
-                    <div
-                        className={cn(
-                            "flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-accent",
-                            getIconColor(notification.group)
-                        )}
-                    >
-                        <Icon className="h-5 w-5" />
-                    </div>
-
-                    <div className="min-w-0 flex-1 space-y-1">
-                        <div className="flex items-start justify-between gap-2">
-                            <p className="font-medium">{notification.title}</p>
-
-                            {notification.is_read && (
-                                <Badge variant="secondary">Read</Badge>
+            <CardContent className="p-3 sm:p-4">
+                <div className="flex flex-col sm:flex-row sm:items-start gap-3 sm:gap-4">
+                    {/* Icon - Left */}
+                    <div className="flex items-start gap-3 sm:gap-4">
+                        <div
+                            className={cn(
+                                "flex h-8 w-8 sm:h-10 sm:w-10 shrink-0 items-center justify-center rounded-full bg-accent",
+                                getIconColor(notification.group)
                             )}
+                        >
+                            <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
                         </div>
 
-                        <p className="text-sm text-muted-foreground line-clamp-2">
-                            {notification.desc}
-                        </p>
-
-                        <p className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <Clock className="h-3 w-3" />
-                            {formatRelativeTime(notification.created_at)}
-                        </p>
+                        {/* Content - Middle */}
+                        <div className="flex-1 min-w-0 sm:hidden">
+                            <div className="flex items-start justify-between gap-2">
+                                <p className="text-sm font-medium line-clamp-2">
+                                    {notification.title}
+                                </p>
+                                {notification.is_read && (
+                                    <Badge variant="secondary" className="text-[10px] px-1.5 shrink-0">
+                                        Read
+                                    </Badge>
+                                )}
+                            </div>
+                            <p className="text-xs text-muted-foreground line-clamp-2 mt-1">
+                                {notification.desc}
+                            </p>
+                            <p className="flex items-center gap-1 text-[10px] text-muted-foreground mt-1.5">
+                                <Clock className="h-2.5 w-2.5" />
+                                {formatRelativeTime(notification.created_at)}
+                            </p>
+                        </div>
                     </div>
-                </div>
 
-                <div className="shrink-0 pt-1">
-                    {!notification.is_read && (
-                        <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => onRead(notification.id)}
-                            disabled={isReading}
-                        >
-                            {isReading ? (
-                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                            ) : (
-                                <Eye className="mr-2 h-4 w-4" />
+                    {/* Desktop Layout */}
+                    <div className="hidden sm:flex sm:flex-1 sm:items-start sm:justify-between sm:gap-4">
+                        <div className="flex-1 min-w-0 space-y-1">
+                            <div className="flex items-start justify-between gap-2">
+                                <p className="font-medium">{notification.title}</p>
+                                {notification.is_read && (
+                                    <Badge variant="secondary" className="shrink-0">Read</Badge>
+                                )}
+                            </div>
+                            <p className="text-sm text-muted-foreground line-clamp-2">
+                                {notification.desc}
+                            </p>
+                            <p className="flex items-center gap-1 text-xs text-muted-foreground">
+                                <Clock className="h-3 w-3" />
+                                {formatRelativeTime(notification.created_at)}
+                            </p>
+                        </div>
+
+                        {/* Button - Right */}
+                        <div className="shrink-0 pt-0.5">
+                            {!notification.is_read && (
+                                <Button
+                                    size="sm"
+                                    variant="outline"
+                                    onClick={() => onRead(notification.id)}
+                                    disabled={isReading}
+                                    className="h-8 sm:h-9 text-xs sm:text-sm px-2 sm:px-3"
+                                >
+                                    {isReading ? (
+                                        <Loader2 className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4 animate-spin" />
+                                    ) : (
+                                        <Eye className="mr-1.5 sm:mr-2 h-3 w-3 sm:h-4 sm:w-4" />
+                                    )}
+                                    
+                                    <span className="xs:hidden">Mark as read</span>
+                                </Button>
                             )}
-                            {isReading ? "Reading..." : "Mark as read"}
-                        </Button>
-                    )}
+                        </div>
+                    </div>
+
+                    {/* Mobile Button - Below Content */}
+                    <div className="sm:hidden">
+                        {!notification.is_read && (
+                            <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => onRead(notification.id)}
+                                disabled={isReading}
+                                className="w-full mt-2 h-8 text-xs"
+                            >
+                                {isReading ? (
+                                    <Loader2 className="mr-1.5 h-3 w-3 animate-spin" />
+                                ) : (
+                                    <Eye className="mr-1.5 h-3 w-3" />
+                                )}
+                                {isReading ? "Reading..." : "Mark as read"}
+                            </Button>
+                        )}
+                    </div>
                 </div>
             </CardContent>
         </Card>

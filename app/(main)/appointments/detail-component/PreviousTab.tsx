@@ -39,7 +39,7 @@ export default function PreviousTab({ appointment }: { appointment: any }) {
 
     // ✅ DATA UI
     return (
-        <div className=" grid grid-cols-3 gap-5">
+        <div className="grid md:grid-cols-3 grid-cols-1 gap-5">
             {previous.map((item: any) => (
                 <Card
                     key={item.id}

@@ -1,22 +1,3 @@
-// "use client";
-
-// import StatsCard from "@/components/home/stats-card";
-// import { useAuth } from "@/context/userContext";
-// import { Calendar } from "lucide-react";
-
-// const Home = () => {
-
-//     const { user } = useAuth();
-
-//     return (
-//         <div className="flex flex-col gap-4">
-//             <section>
-//                 <h1 className="text-xl font-semibold mb-2">Welcome back, Dr. {user?.first_name}</h1>
-//                 <p className="text-body">Here's what's happening with your practice today.</p>
-//             </section>
-
-//             <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-
 "use client";
 
 import StatsCard from "@/components/pages/home/stats-card";
@@ -97,7 +78,7 @@ const Home = () => {
             title: "Average Ratings",
             value: summary?.average_review_score ?? 0,
             badgeText: "Avg",
-            icon: <Clock3 className="h-4 w-4 text-[#0f5132]" />
+            icon: <Star className="h-4 w-4 text-[#0f5132]" />
         }
     ];
 
@@ -105,13 +86,13 @@ const Home = () => {
         {
             id: 1,
             title: "All Patients",
-            icon: <Calendar className="h-6 w-6 text-primary" />,
+            icon: <Users className="h-6 w-6 text-primary" />,
             href: "/all-patients",
         },
         {
             id: 2,
             title: "Patient Reports",
-            icon: <Users className="h-6 w-6 text-primary" />,
+            icon: <FileText className="h-6 w-6 text-primary" />,
             href: "/patient-reports",
         },
         {
@@ -135,22 +116,24 @@ const Home = () => {
     ];
 
     return (
-        <div className="flex flex-col gap-6">
-            <section>
-                <h1 className="mb-2 text-xl font-medium">
+        <div className="flex flex-col gap-4 md:gap-6 md:px-4  w-full">
+            {/* Welcome Section */}
+            <section className="mb-2">
+                <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-primary font-extrabold break-words">
                     Welcome back, Dr. {user?.first_name || dashboard?.first_name || "Doctor"}
                 </h1>
-                <p className="text-body">
+                <p className="text-sm sm:text-base text-body mt-2">
                     Here's what's happening with your practice today.
                 </p>
             </section>
 
+            {/* Loading State */}
             {isLoading ? (
-                <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
-                    {[1, 2, 3].map((item) => (
+                <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                    {[1, 2, 3, 4].map((item) => (
                         <div
                             key={item}
-                            className="flex h-[170px] items-center justify-center rounded-3xl border bg-muted/30"
+                            className="flex h-32 sm:h-36 lg:h-42.5 items-center justify-center rounded-xl sm:rounded-2xl lg:rounded-3xl border bg-muted/30"
                         >
                             <Loader2 className="h-5 w-5 animate-spin" />
                         </div>
@@ -164,7 +147,8 @@ const Home = () => {
                 </div>
             ) : (
                 <>
-                    <section className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    {/* Stats Cards Grid */}
+                    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                         {stats.map((card, index) => (
                             <StatsCard
                                 key={index}
@@ -176,20 +160,21 @@ const Home = () => {
                         ))}
                     </section>
 
-                    {/* Optional section: today's appointments */}
-                    <section className="flex gap-4">
-                        <div className="flex-1 rounded-2xl border bg-white shadow-sm">
-                            <div className="flex flex-col p-4 border-b">
-                                <h2 className="text-lg font-medium">Today's Appointments</h2>
-                                <span className="text-sm text-muted-foreground">
+                    {/* Today's Appointments & Notifications Section */}
+                    <section className="flex flex-col lg:flex-row gap-4 md:gap-6">
+                        {/* Appointments Section */}
+                        <div className="flex-1 rounded-xl sm:rounded-2xl border bg-white shadow-sm">
+                            <div className="flex flex-col p-3 sm:p-4 border-b">
+                                <h2 className="text-base sm:text-lg font-medium">Today's Appointments</h2>
+                                <span className="text-xs sm:text-sm text-muted-foreground">
                                     You have {dashboard?.todays_appointments?.length ?? 0} appointments scheduled
                                 </span>
                             </div>
 
-                            <div className="p-4">
+                            <div className="p-3 sm:p-4">
                                 {dashboard?.todays_appointments?.length ? (
                                     <>
-                                        <div className="grid grid-cols-2 gap-4">
+                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
                                             {dashboard.todays_appointments.slice(0, 3).map((appointment) => (
                                                 <AppointmentCard
                                                     key={appointment.id}
@@ -202,7 +187,7 @@ const Home = () => {
                                             <div className="mt-4 text-center">
                                                 <Link
                                                     href="/appointments"
-                                                    className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+                                                    className="inline-flex items-center justify-center rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors w-full sm:w-auto"
                                                 >
                                                     View All ({dashboard.todays_appointments.length})
                                                 </Link>
@@ -210,34 +195,40 @@ const Home = () => {
                                         )}
                                     </>
                                 ) : (
-                                    <p className="text-sm text-muted-foreground">
-                                        No appointments for today.
-                                    </p>
+                                    <div className="text-center py-8 sm:py-12">
+                                        <Calendar className="h-12 w-12 text-gray-300 mx-auto mb-3" />
+                                        <p className="text-sm text-muted-foreground">
+                                            No appointments for today.
+                                        </p>
+                                    </div>
                                 )}
                             </div>
                         </div>
-                        <div className="min-w-[30%] rounded-2xl border bg-white shadow-sm">
-                            <div className="flex flex-col p-4 border-b">
-                                <h2 className="text-lg font-medium">Notifications</h2>
-                                <span className="text-sm text-muted-foreground">
+
+                        {/* Notifications Section */}
+                        <div className="w-full lg:w-[30%] min-w-[280px] rounded-xl sm:rounded-2xl border bg-white shadow-sm">
+                            <div className="flex flex-col p-3 sm:p-4 border-b">
+                                <h2 className="text-base sm:text-lg font-medium">Notifications</h2>
+                                <span className="text-xs sm:text-sm text-muted-foreground">
                                     You have {notificationsData?.meta?.total_unread ?? 0} unread notifications
                                 </span>
                             </div>
-                            <div>
+                            <div className="max-h-[400px] overflow-y-auto">
                                 <NotificationsCardContent
                                     notifications={notifications}
                                     loading={notificationsLoading}
                                     error={notificationsError?.message || null}
                                     limit={3}
                                     onClickItem={(id) => markAsRead(id)}
-                                    onViewAll={() => router.push("/doctor/notifications")}
+                                            onViewAll={() => router.push("/notifications")}
                                     getIcon={(group) => getNotificationIcon(group)}
                                 />
                             </div>
                         </div>
                     </section>
 
-                    <section>
+                    {/* Quick Actions Section */}
+                    <section className="mt-2">
                         <QuickActionsCard actions={quickActions} />
                     </section>
                 </>

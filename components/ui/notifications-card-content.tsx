@@ -47,56 +47,57 @@ export default function NotificationsCardContent({
 
       {/* 🔄 Loading */}
       {loading ? (
-        <div className="flex items-center justify-center py-8">
-          <div className="h-6 w-6 animate-spin rounded-full border-b-2 border-primary" />
+        <div className="flex items-center justify-center py-8 sm:py-12">
+          <div className="h-6 w-6 sm:h-8 sm:w-8 animate-spin rounded-full border-b-2 border-primary" />
         </div>
       ) : error ? (
 
         /* ❌ Error */
-        <div className="py-8 text-center text-sm text-destructive">
+        <div className="py-8 sm:py-12 text-center text-xs sm:text-sm text-destructive px-4">
           {error}
         </div>
       ) : notifications.length === 0 ? (
 
         /* 📭 Empty */
-        <div className="flex flex-col items-center justify-center py-8 text-center">
-          <Bell size={40} className="text-muted-foreground mb-2" />
-          <p className="font-medium">{emptyTitle}</p>
-          <p className="text-sm text-muted-foreground">{emptyMessage}</p>
+        <div className="flex flex-col items-center justify-center py-8 sm:py-12 px-4 text-center">
+          <Bell size={32} className="sm:size-40 text-muted-foreground mb-2 sm:mb-3" />
+          <p className="text-sm sm:text-base font-medium">{emptyTitle}</p>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-1">{emptyMessage}</p>
         </div>
 
       ) : (
 
         /* ✅ Data */
-        <div className="space-y-4 p-4">
+        <div className="divide-y divide-border">
           {visibleNotifications.map((notification) => (
             <div
               key={notification.id}
-              className={`flex gap-3 p-2 rounded-lg cursor-pointer hover:bg-accent/50 transition-colors ${
-                !notification.is_read ? "bg-accent/30" : ""
-              }`}
+              className={`flex gap-2 sm:gap-3 p-3 sm:p-4 cursor-pointer hover:bg-accent/50 transition-colors ${!notification.is_read ? "bg-accent/30" : ""
+                }`}
               onClick={() => onClickItem?.(notification.id)}
             >
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary/10 shrink-0">
+              {/* Icon */}
+              <div className="flex h-8 w-8 sm:h-10 sm:w-10 items-center justify-center rounded-full bg-primary/10 shrink-0">
                 {getIcon?.(notification.group)}
               </div>
 
+              {/* Content */}
               <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="text-sm font-medium truncate">
+                <div className="flex items-start justify-between gap-2">
+                  <p className="text-xs sm:text-sm font-medium break-words flex-1">
                     {notification.title}
                   </p>
 
                   {!notification.is_read && (
-                    <span className="h-2 w-2 rounded-full bg-blue-500 shrink-0" />
+                    <span className="h-1.5 w-1.5 sm:h-2 sm:w-2 rounded-full bg-blue-500 shrink-0 mt-1" />
                   )}
                 </div>
 
-                <p className="text-xs text-muted-foreground line-clamp-2">
+                <p className="text-[11px] sm:text-xs text-muted-foreground line-clamp-2 mt-0.5">
                   {notification.desc}
                 </p>
 
-                <p className="text-xs text-muted-foreground mt-1">
+                <p className="text-[10px] sm:text-xs text-muted-foreground/70 mt-1.5 sm:mt-2">
                   {(() => {
                     try {
                       const date = new Date(notification.created_at);
@@ -111,23 +112,27 @@ export default function NotificationsCardContent({
             </div>
           ))}
 
-          {/* + More */}
+          {/* + More notifications indicator */}
           {notifications.length > limit && (
-            <p className="text-xs text-muted-foreground text-center pt-2">
-              +{notifications.length - limit} more notifications
-            </p>
+            <div className="px-3 sm:px-4 py-2 sm:py-3 text-center bg-muted/20">
+              <p className="text-[10px] sm:text-xs text-muted-foreground">
+                +{notifications.length - limit} more {notifications.length - limit === 1 ? 'notification' : 'notifications'}
+              </p>
+            </div>
           )}
         </div>
       )}
 
       {/* 🔽 Bottom Action */}
-      <Button
-        variant="link"
-        className="text-sm hover:underline text-center"
-        onClick={onViewAll}
-      >
-        View All Notifications
-      </Button>
+      <div className="p-2 sm:p-3 border-t">
+        <Button
+          variant="ghost"
+          className="w-full text-xs sm:text-sm hover:bg-accent transition-colors h-9 sm:h-10"
+          onClick={onViewAll}
+        >
+          View All Notifications
+        </Button>
+      </div>
     </CardContent>
   );
 }
