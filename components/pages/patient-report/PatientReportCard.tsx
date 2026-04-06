@@ -24,6 +24,15 @@ interface PatientReportCardProps {
     onViewReports: (patient: any) => void;
 }
 
+
+interface Report {
+    id: string; 
+    report_type: string;
+    report_name: string;
+    report_date_formatted?: string; 
+    uploaded_at?: string; 
+}
+
 const getInitials = (name?: string | null) => {
     if (!name) return "NA";
     return name
@@ -112,7 +121,7 @@ export default function PatientReportCard({
                     </div>
 
                     <div className="space-y-1.5 sm:space-y-2">
-                        {reports.slice(0, 2).map((report) => (
+                        {reports.slice(0, 2).map((report: Report) => (
                             <div
                                 key={report.id}
                                 className="flex items-center gap-1.5 sm:gap-2 text-xs bg-accent/30 p-1.5 sm:p-2 rounded"

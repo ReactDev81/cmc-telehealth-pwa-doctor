@@ -20,17 +20,19 @@ export default function StatsCard({
     icon,
 }: StatsCardProps) {
     return (
-        <Card key={title} className="border-border">
-            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">
+        <Card className="border-border overflow-hidden h-full">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0">
+                <CardTitle className="text-[11px] sm:text-xs md:text-sm font-medium text-muted-foreground wrap-break-word leading-tight">
                     {title}
                 </CardTitle>
-                {icon && <div className="h-4 w-4 text-[#0f5132]">{icon}</div>}
+                {icon && <div className="h-3 w-3 sm:h-4 sm:w-4 shrink-0 text-[#0f5132] ml-2">{icon}</div>}
             </CardHeader>
-            <CardContent>
-                <div className="text-2xl font-bold">{value}</div>
-                <p className="mt-1 flex items-center gap-1 text-xs text-muted-foreground">
-                    <TrendingUp className="h-3 w-3 text-primary" />
+            <CardContent className="p-3 sm:p-4 pt-0">
+                <div className="text-lg sm:text-xl md:text-2xl font-bold">
+                    {value}
+                </div>
+                <p className="mt-1 flex items-center gap-1 text-[9px] sm:text-xs text-muted-foreground">
+                    <TrendingUp className="h-2.5 w-2.5 sm:h-3 sm:w-3 text-primary shrink-0" />
                     <span>Updated from API</span>
                 </p>
             </CardContent>

@@ -120,7 +120,7 @@ const Home = () => {
             {/* Welcome Section */}
             <section className="mb-2">
                 <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl text-primary font-extrabold break-words">
-                    Welcome back, Dr. {user?.first_name || dashboard?.first_name || "Doctor"}
+                    Welcome back, Dr. {user?.first_name || dashboard?.first_name || "Doctor"} {user?.last_name || dashboard?.last_name || ""}
                 </h1>
                 <p className="text-sm sm:text-base text-body mt-2">
                     Here's what's happening with your practice today.
@@ -148,7 +148,7 @@ const Home = () => {
             ) : (
                 <>
                     {/* Stats Cards Grid */}
-                    <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+                    <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
                         {stats.map((card, index) => (
                             <StatsCard
                                 key={index}
