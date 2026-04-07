@@ -163,6 +163,7 @@ export function DataTable<T>({
         table={table}
         columns={columns}
         loading={loading}
+        statusType="appointment"
       />
 
       {/* Table */}

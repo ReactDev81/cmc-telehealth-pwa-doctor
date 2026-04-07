@@ -1,14 +1,16 @@
 import { flexRender, Table, ColumnDef } from "@tanstack/react-table";
 import { Loader2, ChevronRight, CreditCard, User, Calendar, DollarSign, Package, Hash } from "lucide-react";
 import { Button } from "../ui";
+import { getStatusColor } from "@/src/utils/getStatusColor";
 
 interface MobileCardViewProps<TData> {
     table: Table<TData>;
     columns: ColumnDef<TData, any>[];
     loading: boolean;
+    statusType?: StatusType;
 }
 
-const MobileCardView = <TData,>({ table, columns, loading }: MobileCardViewProps<TData>) => {
+const MobileCardView = <TData,>({ table, columns, loading, statusType = "appointment", }: MobileCardViewProps<TData>) => {
     const rows = table.getRowModel().rows;
 
     // Helper function to get icon based on header text
@@ -21,21 +23,6 @@ const MobileCardView = <TData,>({ table, columns, loading }: MobileCardViewProps
         if (text.includes("items") || text.includes("product")) return <Package className="h-3.5 w-3.5" />;
         if (text.includes("id") || text.includes("invoice")) return <Hash className="h-3.5 w-3.5" />;
         return null;
-    };
-
-    // Helper function to get status badge styling
-    const getStatusBadge = (value: string | undefined) => {
-        const status = value?.toLowerCase() || "";
-        if (status === "paid") {
-            return "bg-green-50 text-green-700 border-green-200";
-        }
-        if (status === "pending") {
-            return "bg-yellow-50 text-yellow-700 border-yellow-200";
-        }
-        if (status === "unpaid") {
-            return "bg-red-50 text-red-700 border-red-200";
-        }
-        return "bg-gray-50 text-gray-700 border-gray-200";
     };
 
     if (loading) {
@@ -86,7 +73,10 @@ const MobileCardView = <TData,>({ table, columns, loading }: MobileCardViewProps
                                 </div>
 
                                 {statusValue && (
-                                    <span className={`text-xs font-medium px-2 py-0.5 rounded-full border ${getStatusBadge(statusValue)}`}>
+                                    <span
+                                        className={`text-xs font-medium px-2 py-0.5 rounded-full border ${getStatusColor(statusType || "appointment", statusValue)
+                                            }`}
+                                    >
                                         {statusValue}
                                     </span>
                                 )}
@@ -122,14 +112,6 @@ const MobileCardView = <TData,>({ table, columns, loading }: MobileCardViewProps
                                     </div>
                                 );
                             })}
-                        </div>
-
-                        {/* Footer Actions */}
-                        <div className="bg-gray-50 px-4 py-2 border-t border-gray-100 flex w-full">
-                            <Button size="sm" className="text-xs w-full">
-                                View Details
-                                <ChevronRight className="ml-1 h-3 w-3" />
-                            </Button>
                         </div>
                     </div>
                 );

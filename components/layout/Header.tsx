@@ -244,16 +244,16 @@ export function Header() {
                             </AvatarFallback>
                           </Avatar>
                           <div className="flex-1 min-w-0">
-                            <p className="text-sm font-semibold truncate">
+                            <p className="text-base font-semibold truncate">
                               {initializing ? "Loading..." : name}
                             </p>
-                            <p className="text-[11px] text-muted-foreground truncate">
+                            <p className="text-sm text-muted-foreground truncate">
                               {initializing ? "Loading..." : user?.email || "healthcare@info.test"}
                             </p>
                             <Link
                               href="/profile"
                               onClick={() => setIsMobileMenuOpen(false)}
-                              className="inline-block mt-1 text-[10px] text-primary hover:underline"
+                              className="inline-block mt-1 text-sm text-primary hover:underline"
                             >
                               View Profile →
                             </Link>
