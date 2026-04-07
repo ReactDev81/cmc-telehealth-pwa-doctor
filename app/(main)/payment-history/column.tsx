@@ -5,18 +5,7 @@ import type { TransactionItem } from "@/types/transactions";
 import { Badge } from "@/components/ui/badge";
 import { getStatusColor } from "@/src/utils/getStatusColor";
 
-const getStatusVariant = (status: string) => {
-  switch (status?.toLowerCase()) {
-    case "paid":
-      return "default";
-    case "pending":
-      return "secondary";
-    case "failed":
-      return "destructive";
-    default:
-      return "outline";
-  }
-};
+
 
 export const transactionColumns: ColumnDef<TransactionItem>[] = [
   {
@@ -50,7 +39,7 @@ export const transactionColumns: ColumnDef<TransactionItem>[] = [
         // </Badge>
         <Badge
           className={`${getStatusColor(
-            "appointment",
+            "payment", 
             item.status
           )} gap-1`}
         >

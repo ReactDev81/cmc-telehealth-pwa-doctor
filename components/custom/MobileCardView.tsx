@@ -1,7 +1,6 @@
 import { flexRender, Table, ColumnDef } from "@tanstack/react-table";
-import { Loader2, ChevronRight, CreditCard, User, Calendar, DollarSign, Package, Hash } from "lucide-react";
-import { Button } from "../ui";
-import { getStatusColor } from "@/src/utils/getStatusColor";
+import { Loader2, CreditCard, User, Calendar, DollarSign, Package, Hash } from "lucide-react";
+import { getStatusColor, StatusType } from "@/src/utils/getStatusColor";
 
 interface MobileCardViewProps<TData> {
     table: Table<TData>;
