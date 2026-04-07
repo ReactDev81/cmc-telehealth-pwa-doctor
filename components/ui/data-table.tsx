@@ -30,6 +30,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import MobileCardView from "../custom/MobileCardView";
 
 export interface FilterOption {
   label: string;
@@ -158,8 +159,14 @@ export function DataTable<T>({
         </div>
       </div>
 
+      <MobileCardView
+        table={table}
+        columns={columns}
+        loading={loading}
+      />
+
       {/* Table */}
-      <div className="border rounded-lg overflow-hidden bg-white [&_td]:border-b [&_th]:border-b">
+      <div className="hidden md:block border rounded-lg overflow-hidden bg-white [&_td]:border-b [&_th]:border-b">
         <Table className="w-full text-sm">
           <TableHeader className="bg-muted/50">
             {table.getHeaderGroups().map((headerGroup) => (
