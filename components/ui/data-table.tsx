@@ -113,7 +113,7 @@ export function DataTable<T>({
       {/* Toolbar: Search + Filters */}
       <div className="flex flex-wrap items-center gap-3">
         {enableSearch && (
-          <div className="relative flex-1 min-w-[200px]">
+          <div className="relative flex-1 min-w-50">
             <Search className="absolute left-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search..."
@@ -131,7 +131,7 @@ export function DataTable<T>({
               value={filter.value || "all"}
               onValueChange={filter.onChange}
             >
-              <SelectTrigger className="h-9 w-fit min-w-[130px] text-sm">
+              <SelectTrigger className="h-9 w-fit min-w-32.5 text-sm">
                 <SelectValue placeholder={filter.label} />
               </SelectTrigger>
               <SelectContent>
