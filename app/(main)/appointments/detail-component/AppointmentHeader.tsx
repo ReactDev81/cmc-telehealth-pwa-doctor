@@ -26,7 +26,6 @@ const getInitials = (name: string) => {
 };
 
 export default function AppointmentHeader({ appointment }: { appointment: any }) {
-    console.log(appointment);
 
     const [open, setOpen] = useState(false);
     const [loading, setLoading] = useState(false);
@@ -56,6 +55,9 @@ export default function AppointmentHeader({ appointment }: { appointment: any })
             setLoading(false);
         }
     };
+
+    const joinUrl = appointment?.join_url || "";
+    const callNow = appointment?.call_now || "";
 
     return (
         <Card className="shadow-sm rounded-xl sm:rounded-2xl border overflow-hidden">
@@ -91,14 +93,13 @@ export default function AppointmentHeader({ appointment }: { appointment: any })
                             </div>
 
                             <div>
-                                {!successOpen &&
-                                    ["confirmed", "rescheduled"].includes(appointment?.status) && (
-                                        <Button
-                                            variant="destructive"
-                                            onClick={() => setOpen(true)}
-                                            disabled={loading}
-                                        >
-                                            {loading ? "Cancelling..." : "Cancel Appointment"}
+                                {callNow && joinUrl && (
+                                    <Button
+                                        variant="default"
+                                        onClick={() => window.open(joinUrl, "_blank")}
+                                        disabled={!joinUrl}
+                                    >
+                                            Join Now
                                         </Button>
                                     )}
                             </div>
@@ -202,16 +203,16 @@ export default function AppointmentHeader({ appointment }: { appointment: any })
                             </Badge>
                         </div>
 
-                        {/* Cancel Button - Bottom */}
+                        {/* Join Now Button - Bottom */}
                         {!successOpen &&
-                            ["confirmed", "rescheduled"].includes(appointment?.status) && (
+                            ["confirmed", "rescheduled"].includes(appointment?.status) &&
+                            joinUrl && (
                                 <Button
                                     variant="default"
-                                    className="bg-red-700 hover:bg-red-800 w-full h-8 text-xs mt-1"
-                                    onClick={() => setOpen(true)}
-                                    disabled={loading}
+                                    className="w-full h-8 text-xs mt-1"
+                                    onClick={() => window.open(joinUrl, "_blank")}
                                 >
-                                    {loading ? "Cancelling..." : "Cancel Appointment"}
+                                    Join Now
                                 </Button>
                             )}
                     </div>
