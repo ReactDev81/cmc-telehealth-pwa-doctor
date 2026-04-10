@@ -133,14 +133,28 @@ export default function PrescriptionTab({ appointmentId }: { appointmentId: stri
 
     if (!medicines.length && !instructionsByDoctor && !nextVisitDate) {
         return (
-            <Card>
-                <CardContent className="p-6 sm:p-8 text-center">
-                    <div className="flex flex-col items-center gap-2 sm:gap-3">
-                        <FileText className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground" />
-                        <p className="text-xs sm:text-sm text-muted-foreground">No prescription available</p>
-                    </div>
-                </CardContent>
-            </Card>
+            <>
+                <div className="flex justify-end my-4">
+                    <Button
+                        onClick={() => setIsAddDialogOpen(true)}
+                        className="h-8 sm:h-9 text-xs sm:text-sm"
+                    >
+                        Add Prescription
+                    </Button>
+                </div>
+                <Card>
+                    <CardContent className="p-6 sm:p-8 text-center">
+                        <div className="flex flex-col items-center gap-2 sm:gap-3">
+                            <FileText className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground" />
+                            <p className="text-xs sm:text-sm text-muted-foreground">No prescription available</p>
+                        </div>
+                    </CardContent>
+                </Card>
+                <AddPrescriptionDialog
+                    open={isAddDialogOpen}
+                    onOpenChange={setIsAddDialogOpen}
+                />
+            </>
         );
     }
 

@@ -61,11 +61,13 @@ export default function AppointmentCard({
     const [customDialogOpen, setCustomDialogOpen] = useState(false);
     const [dialogData, setDialogData] = useState<any>(null);
 
+    console.log("appointment", appointment);
 
-
+    const joinUrl = appointment?.video_consultation?.join_url;
     const showCallNow = appointment.call_now === true;
 
     const router = useRouter();
+    console.log("appointment Id : ", appointment.appointment_id || appointment.id);
 
 
 
@@ -198,7 +200,7 @@ export default function AppointmentCard({
                                 className="flex-1 h-8 sm:h-9 border-primary cursor-pointer hover:opacity-90  text-xs sm:text-sm gap-1.5 flex items-center justify-center"
                                 onClick={(e) => {
                                     e.stopPropagation();
-                                    window.open(`/start-consultation?room_url=${appointment.video_consultation.join_url}&appointment_id=${appointment.appointment_id}`, "_blank");
+                                    window.open(`/start-consultation?room_url=${joinUrl}&appointment_id=${appointment.appointment_id || appointment.id}`, "_blank");
                                 }}
                             >
                                 <PhoneCallIcon className="h-3 w-3 sm:h-3.5 sm:w-3.5" />

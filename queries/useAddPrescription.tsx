@@ -11,6 +11,8 @@ export const useAddPrescription = (appointmentId: string, token: string) => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["patient-detail"] });
             queryClient.invalidateQueries({ queryKey: ["appointment"] });
+            // Invalidate prescription query to refresh immediately
+            queryClient.invalidateQueries({ queryKey: ["prescription", appointmentId] });
         },
     });
 };

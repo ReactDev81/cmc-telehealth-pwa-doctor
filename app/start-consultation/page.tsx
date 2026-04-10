@@ -170,7 +170,7 @@ const ConsultationContent = () => {
                     </button>
 
                     <button
-                        onClick={() => window.open(`/appointments/${appointmentId}`, "_blank")}
+                        onClick={() => window.open(`/appointments/${appointmentId}?tab=prescription`, "_blank")}
                         className="flex flex-col items-center gap-1.5"
                     >
                         <div className="w-12 h-12 bg-[#0000008f] rounded-xl flex items-center justify-center hover:bg-[#000000af] transition-colors">

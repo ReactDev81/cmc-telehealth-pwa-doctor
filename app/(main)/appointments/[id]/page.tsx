@@ -1,5 +1,5 @@
 "use client";
-import { useParams } from "next/navigation";
+import { useParams, useSearchParams } from "next/navigation";
 import { useState } from "react";
 import CustomTabs, { TabItem } from "@/components/custom/CustomTabs";
 import { useAppointmentById } from "@/queries/useAppointmentId";
@@ -14,10 +14,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 export default function AppointmentDetail() {
     const params = useParams();
     const id = params?.id as string;
+    const searchParams = useSearchParams();
+    const initialTab = searchParams.get("tab") || "overview";
 
     const { data, isLoading, error } = useAppointmentById(id);
 
-    const [activeTab, setActiveTab] = useState("overview");
+    const [activeTab, setActiveTab] = useState(initialTab);
 
     // Loading skeleton
     if (isLoading) {
