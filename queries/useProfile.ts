@@ -30,5 +30,7 @@ export const useDoctorProfile = () => {
   return useQuery({
     queryKey: doctorProfileKeys.all,
     queryFn: getDoctorProfile,
+    staleTime: 5 * 60 * 1000, // 5 minutes - profile changes rarely
+    gcTime: 10 * 60 * 1000, // 10 minutes
   });
 };

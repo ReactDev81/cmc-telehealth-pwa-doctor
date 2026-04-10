@@ -26,9 +26,11 @@ import NotificationsCardContent from "@/components/ui/notifications-card-content
 
 const Home = () => {
 
-    const { user } = useAuth();
+    const { user, token } = useAuth();
+    console.log("token : ", token);
     const router = useRouter();
     const { data, isLoading, isError, error } = useDoctorHome();
+    console.log("data", data);
     const { 
         data: notificationsData, 
         isLoading: notificationsLoading, 

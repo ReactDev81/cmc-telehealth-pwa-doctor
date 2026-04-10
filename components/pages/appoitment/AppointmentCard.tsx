@@ -97,7 +97,7 @@ export default function AppointmentCard({
                         {/* Patient Info */}
                         <div className="flex-1 min-w-0">
                             <div className="flex flex-row sm:items-start justify-between gap-1.5 sm:gap-2">
-                                {/* Left */}
+                                {/* Left - Patient Details */}
                                 <div className="flex-1 min-w-0">
                                     <h3 className="text-sm sm:text-base font-semibold truncate">
                                         {appointment.patient?.name || appointment?.patient_name || "Unknown Patient"}
@@ -116,20 +116,34 @@ export default function AppointmentCard({
                                                     "Video"}
                                             </span>
                                         </Badge>
+                                        {/* {!showCallNow && (
+                                            <Badge
+                                                className={`${getStatusColor(
+                                                    "appointment",
+                                                    appointment.status
+                                                )} text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 whitespace-nowrap shrink-0`}
+                                            >
+                                                {appointment.status_label || appointment.status}
+                                            </Badge>
+                                        )} */}
                                     </div>
-                                    {showCallNow ? (
-                                        <Badge
-                                            className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1 px-2 sm:px-2.5 py-1 text-[10px] sm:text-xs font-medium whitespace-nowrap self-start sm:self-auto"
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                onCallNow?.();
-                                            }}
-                                        >
-                                            <PhoneCall className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
-                                            <span className="hidden xs:inline">Join Now</span>
-                                            <span className="xs:hidden">Join</span>
-                                        </Badge>
-                                    ) : (
+                                </div>
+
+                                {/* Right - Join Now Badge (Top Right) */}
+                                {showCallNow ? (
+                                    <Badge
+                                        className="bg-success text-success-foreground hover:opacity-90 cursor-pointer shrink-0 gap-1 px-2 sm:px-2.5 py-1 text-[10px] sm:text-xs font-medium whitespace-nowrap"
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            onCallNow?.();
+                                        }}
+                                    >
+                                        <PhoneCall className="h-2.5 w-2.5 sm:h-3 sm:w-3" />
+                                        <span className="hidden xs:inline">Join Now</span>
+                                        <span className="xs:hidden">Join</span>
+                                    </Badge>
+                                ) :
+                                    (
                                         <Badge
                                             className={`${getStatusColor(
                                                 "appointment",
@@ -139,12 +153,11 @@ export default function AppointmentCard({
                                             {appointment.status_label || appointment.status}
                                         </Badge>
                                     )}
-                                </div>
                             </div>
                         </div>
                     </div>
 
-                    {/* 🔹 Date & Time */}
+                    {/* Date & Time */}
                     <div className="mt-3 sm:mt-4 space-y-1.5">
                         <div className="flex items-center gap-1.5 sm:gap-2 text-muted-foreground">
                             <Calendar className="h-3 w-3 sm:h-3.5 sm:w-3.5 shrink-0" />
@@ -179,7 +192,7 @@ export default function AppointmentCard({
                         </Button>
 
                         {/* Show Join Now if video consultation is joinable */}
-                        {appointment.video_consultation?.can_join ? (
+                        {appointment.video_consultation?.can_join || appointment.call_now ? (
                             <Button
                                 variant="outline"
                                 className="flex-1 h-8 sm:h-9 border-primary cursor-pointer hover:opacity-90  text-xs sm:text-sm gap-1.5 flex items-center justify-center"
