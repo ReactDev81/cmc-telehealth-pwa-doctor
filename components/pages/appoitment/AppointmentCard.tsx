@@ -63,7 +63,8 @@ export default function AppointmentCard({
 
     console.log("appointment", appointment);
 
-    const joinUrl = appointment?.video_consultation?.join_url;
+    const joinUrl = appointment?.join_url;
+    console.log("joiUrl : ", joinUrl);
     const showCallNow = appointment.call_now === true;
 
     const router = useRouter();
