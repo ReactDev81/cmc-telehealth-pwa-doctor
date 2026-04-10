@@ -96,12 +96,12 @@ export default function AppointmentHeader({ appointment }: { appointment: any })
                                 {callNow && joinUrl && (
                                     <Button
                                         variant="default"
-                                        onClick={() => window.open(joinUrl, "_blank")}
+                                        onClick={() => window.open(`/start-consultation?room_url=${joinUrl}&appointment_id=${appointment.appointment_id}`, "_blank")}
                                         disabled={!joinUrl}
                                     >
-                                            Join Now
-                                        </Button>
-                                    )}
+                                        Join Now
+                                    </Button>
+                                )}
                             </div>
                         </div>
 
