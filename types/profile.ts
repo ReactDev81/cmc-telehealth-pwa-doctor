@@ -119,6 +119,7 @@ export interface PersonalInformation {
   doctor_departments: DoctorDepartment[];
   email: string | null;
   avatar: string | null;
+  medical_license: string | null;
 }
 
 export interface WorkingExperienceItem {

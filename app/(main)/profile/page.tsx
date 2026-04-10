@@ -13,16 +13,19 @@ import ReviewsSection from "@/components/pages/profile/reviewsSection";
 import SocialLinksSection from "@/components/pages/profile/socialLinksSection";
 import { useDoctorProfile } from "@/queries/useProfile";
 import { useDoctorHome } from "@/queries/useHome";
+import { useAuth } from "@/context/userContext";
 
 const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("personal");
   const [isEditingPersonal, setIsEditingPersonal] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
 
+  const { user } = useAuth();
   const { data, isLoading, isError, error } = useDoctorProfile();
   const { data: homeData } = useDoctorHome();
 
   const profile = data?.data;
+  console.log("profile data : ", profile);
   const homeProfile = homeData?.data;
 
   const personalInfo = profile?.personal_information;
@@ -40,7 +43,7 @@ const ProfilePage = () => {
     email: "",
     bio: "",
     phone: "",
-    license: "",
+    medical_license: "",
   });
 
   useEffect(() => {
@@ -50,11 +53,21 @@ const ProfilePage = () => {
         last_name: personalInfo.last_name ?? "",
         email: personalInfo.email ?? "",
         bio: personalInfo.bio ?? "",
-        phone: "",
-        license: "",
+        phone: user?.phone ?? "",
+        medical_license: personalInfo.medical_license ?? "",
       });
     }
-  }, [personalInfo]);
+  }, [personalInfo, user]);
+
+  // Also update cancel handler when user changes
+  useEffect(() => {
+    if (!isEditingPersonal) {
+      setFormData((prev) => ({
+        ...prev,
+        phone: user?.phone ?? "",
+      }));
+    }
+  }, [user?.phone, isEditingPersonal]);
 
   const fullName = `${formData.first_name} ${formData.last_name}`.trim() || "Doctor";
 
@@ -162,8 +175,8 @@ const ProfilePage = () => {
       last_name: personalInfo?.last_name ?? "",
       email: personalInfo?.email ?? "",
       bio: personalInfo?.bio ?? "",
-      phone: "",
-      license: "",
+      phone: user?.phone ?? "",
+      medical_license: personalInfo?.medical_license ?? "",
     });
   };
 
@@ -273,7 +286,7 @@ const ProfilePage = () => {
         role={primaryRole}
         email={personalInfo?.email ?? ""}
         phone={formData.phone}
-        license={formData.license}
+        license={formData.medical_license}
         reviewSummary={reviewSummary}
       />
 

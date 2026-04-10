@@ -29,7 +29,7 @@ interface PersonalInfoSectionProps {
     email: string;
     bio: string;
     phone: string;
-    license: string;
+    medical_license: string;
   };
   profileData?: ProfileData;
   fullName: string;
@@ -115,11 +115,11 @@ export default function PersonalInfoSection({
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="license">License Number</Label>
+                <Label htmlFor="medical_license">License Number</Label>
                 <Input
-                  id="license"
-                  value={formData.license}
-                  onChange={(e) => onInputChange("license", e.target.value)}
+                  id="medical_license"
+                  value={formData.medical_license}
+                  onChange={(e) => onInputChange("medical_license", e.target.value)}
                   placeholder="Enter license number"
                 />
               </div>
@@ -153,7 +153,7 @@ export default function PersonalInfoSection({
               <InfoField label="Department" value={primaryDepartment} />
               <InfoField label="Email" value={profileData?.email} />
               <InfoField label="Phone" value={formData.phone} />
-              <InfoField label="License Number" value={formData.license} />
+              <InfoField label="License Number" value={formData.medical_license} />
               <InfoField label="Role" value={primaryRole} />
             </div>
 
